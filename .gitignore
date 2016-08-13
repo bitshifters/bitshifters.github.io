@@ -1,1 +1,10 @@
 node_modules
+.vs
+jsbeeb/tests
+jsbeeb/images/sb
+jsbeeb/discs
+jsbeeb/.gitignore
+jsbeeb/.gitmodules
+jsbeeb/.jshintrc
+jsbeeb/.travis.yml
+jsbeeb/basic
