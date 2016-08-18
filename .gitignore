@@ -8,3 +8,7 @@ jsbeeb/.gitmodules
 jsbeeb/.jshintrc
 jsbeeb/.travis.yml
 jsbeeb/basic
+_site
+.sass-cache
+.jekyll-metadata
+Gemfile.lock
