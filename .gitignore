@@ -1,5 +1,6 @@
 node_modules
 .vs
+backup
 jsbeeb/tests
 jsbeeb/images/sb
 jsbeeb/.gitignore
@@ -7,3 +8,7 @@ jsbeeb/.gitmodules
 jsbeeb/.jshintrc
 jsbeeb/.travis.yml
 jsbeeb/basic
+_site
+.sass-cache
+.jekyll-metadata
+Gemfile.lock
