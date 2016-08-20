@@ -19,7 +19,7 @@ video: https://www.youtube.com/watch?v=9bwQZ8ykhqA
 
 ---
 
-**Mode Infinity**
+**Master of Your Old School**
 
 A demo for the BBC Master microcomputer
 
