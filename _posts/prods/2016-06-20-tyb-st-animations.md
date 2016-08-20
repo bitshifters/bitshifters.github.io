@@ -11,7 +11,7 @@ authors:
 year: 1991
 type: Animation
 platform: BBC Micro
-download: tyb-st-animations.ssd
+download: tyb-st-animations.dsd
 source: 
 
 
