@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+{% include head.html %}
+
+<body id="page-top" class="index">
+    {% include nav.html %} {% include generic_header.html %}
+
+    <!-- Competition Section -->
+    <section id="portfolio">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h2>Open Challenges</h2>
+                    <hr class="star-primary">
+                </div>
+
+                {% for post in site.posts %} {% if post.category contains 'compos' %} {% include compos_item.html %} {% endif %} {% endfor
+                %}
+            </div>
+
+
+
+        </div>
+    </section>
+
+
+
+
+    {% include footer.html %} {% include js.html %}
+</body>
+
+</html>
