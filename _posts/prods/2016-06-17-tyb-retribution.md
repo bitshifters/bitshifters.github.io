@@ -11,7 +11,7 @@ authors:
 year: 1992
 type: Graphics Demo
 platform: BBC Micro
-download: tyb-retribution.ssd
+download: tyb-retribution.dsd
 source: 
 
 
