@@ -9,18 +9,22 @@
     <!-- Productions Grid Section -->
     <section id="portfolio">
         <div class="container">
-            <div class="row">
+        
+        
 
+            <div class="row">
+                <!--
                 <div class="col-lg-12 text-center">
-                    <h2>Collective Releases</h2>
+                    <h2>Productions by other teams</h2>
                     <hr class="star-primary">
                 </div>
+-->
 
-                {% for post in site.posts %} {% if post.category contains 'prods' %} {% if post.tags contains 'house' %} {% include prods_item.html
-                %} {% endif %} {% endif %} {% endfor %}
+                {% assign items = site.posts | sort: 'year' %} {% for post in items reversed %} {% if post.category contains 'prods' %} {%
+                if post.tags contains 'guest' %} {% include prods_item.html %} {% endif %} {% endif %} {% endfor %}
+
+
             </div>
-
-
         </div>
     </section>
 
