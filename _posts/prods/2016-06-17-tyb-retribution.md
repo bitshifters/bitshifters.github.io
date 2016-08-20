@@ -4,7 +4,7 @@ category: [posts, prods]
 tags: guest
 
 title: Retribution Megademo
-img: tyb-retribution.PNG
+img: tyb-retribution.png
 alt: image-alt
 team: The Yorkshire Boys
 authors: 

@@ -4,7 +4,7 @@ category: [posts, prods]
 tags: guest
 
 title: Expansions Megamix
-img: tyb-expansions.PNG
+img: tyb-expansions.png
 alt: image-alt
 team: The Yorkshire Boys
 authors: 
