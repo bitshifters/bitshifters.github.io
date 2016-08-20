@@ -1,10 +1,10 @@
 # Site settings
-
+title: Bitshifters
 email: your-email@domain.com
-url: https://example.github.io
-description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
+url: https://bitshifters.github.io
+description: "BBC Micro and Retro Computer Code & Demos"
 
-meta_author: LastName FirstName
+meta_author: Bitshifters
 
 # Google webmaster tools
 google_verify:
@@ -28,6 +28,11 @@ color:
   primary-rgb: "24,288,156" #"128,179,255"
   secondary: 2c3e50 #FD6E8A
   secondary-dark: 233140 #A2122F
+
+
+#####################################################################
+
+# Baked the following into the HTML since only referenced in one place.
 
 # Footer settings
 footer:
@@ -57,6 +62,11 @@ address:
 # Credits content
 credits: 'Freelancer is a free to use, open source Bootstrap theme created by <a href="http://startbootstrap.com">Start Bootstrap</a>.'
 
+#####################################################################
+
 # Build settings
 markdown: kramdown
-permalink: pretty
+
+# set permalinks to be based on category & title. No need for date.
+# category is "blog" "prods" "comps"
+permalink: none

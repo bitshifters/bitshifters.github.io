@@ -1,0 +1,32 @@
+<!-- html code to present a compo item -->
+<div class="col-sm-4 portfolio-item">
+    <div class="panel panel-default">
+        <div class="panel-body">
+
+
+            <!--           <a href="#portfolioModal-{{ post.modal-id }}" class="portfolio-link" data-toggle="modal">
+-->
+            <a href="{{ post.url }}" class="portfolio-link">
+                <div class="caption">
+                    <div class="caption-content">
+                        <i class="fa fa-search-plus fa-3x"></i>
+                    </div>
+                </div>
+                <img src="/content/{{ post.img }}" class="img-responsive" alt="{{ post.alt }}">
+            </a>
+            <h4>{{ post.title | truncate: 25 }}</h4>
+            <h6>{{ post.excerpt | strip_html }}</h6>
+
+
+            <a href="{{ post.url }}" class="btn btn-default">Read More</a>
+            <!--
+        <a href="{{ post.emulate }}" class="btn btn-default">
+            <i class="fa fa-play-circle"></i> Emulate
+    </a>
+        <a href="{{ post.download }}" class="btn btn-default">
+            <i class="fa fa-download"></i> Download
+    </a>
+    -->
+        </div>
+    </div>
+</div>

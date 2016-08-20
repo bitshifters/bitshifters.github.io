@@ -1,0 +1,21 @@
+<!-- html code to present a news item -->
+<div class="col-xs-6 col-sm-4 col-md-3 portfolio-item ">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <a href="{{ post.url }}" class="portfolio-link">
+                <div class="caption">
+                    <div class="caption-content">
+                        <i class="fa fa-search-plus fa-3x"></i>
+                    </div>
+                </div>
+                <img src="/content/{{ post.img }}" class="img-responsive" alt="{{ post.alt }}">
+            </a>
+            <h4>{{ post.title | truncate: 25 }}</h4>
+            {% if post.category contains 'prods' %}
+            <h6>{{ post.team }}</h6>
+            {% else %}
+            <h6>{{ post.platform }}</h6>
+            {% endif %}
+        </div>
+    </div>
+</div>

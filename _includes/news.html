@@ -1,0 +1,47 @@
+<!-- Portfolio Grid Section -->
+<section id="portfolio">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Updates & News</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-warning">
+                <div class="panel-heading">Latest BitShifters Releases</div>
+                <div class="panel-body">
+                    {% assign items = site.tags['house'] | sort: 'date' | reverse %} 
+                    {% for post in items limit:8 %} 
+                    {% include news_item.html %} 
+                    {% endfor %}
+                </div>
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="panel panel-info">
+                <div class="panel-heading">Recent Posts</div>
+                <div class="panel-body">
+                    {% assign items = site.categories['prods'] | sort: 'date' | reverse %} 
+                    {% for post in items limit:8 %} 
+                    {% include news_item.html %} 
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="panel panel-success">
+                <div class="panel-heading">Latest Competitions</div>
+                <div class="panel-body">
+                    {% assign items = site.categories['compos'] | sort: 'date' | reverse %} 
+                    {% for post in items limit:8 %} {% include news_item.html %} 
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
