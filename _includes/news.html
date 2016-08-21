@@ -11,7 +11,7 @@
             <div class="panel panel-warning">
                 <div class="panel-heading">Latest BitShifters Releases</div>
                 <div class="panel-body">
-                    {% assign items = site.tags['house'] | sort: 'date' | reverse %} 
+                    {% assign items = site.categories['prods'] | sort: 'date' | reverse %} 
                     {% for post in items limit:8 %} 
                     {% include news_item.html %} 
                     {% endfor %}
