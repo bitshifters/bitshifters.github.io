@@ -1,7 +1,7 @@
 <!-- html code to present a news item -->
 <div class="col-xs-6 col-sm-4 col-md-3 portfolio-item ">
     <div class="panel panel-default">
-        <div class="panel-body">
+        <div class="panel-body" data-mh="group-newsitem">
             <a href="{{ post.url }}" class="portfolio-link">
                 <div class="caption">
                     <div class="caption-content">
@@ -10,15 +10,10 @@
                 </div>
                 <img src="/content/{{ post.img }}" class="img-responsive" alt="{{ post.alt }}">
             </a>
-            <h4>{{ post.title | truncate: 30 }}
-                <!-- revolting hack for formatting, get rid asap! -->
-{% if post.title.size < 18 %}
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
-{% endif %}
-
-
-            </h4>
+            <div data-mh="group-newstext">          
+                <h4>{{ post.title | truncate: 30 }}</h4>
+            </div>
+ 
             {% if post.category contains 'prods' %}
             <h6>{{ post.team }}</h6>
             {% else %}

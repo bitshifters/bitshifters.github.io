@@ -1,7 +1,7 @@
 <!-- html code to present a production item -->
 <div class="col-sm-4 portfolio-item">
     <div class="panel panel-default">
-        <div class="panel-body">
+        <div class="panel-body" data-mh="group-prods">
 
 
             <!--           <a href="#portfolioModal-{{ post.modal-id }}" class="portfolio-link" data-toggle="modal">
@@ -12,10 +12,12 @@
                         <i class="fa fa-search-plus fa-3x"></i>
                     </div>
                 </div>
-                <img src="/content/{{ post.img }}" class="img-responsive" alt="{{ post.alt }}">
+                <img src="/content/{{ post.img }}" class="img-responsive"  alt="{{ post.alt }}">
             </a>
-            <h4>{{ post.title | truncate: 20 }}</h4>
-            <h6>{{ post.team }}, {{ post.year }}</h6>
+            <div data-mh="group-prods-titles">
+                <h4>{{ post.title | truncate: 30 }}</h4> 
+            </div>
+            <h6>{{ post.team }}, {{ post.year }}</h6> 
 
 
             <a href="{{ post.url }}" class="btn btn-default">Read More</a>
