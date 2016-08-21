@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
-    {% include head.html %}
-    <body id="page-top" class="index">
+{% include head.html %}
+
+<body id="page-top" class="index">
     {% include nav.html %}
 
     <!-- Header -->
@@ -20,57 +21,54 @@
     </header>
 
 
-        <section id="post">
+    <section id="post">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
-                                        <div class="modal-body">
+                    <div class="modal-body">
 
-                    <img src="/content/{{ page.img }}" width="640" class="img-responsive img-centered img-thumbnail" alt="{{ page.alt }}">
-                    <p>{{ page.content }}</p>
-                                        <hr class="star-primary">
-                    <ul class="list-inline item-details">
-                        <li>Team:
-                            <strong>{{ page.team }}
+                        <img src="/content/{{ page.img }}" width="640" class="img-responsive img-centered img-thumbnail" alt="{{ page.alt }}">
+                        <p>{{ page.content }}</p>
+                        <hr class="star-primary">
+                        <ul class="list-inline item-details">
+                            <li>Team:
+                                <strong>{{ page.team }}
                             </strong>
-                        </li>
-                       {% if page.authors %}
-                        <li>Authors:
-                            <strong>{{ page.authors }}
+                            </li>
+                            {% if page.authors %}
+                            <li>Authors:
+                                <strong>{{ page.authors }}
                             </strong>
-                        </li>
-                        {% endif %} 
-                        <li>Released:
-                            <strong>{{ page.year }}
+                            </li>
+                            {% endif %}
+                            <li>Released:
+                                <strong>{{ page.year }}
                             </strong>
-                        </li>
-                        <li>Type:
-                            <strong>{{ page.type }}
+                            </li>
+                            <li>Type:
+                                <strong>{{ page.type }}
                             </strong>
-                        </li>
-                        <li>
-                            Platform:
-                            <strong>
+                            </li>
+                            <li>
+                                Platform:
+                                <strong>
                                 {{ page.platform }}
                             </strong>
-                        </li>
-                    </ul> 
-                          
-                    <ul class="list-inline item-details">
-                       {% if page.pouet %}
-                        <a href="{{ page.pouet }}" target="_blank">Pouet</a>
-                        {% endif %} 
-                       {% if page.video %}
-                        <a href="{{ page.video }}" target="_blank">Video</a>
-                        {% endif %} 
-                    </ul>           
-                    
-                                          
-                </div>
+                            </li>
+                        </ul>
+
+                        <ul class="list-inline item-details">
+                            {% if page.pouet %}
+                            <a href="{{ page.pouet }}" target="_blank">Pouet</a> {% endif %} {% if page.video %}
+                            <a href="{{ page.video }}" target="_blank">Video</a> {% endif %}
+                        </ul>
+
+
+                    </div>
                 </div>
             </div>
 
-<!--
+            <!--
 
             <div class="row">
                      {{content}}
@@ -89,26 +87,24 @@
    
             </div>
 -->
-              
+
         </div>
         <!--
         <div class="fb-comments" data-href="{{ post.url }}" data-numposts="5"></div>
         -->
-                            <div class="col-lg-8 col-lg-offset-2 text-center">
-                                                        <a target='_blank' href="/jsbeeb/?disc=https://bitshifters.github.io/content/{{ page.download }}&autoboot&model=Master" class="btn btn-lg btn-success">
-                            <i class="fa fa-play-circle"></i> Emulate
-                        </a>&nbsp;&nbsp;&nbsp;
-                        <a href="/content/{{ page.download }}" class="btn btn-lg btn-success">
-                            <i class="fa fa-download"></i> Download
-                        </a>&nbsp;&nbsp;&nbsp;
+        <div class="col-lg-8 col-lg-offset-2 text-center">
+            <a target='_blank' href="/jsbeeb/?disc=https://bitshifters.github.io/content/{{ page.download }}&autoboot&model=Master" class="btn btn-lg btn-success">
+                <i class="fa fa-play-circle"></i> Emulate
+            </a>&nbsp;&nbsp;&nbsp;
+            <a href="/content/{{ page.download }}" class="btn btn-lg btn-success">
+                <i class="fa fa-download"></i> Download
+            </a>&nbsp;&nbsp;&nbsp; {% if page.source %}
 
-                        {% if page.source %}
-
-                        <a target='_blank' href="{{ page.source }}" class="btn btn-lg btn-success">
-                            <i class="fa fa-github"></i> Source
-                        </a>
-                        {% endif %}
-                    </div>
+            <a target='_blank' href="{{ page.source }}" class="btn btn-lg btn-success">
+                <i class="fa fa-github"></i> Source
+            </a>
+            {% endif %}
+        </div>
     </section>
 
     <!--
@@ -131,8 +127,7 @@
                 </section>      
 -->
 
-    {% include footer.html %}
+    {% include footer.html %} {% include js.html %}
+</body>
 
-    {% include js.html %}
-    </body>
 </html>
