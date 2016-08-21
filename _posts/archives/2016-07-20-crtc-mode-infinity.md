@@ -1,7 +1,7 @@
 ---
 layout: prods_post
-category: [posts, prods]
-tags: guest
+category: [posts, archives]
+tags: 
 
 title: Mode Infinity
 img: crtc-mode-infinity.jpg

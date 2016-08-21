@@ -1,7 +1,7 @@
 ---
 layout: prods_post
 category: [posts, prods]
-tags: house
+tags: 
 
 title: BEEB TRACKER VOLUME 1
 img: bs-beebtrk.png

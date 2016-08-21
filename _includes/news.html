@@ -24,7 +24,7 @@
             <div class="panel panel-info">
                 <div class="panel-heading">Recent additions to the BBC Demo Archive</div>
                 <div class="panel-body">
-                    {% assign items = site.tags['guest'] | sort: 'date' | reverse %} 
+                    {% assign items = site.categories['archives'] | sort: 'date' | reverse %} 
                     {% for post in items limit:8 %} 
                     {% include news_item.html %} 
                     {% endfor %}

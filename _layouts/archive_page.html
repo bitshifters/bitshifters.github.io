@@ -20,8 +20,8 @@
                 </div>
 -->
 
-                {% assign items = site.posts | sort: 'year' %} {% for post in items reversed %} {% if post.category contains 'prods' %} {%
-                if post.tags contains 'guest' %} {% include prods_item.html %} {% endif %} {% endif %} {% endfor %}
+                {% assign items = site.posts | sort: 'year' %} {% for post in items reversed %} {% if post.category contains 'archives' %} 
+                 {% include prods_item.html %} {% endif %} {% endfor %}
 
 
             </div>

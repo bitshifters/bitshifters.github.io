@@ -1,7 +1,7 @@
 ---
 layout: prods_post
-category: [posts, prods]
-tags: guest
+category: [posts, archives]
+tags: 
 
 title: Retribution Megademo
 img: tyb-retribution.png

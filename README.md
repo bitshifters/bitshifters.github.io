@@ -55,11 +55,11 @@ Some files (templates, layouts, includes etc.) are mostly HTML, with embedded Li
 Some files (pages, posts, data) are YAML style configuration files, with embedded variables and markdown formatted content.
 
 
-**Productions** are pieces of work created by the Bitshifters collective
+**Productions** are pieces of work created by the Bitshifters collective (category 'prods')
 
-**Archives** are pieces of work created by anyone else. They are treated by the site as productions also, but just tagged differently.
+**Archives** are pieces of work created by anyone else. They are treated by the site as productions also, but just categorised differently (category 'archives')
 
-**Competitions** are posts releated to a specific challenge we'll be setting every so often, so kinda like a blog post.
+**Competitions** are posts releated to a specific challenge we'll be setting every so often, so kinda like a blog post. (category 'compos')
 
 ## How to use
 
@@ -76,11 +76,11 @@ Post Filename format:
 ---
 layout: prods_post
 category: [posts, prods]
-tags: house
+tags: whatever tags you like
 
 title: name of the production
 img: filename of the image in /content/ for this production (no need for any path) eg. TheMaster-Demo128.png
-alt: image-alt
+alt: text describing the image
 team: name of the team that created the production
 authors: members of the team
 year: year that the production was created
@@ -99,7 +99,7 @@ PUT YOUR MARKDOWN FORMATTED POST CONTENT HERE
 ### Archives (eg. demos or cool stuff created by any other teams that we want to archive on the site)
 To add a new archive:
  - Place an image and a disk image file (SSD or DSD) for the archive in `/content/`
- - Create a .md file in the `_posts/prods/` folder with the correct filename convention, and the content you wish to publish
+ - Create a .md file in the `_posts/archives/` folder with the correct filename convention, and the content you wish to publish
  - Apply the correct category and tags, and the new production will automatically be listed in the right place when the site is rebuilt
 
 Post Filename format:
@@ -108,8 +108,8 @@ Post Filename format:
 ```txt
 ---
 layout: prods_post
-category: [posts, prods]
-tags: guest
+category: [posts, archives]
+tags: whatever tags you like
 
 ... (same properties as productions above)
 ```
@@ -128,7 +128,7 @@ Post Filename format:
 ---
 layout: prods_post
 category: [posts, compos]
-tags: 
+tags: whatever tags you like
 
 
 year: year the competition started

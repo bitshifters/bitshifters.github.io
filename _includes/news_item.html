@@ -14,10 +14,10 @@
                 <h4>{{ post.title | truncate: 30 }}</h4>
             </div>
  
-            {% if post.category contains 'prods' %}
-            <h6>{{ post.team }}</h6>
-            {% else %}
+            {% if post.category contains 'compos' %}
             <h6>{{ post.platform }}</h6>
+            {% else %}
+            <h6>{{ post.team }}</h6>
             {% endif %}
         </div>
     </div>

@@ -1,23 +1,22 @@
 ---
 layout: prods_post
-category: [posts, prods]
-tags: guest
+category: [posts, archives]
+tags: 
 
-title: Enjoy The Silence
-img: tyb-enjoy.png
+title: Expansions Megamix
+img: tyb-expansions.png
 alt: image-alt
 team: The Yorkshire Boys
 authors: 
-year: 1990
+year: 1991
 type: Sampled Sound
 platform: BBC Micro
-download: tyb-enjoy.ssd
+download: tyb-expansions.ssd
 source: 
 
 
 ---
 
-**Enjoy The Silence**
+**Expansions Megamix**
 
 A sampled and sequenced sound megamix
-
