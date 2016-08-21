@@ -14,7 +14,7 @@ platform: BBC Master
 download: crtc-beebnyan.ssd
 source: https://github.com/crtc-demos/beebnyan
 pouet: http://www.pouet.net/prod.php?which=57734
-video: 
+video: https://www.youtube.com/watch?v=LrmEB-DpZGQ
 
 
 ---
