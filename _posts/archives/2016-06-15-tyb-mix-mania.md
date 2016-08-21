@@ -11,7 +11,7 @@ authors:
 year: 1990
 type: Sampled Sound
 platform: BBC Micro
-download: mix-mania.ssd
+download: mix-mania.dsd
 source: 
 pouet: http://www.pouet.net/prod.php?which=51248
 
