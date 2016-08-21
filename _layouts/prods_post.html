@@ -21,13 +21,38 @@
     </header>
 
 
-    <section id="post">
+    <!-- section has to be called portfolio otherwise the caption overlays dont work -->
+    <section id="portfolio">
+
+
+
+
         <div class="container">
+
+
+
+
+
             <div class="row">
-                <div class="col-lg-12 text-center">
+
+                <!-- has to be portfolio-item for the caption overlay to work -->
+                <div class="col-lg-12 text-center portfolio-item">
                     <div class="modal-body">
 
-                        <img src="/content/{{ page.img }}" width="640" class="img-responsive img-centered img-thumbnail" alt="{{ page.alt }}">
+                        {% if page.video %}
+                        <a href="#videoModal" class="portfolio-link" data-toggle="modal">
+                            <div class="caption">
+                                <div class="caption-content">
+                                    <i class="fa fa-youtube-play fa-4x"></i>
+                                </div>
+                            </div>
+                        {% endif %}
+                            <img src="/content/{{ page.img }}" width="640" class="img-responsive img-centered img-thumbnail" alt="{{ page.alt }}">
+                        {% if page.video %}
+                        </a>
+                        {% endif %}
+
+                        
                         <p>{{ page.content }}</p>
                         <hr class="star-primary">
                         <ul class="list-inline item-details">
@@ -127,7 +152,13 @@
                 </section>      
 -->
 
-    {% include footer.html %} {% include js.html %}
+    {% include footer.html %} 
+    
+    {% include js.html %}
+
+    {% include video_modal.html %}
+
+
 </body>
 
 </html>

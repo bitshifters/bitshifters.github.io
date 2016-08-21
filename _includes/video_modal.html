@@ -1,0 +1,59 @@
+<!-- Video Modal -->
+
+<div class="portfolio-modal modal fade" id="videoModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+
+
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <h2>{{ page.title}}</h2>
+                <hr class="star-primary">
+                <!--
+                <div class="col-lg-12 col-lg-offset-2">
+                    <div class="modal-body">
+
+                    </div>
+
+                </div>
+-->
+            </div>
+            <div class="row">
+
+                <!-- 16:9 aspect ratio -->
+                <div class="embed-responsive embed-responsive-16by9">
+                    <iframe class="embed-responsive-item" src="" frameborder="0" allowfullscreen></iframe>
+                </div>
+
+            </div>
+            <div class="row">
+                <br/>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Scripts to start & stop video playing when the videoModal shows/closes. Uses a bit of liquid magic to transform the YouTube URL to embedded version. -->
+<script>
+    // doesn't seen to work as expected for shown.bs.modal, but show is fine for our needs
+    $("#videoModal").on('show.bs.modal', function (e) {
+        $("#videoModal iframe").attr("src", "{{ page.video | replace:'watch?v=','embed/' }}?autoplay=1");
+    });
+
+    $("#videoModal").on('hidden.bs.modal', function (e) {
+        $("#videoModal iframe").attr("src", "");
+    });
+
+ //| replace:' ','-' }} https://www.youtube.com/embed/_JoWIxHPGM4?autoplay=1
+</script>
