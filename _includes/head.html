@@ -9,7 +9,7 @@
     <!-- fb meta tags -->
     <meta property="og:url"                content="{{ page.url | replace:'index.html','' | prepend: site.url }}" />
     <meta property="og:type"               content="article" />
-    <meta property="og:title"              content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}" />
+    <meta property="og:title"              content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}{% if page.team %}, by {{ page.team }}{% endif %}" />
     <meta property="og:description"        content="{{ site.description }}" />
     <meta property="og:image"              content="{% if page.img %}{{ site.url }}/content/{{ page.img }}{% else %}/img/bitshifters.png{% endif %}" />
 
