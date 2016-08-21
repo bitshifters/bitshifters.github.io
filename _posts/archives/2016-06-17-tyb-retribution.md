@@ -13,7 +13,8 @@ type: Graphics Demo
 platform: BBC Micro
 download: tyb-retribution.dsd
 source: 
-
+pouet: http://www.pouet.net/prod.php?which=53827
+video: https://www.youtube.com/watch?v=BJFcGqAra2I
 
 ---
 
