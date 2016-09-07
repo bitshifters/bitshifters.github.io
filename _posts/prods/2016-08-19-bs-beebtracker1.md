@@ -13,6 +13,7 @@ type: Chiptune
 platform: BBC Micro
 download: bs-beebtrk.ssd
 source: https://github.com/bitshifters/beeb-tracker
+pouet: http://www.pouet.net/prod.php?which=68038
 
 
  
