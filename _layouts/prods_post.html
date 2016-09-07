@@ -46,13 +46,12 @@
                                     <i class="fa fa-youtube-play fa-4x"></i>
                                 </div>
                             </div>
-                        {% endif %}
-                            <img src="/content/{{ page.img }}" width="640" class="img-responsive img-centered img-thumbnail" alt="{{ page.alt }}">
-                        {% if page.video %}
+                            {% endif %}
+                            <img src="/content/{{ page.img }}" width="640" class="img-responsive img-centered img-thumbnail" alt="{{ page.alt }}">                            {% if page.video %}
                         </a>
                         {% endif %}
 
-                        
+
                         <p>{{ page.content }}</p>
                         <hr class="star-primary">
                         <ul class="list-inline item-details">
@@ -81,13 +80,13 @@
                             </strong>
                             </li>
                         </ul>
-
+                        <!--
                         <ul class="list-inline item-details">
                             {% if page.pouet %}
                             <a href="{{ page.pouet }}" target="_blank">Pouet</a> {% endif %} {% if page.video %}
                             <a href="{{ page.video }}" target="_blank">Video</a> {% endif %}
                         </ul>
-
+-->
 
                     </div>
                 </div>
@@ -113,29 +112,53 @@
             </div>
 -->
 
-        </div>
+
+            <div class="row">
+
+                <div class="col-lg-8 col-lg-offset-2 text-center">
+
+                    <!-- emulation -->
+                    <a target='_blank' href="/jsbeeb/?disc=https://bitshifters.github.io/content/{{ page.download }}&autoboot&model=Master" class="btn btn-md btn-success">
+                        <i class="fa fa-play-circle"></i> Emulate
+                    </a>&nbsp;&nbsp;&nbsp;
+
+                    <!-- download -->
+                    <a href="/content/{{ page.download }}" class="btn btn-md btn-success">
+                        <i class="fa fa-download"></i> Download
+                    </a>&nbsp;&nbsp;&nbsp;
+
+                    <!-- source code -->
+                    {% if page.source %}
+                    <a target='_blank' href="{{ page.source }}" class="btn btn-md btn-success">
+                        <i class="fa fa-github"></i> Source
+                    </a>&nbsp;&nbsp;&nbsp; {% endif %}
+
+                    <!-- video -->
+                    {% if page.video %}
+                    <a target='_blank' href="{{ page.video }}" class="btn btn-md btn-success">
+                        <i class="fa fa-film"></i> Video
+                    </a>&nbsp;&nbsp;&nbsp; {% endif %}
+
+                    <!-- pouet -->
+                    {% if page.pouet %}
+                    <a target='_blank' href="{{ page.pouet }}" class="btn btn-md btn-success">
+                        <i class="fa fa-cube"></i> Pouet
+                    </a>&nbsp;&nbsp;&nbsp; {% endif %}
+                    
+                </div>
+
+            </div>
 
 
-         <div class="col-lg-8 col-lg-offset-2 text-center">
-            <a target='_blank' href="/jsbeeb/?disc=https://bitshifters.github.io/content/{{ page.download }}&autoboot&model=Master" class="btn btn-lg btn-success">
-                <i class="fa fa-play-circle"></i> Emulate
-            </a>&nbsp;&nbsp;&nbsp;
-            <a href="/content/{{ page.download }}" class="btn btn-lg btn-success">
-                <i class="fa fa-download"></i> Download
-            </a>&nbsp;&nbsp;&nbsp; {% if page.source %}
-
-            <a target='_blank' href="{{ page.source }}" class="btn btn-lg btn-success">
-                <i class="fa fa-github"></i> Source
-            </a>
-            {% endif %}
         </div>
     </section>
 
-<hr>
+    <hr>
     <div class="container">
 
-<div class="fb-like" data-href="{{ post.url }}" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true" data-share="true"></div>   
-    <div class="fb-comments" data-href="{{ post.url }}" data-numposts="5" data-width="100%"></div>
+        <div class="fb-like" data-href="{{ post.url }}" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true"
+            data-share="true"></div>
+        <div class="fb-comments" data-href="{{ post.url }}" data-numposts="5" data-width="100%"></div>
 
         <!--
         <div class="fb-comments" data-href="{{ post.url }}" data-numposts="5"></div>
@@ -162,11 +185,7 @@
                 </section>      
 -->
 
-    {% include footer.html %} 
-    
-    {% include js.html %}
-
-    {% include video_modal.html %}
+    {% include footer.html %} {% include js.html %} {% include video_modal.html %}
 
 
 </body>
