@@ -16,8 +16,8 @@
                     <hr class="star-primary">
                 </div>
 
-                {% for post in site.posts %} {% if post.category contains 'prods' %} {% include prods_item.html
-                %} {% endif %} {% endfor %}
+                {% for post in site.posts %} {% if post.category contains 'prods' %} {% include prods_item.html %} {% endif %} {% endfor
+                %}
             </div>
 
 
@@ -25,10 +25,7 @@
     </section>
 
 
-
-
-    {% include footer.html %}
-   {% include js.html %}
+    {% include footer.html %} {% include js.html %}
 </body>
 
 </html>
