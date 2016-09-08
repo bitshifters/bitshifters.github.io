@@ -26,4 +26,3 @@ All of the VGM files were ported to BBC Micro using a conversion script that tra
 
 Since VGM is a verbose format, the VGM files in the demos were exported from the same script in a compact raw binary format, and then compressed using Exomiser to enable them to be loaded into the limited RAM of a BBC Micro.
 
-**note: JSBeeb sound emulation is a little experimental atm, BeebEm works better, but a real BBC is the best of all!**
