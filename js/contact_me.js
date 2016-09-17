@@ -104,7 +104,7 @@ $(function() {
             $.ajax({
                 url: "https://hooks.slack.com/services/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",
                 type: "POST",
-                data: 'payload=' + JSON.stringify({ "channel" : "#compos",
+                data: 'payload=' + JSON.stringify({ "channel" : "#submissions",
                     "text": "A submission from the bitshifters website of type: '" + type + "', url '" + url + "', Name: '" + name + "', Email: '" + email + "', Message: '" + message + "'."
                 }),
                 dataType: 'json',
