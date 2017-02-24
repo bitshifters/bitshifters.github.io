@@ -6,7 +6,7 @@ tags:
 title: TELETEXT BAD APPLE
 img: bs-badappl.png
 alt: image-alt
-authors: Kieran & Simon
+authors: Kieran, Simon, Inverse Phase & Horsenburger
 team: Bitshifters
 year: 2017
 type: Demo
