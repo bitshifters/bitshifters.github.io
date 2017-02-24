@@ -4,14 +4,14 @@ category: [posts, prods]
 tags: 
 
 title: TELETEXT BAD APPLE
-img: bs-badapple.png
+img: bs-badappl.png
 alt: image-alt
 authors: Kieran & Simon
 team: Bitshifters
 year: 2017
 type: Demo
 platform: BBC Micro Model B
-download: bs-badapple.dsd
+download: bs-badappl.dsd
 source: https://github.com/kieranhj/bad-apple
 
 
