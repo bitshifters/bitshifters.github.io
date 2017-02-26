@@ -23,10 +23,11 @@ The Tou Hou Bad Apple [video](https://www.youtube.com/watch?v=G3C-VevI36s) has b
 
 Our version is a full 3m18s of video playback, played back at 25 frames per second in Teletext / MODE 7.
 
-The music is a custom chiptune hand designed by [Inverse Phase](http://www.inversephase.com/) for the BBC Micro's SN76489.
+The music is a custom VGM chiptune, hand designed by [Inverse Phase](http://www.inversephase.com/) for the BBC Micro's SN76489.
 
 Intro art by [Horsenburger](http://www.horsenburger.com/)
 
-Every part of the demo you see is packed into a standard BBC Micro's 32Kb RAM and fits on one single 400Kb double sided floppy disk image.
+Every part of the demo you see is crammed into a standard BBC Micro's 32Kb RAM and is heavily compressed to fit on one single 400Kb double sided floppy disk image. 
+
 
 
