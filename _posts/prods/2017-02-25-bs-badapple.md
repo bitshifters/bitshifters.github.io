@@ -23,11 +23,15 @@ The Tou Hou Bad Apple [video](https://www.youtube.com/watch?v=G3C-VevI36s) has b
 
 Our version is a full 3m18s of video playback, played back at 25 frames per second in Teletext / MODE 7.
 
-The music is a custom VGM chiptune, hand designed by [Inverse Phase](http://www.inversephase.com/) for the BBC Micro's SN76489.
+MODE 7 on the BBC Micro used a [Mullard SAA5050](https://en.wikipedia.org/wiki/Mullard_SAA5050) Teletext display/decoder chip which (apart from from subtle implementation differences) is the same [Teletext](https://en.wikipedia.org/wiki/Teletext) chip used in analogue TVs. It is 40x25 characters, supporting 8 primary colours, with support for text characters and basic graphical effects using control codes embedded into each character row. Support for teletext on the BBC Micro was an original requirement of the BBC's specification for the machine due to their own use of broadcast teletext ([Ceefax](https://en.wikipedia.org/wiki/Ceefax)).
+
+The music is a custom VGM chiptune, hand designed by [Inverse Phase](http://www.inversephase.com/) for the BBC Micro's [SN76489](https://en.wikipedia.org/wiki/Texas_Instruments_SN76489).
 
 Intro art by [Horsenburger](http://www.horsenburger.com/)
 
 Every part of the demo you see is crammed into a standard BBC Micro's 32Kb RAM and is heavily compressed to fit on one single 400Kb double sided floppy disk image. 
 
+You can watch the demo in your browser, using the brilliant JSBeeb Javascript BBC Micro emulator by clicking the Emulate button below.
 
+Full source is on Github. 
 
