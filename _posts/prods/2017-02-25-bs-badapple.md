@@ -25,9 +25,9 @@ Our version is a full 3m18s of video playback, played back at 25 frames per seco
 
 MODE 7 on the BBC Micro used a [Mullard SAA5050](https://en.wikipedia.org/wiki/Mullard_SAA5050) Teletext display/decoder chip which (apart from from subtle implementation differences) is the same [Teletext](https://en.wikipedia.org/wiki/Teletext) chip used in analogue TVs. It is 40x25 characters, supporting 8 primary colours, with support for text characters and basic graphical effects using control codes embedded into each character row. Support for teletext on the BBC Micro was an original requirement of the BBC's specification for the machine due to their own use of broadcast teletext ([Ceefax](https://en.wikipedia.org/wiki/Ceefax)).
 
-The music is a custom VGM chiptune, hand designed by [Inverse Phase](http://www.inversephase.com/) for the BBC Micro's [SN76489](https://en.wikipedia.org/wiki/Texas_Instruments_SN76489).
+The music is a custom VGM chiptune, hand designed by [Inverse Phase](http://www.inversephase.com/) for the BBC Micro's [SN76489](https://en.wikipedia.org/wiki/Texas_Instruments_SN76489). You can support IP's excellent work by [becoming a patron here](https://www.patreon.com/inversephase). 
 
-Intro art by [Horsenburger](http://www.horsenburger.com/)
+Intro art by [Horsenburger](http://www.horsenburger.com/), and you can buy awesome stuff from [Horsenburger's store](https://www.tshirtstudio.com/marketplace/horsenburger's-textworks).
 
 Every part of the demo you see is crammed into a standard BBC Micro's 32Kb RAM and is heavily compressed to fit on one single 400Kb double sided floppy disk image. 
 
@@ -40,5 +40,5 @@ For more information on teletext, take a look at the following sites:
 * [Edit.TF](http://edit.tf/) - A Web Based Teletext Editor
 * [Facebook Teletext Group](https://www.facebook.com/groups/TeletextGroup/) - Teletext Community Group
 * [Dan Farrimond's Art](http://danfarrimond.co.uk/) - Awesome teletext art
-* [Horsenburger's Art](http://www.horsenburger.com/)
+* [Horsenburger's Art](http://www.horsenburger.com/) - Addtional Awesome teletext art
 
