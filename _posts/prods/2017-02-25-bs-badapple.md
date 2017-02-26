@@ -35,3 +35,10 @@ You can watch the demo in your browser, using the brilliant JSBeeb Javascript BB
 
 Full source is on Github. 
 
+For more information on teletext, take a look at the following sites:
+* [TeletextR](http://teletextart.co.uk/) - News & Happenings in the world of Teletext
+* [Edit.TF](http://edit.tf/) - A Web Based Teletext Editor
+* [Facebook Teletext Group](https://www.facebook.com/groups/TeletextGroup/) - Teletext Community Group
+* [Dan Farrimond's Art](http://danfarrimond.co.uk/) - Awesome teletext art
+* [Horsenburger's Art](http://www.horsenburger.com/)
+
