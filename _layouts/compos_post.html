@@ -50,22 +50,51 @@
                     <!-- submit -->
                     <a href="/submit.html" class="btn btn-md btn-success">
                         <i class="fa fa-envelope"></i> Submit your entry
-                    </a>                
+                    </a>
                 </div>
 
 
             </div>
         </div>
 
+        <hr>
+
+        <section id="portfolio">
+            <div class="container">
+
+                <div class="row">
+                    <div class="panel panel-warning">
+                        <div class="panel-heading">Submissions</div>
+                        <div class="panel-body">
+                            
+
+                
+                {% for post in site.posts %} {% if post.category contains 'prods' %}
+                  {% if post.tags contains page.compo_id %} {% include news_item.html %} 
+                  {% endif %} {% endif %} {% endfor
+                %}
+
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </section>
+
+
+
         <!-- FB comments area -->
-    <hr>
-    <div class="container">
+        <hr>
+        <div class="container">
 
-        <div class="fb-like" data-href="{{ post.url }}" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true"
-            data-share="true"></div>
+            <div class="fb-like" data-href="{{ post.url }}" data-layout="button_count" data-action="like" data-size="large" data-show-faces="true"
+                data-share="true"></div>
 
 
-    </div>
+        </div>
 
     </section>
 
@@ -74,14 +103,16 @@
     <section class="success">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-center">
-                <p>You are welcome to discuss your ideas and share code on the stardot forums. Entries can be submitted using our site contact form, and please include a link to the disk image of your demo, source code, etc. along with information about your demo.</p>
-                        <p>Wherever possible, entries will be gathered and archived on this site.</p>
-           <a target='_blank' href="http://www.stardot.org.uk/forums/" class="btn btn-lg btn-outline">
-                <i class="fa fa-comments"></i> Visit the Forums
-            </a>&nbsp;&nbsp;&nbsp;
-            <a href="/submit.html" class="btn btn-lg btn-outline">
-                <i class="fa fa-envelope"></i> Submit an Entry
-            </a>&nbsp;&nbsp;&nbsp;
+                <p>You are welcome to discuss your ideas and share code on the stardot forums. Entries can be submitted using
+                    our site contact form, and please include a link to the disk image of your demo, source code, etc. along
+                    with information about your demo.</p>
+                <p>Wherever possible, entries will be gathered and archived on this site.</p>
+                <a target='_blank' href="http://www.stardot.org.uk/forums/" class="btn btn-lg btn-outline">
+                    <i class="fa fa-comments"></i> Visit the Forums
+                </a>&nbsp;&nbsp;&nbsp;
+                <a href="/submit.html" class="btn btn-lg btn-outline">
+                    <i class="fa fa-envelope"></i> Submit an Entry
+                </a>&nbsp;&nbsp;&nbsp;
             </div>
 
         </div>
@@ -112,7 +143,6 @@
             </div>
 -->
 
-    </div>
 
 
 

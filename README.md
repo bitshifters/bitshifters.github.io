@@ -76,7 +76,7 @@ Post Filename format:
 ---
 layout: prods_post
 category: [posts, prods]
-tags: whatever tags you like
+tags: whatever tags you like. For compo entries, add a tag that matches a compo_id
 
 title: name of the production
 img: filename of the image in /content/ for this production (no need for any path) eg. TheMaster-Demo128.png
@@ -129,7 +129,7 @@ Post Filename format:
 layout: prods_post
 category: [posts, compos]
 tags: whatever tags you like
-
+compo_id: The id of this compo. Tag any posts with this ID so that they are filtered as submissions.
 
 year: year the competition started
 title: name of the competition

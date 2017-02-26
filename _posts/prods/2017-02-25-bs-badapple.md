@@ -1,7 +1,7 @@
 ---
 layout: prods_post
 category: [posts, prods]
-tags: 
+tags: compo1
 
 title: TELETEXT BAD APPLE
 img: bs-badappl.png
