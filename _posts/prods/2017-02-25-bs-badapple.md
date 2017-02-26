@@ -13,6 +13,7 @@ type: Demo
 platform: BBC Micro Model B
 download: bs-badappl.dsd
 source: https://github.com/kieranhj/bad-apple
+pouet: http://www.pouet.net/prod.php?which=69110
 
 
 ---
@@ -29,7 +30,7 @@ The music is a custom VGM chiptune, hand designed by [Inverse Phase](http://www.
 
 Intro art by [Horsenburger](http://www.horsenburger.com/), and you can buy awesome stuff from [Horsenburger's store](https://www.tshirtstudio.com/marketplace/horsenburger's-textworks).
 
-Every part of the demo you see is crammed into a standard BBC Micro's 32Kb RAM and is heavily compressed to fit on one single 400Kb double sided floppy disk image. 
+Every part of the demo you see is crammed into a standard 8-bit 2MHz 6502 based BBC Micro's 32Kb RAM and is heavily compressed to fit on one single 400Kb double sided floppy disk image. 
 
 You can watch the demo in your browser, using the brilliant JSBeeb Javascript BBC Micro emulator by clicking the Emulate button below.
 
