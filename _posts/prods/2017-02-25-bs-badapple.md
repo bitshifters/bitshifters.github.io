@@ -14,6 +14,8 @@ platform: BBC Micro Model B
 download: bs-badappl.dsd
 source: https://github.com/kieranhj/bad-apple
 pouet: http://www.pouet.net/prod.php?which=69110
+video: https://www.youtube.com/watch?v=22y_aiOx9CY
+
 
 
 ---
