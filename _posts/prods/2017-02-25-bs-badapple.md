@@ -12,7 +12,7 @@ year: 2017
 type: Demo
 platform: BBC Micro Model B
 download: bs-badappl.dsd
-source: https://github.com/kieranhj/bad-apple
+source: https://github.com/bitshifters/bad-apple
 pouet: http://www.pouet.net/prod.php?which=69110
 video: https://www.youtube.com/watch?v=22y_aiOx9CY
 
@@ -36,7 +36,7 @@ The code, music & screens are crammed into a standard 8-bit 2MHz 6502 based BBC 
 
 You can watch the demo in your browser, using the brilliant JSBeeb Javascript BBC Micro emulator by clicking the Emulate button below.
 
-Full source is on Github. 
+Full source is on Github.
 
 For more information on teletext, take a look at the following sites:
 * [TeletextR](http://teletextart.co.uk/) - News & Happenings in the world of Teletext
