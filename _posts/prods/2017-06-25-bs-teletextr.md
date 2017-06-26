@@ -13,6 +13,8 @@ type: Demo
 platform: BBC Master
 download: bs-teletextr.ssd
 source: https://github.com/bitshifters/teletextr
+pouet: http://www.pouet.net/prod.php?which=70465
+video: https://www.youtube.com/watch?v=y2knYNDNKfY
 
 
 
