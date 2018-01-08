@@ -11,7 +11,7 @@ team: Bitshifters
 year: 2017
 type: Game
 platform: BBC Master
-download: bs-pop-beeb-latest-wip.ssd
+download: bs-pop-beeb-latest-wip.dsd
 source: https://github.com/kieranhj/pop-beeb
 pouet: 
 video: 
