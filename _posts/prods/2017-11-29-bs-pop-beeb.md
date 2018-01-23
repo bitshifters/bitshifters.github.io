@@ -28,11 +28,11 @@ After the original Apple II 6502 source code was recovered and uploaded to [GitH
 
 See the thread on [Stardot forums](http://stardot.org.uk/forums/viewtopic.php?f=53&t=13079) for more information and a development blog of sorts.
 
-BBC Computer keyboard layout (your emulator may vary!):
-* Z - left
-* X - right
-* \* - up
-* ? - down
-* \+ - jump left
-* } - jump right
-* Return - action (step, grab, pickup, attack etc.)
+BBC Computer keyboard layout (your emulator layout may vary!):
+* [Z] - left
+* [X] - right
+* [\*] - up
+* [?] - down
+* [\+] - jump left
+* [}] - jump right
+* [RETURN] - action (step, grab, pickup, attack etc.)
