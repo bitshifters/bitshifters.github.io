@@ -30,7 +30,7 @@ See the thread on [Stardot forums](http://stardot.org.uk/forums/viewtopic.php?f=
 
 BBC Computer keyboard layout (your emulator layout may vary!):
 * [Z] - left
-* [X] - right
+* [\X] - right
 * [\*] - up
 * [?] - down
 * [\+] - jump left
