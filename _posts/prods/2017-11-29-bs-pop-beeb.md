@@ -34,5 +34,5 @@ BBC Computer keyboard layout (your emulator layout may vary!):
 * [\*] - up
 * [?] - down
 * [\+] - jump left
-* [}] - jump right
+* [ } ] - jump right
 * [RETURN] - action (step, grab, pickup, attack etc.)
