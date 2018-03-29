@@ -67,7 +67,7 @@ Next job, was the audio. The original game is as much a visual as an audio feast
 
 **Pack it in!!**
 
-So although we were using almost every trick and byte in the machine we still kept running out of space to cram it all in. So we rallied, data was crunched, code was optimized, and somehow Kieran squeezed it all onto a single 200Kb disc image (ask him sometime about that time we wrote a PAK type file system in a couple of hours on the train home!!).
+So although we were using almost every trick and byte in the machine we still kept running out of space to cram it all in. So we rallied, data was crunched, code was optimized, and somehow Kieran squeezed it all onto a single 200Kb disc image (ask him sometime about that time he wrote a PAK type file system in a couple of hours on the train home!!).
 
 **Ship it!**
 
