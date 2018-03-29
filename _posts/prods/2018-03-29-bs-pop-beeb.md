@@ -11,7 +11,7 @@ team: Bitshifters
 year: 2018
 type: Game
 platform: BBC Master
-download: bs-pop-beeb.ssd
+download: pop-beeb.ssd
 source: https://github.com/kieranhj/pop-beeb
 pouet: 
 video: 
@@ -112,21 +112,6 @@ BBC Computer keyboard layout (your emulator layout may vary!):
 * `CTRL`+`↓` - Volume down
 * `CTRL`+`E` - Toggle easy guards on/off (reduce attack probability)
 
-**Debug Keys (Development Build only!)**
-
-* `CTRL`+`N` - Next level
-* `CTRL`+`5` - Skip 5 levels
-* `CTRL`+`Z` - Zap (Kill) guard
-* `CTRL`+`W` - Increase max energy
-* `CTRL`+`S` - Increase energy
-* `CTRL`+`D` - Decrease energy
-* `CTRL`+`U` - Move Player up one row on screen
-* `CTRL`+`Q` - Antimatter (press and walk through gates etc.)
-* `CTRL`+`1` - Add one minute to time remaining
-* `CTRL`+`2` - Remove one minute from time remaining
-* `CTRL`+`0` - Set time remaining to 60 seconds...
-* `R` - Resurrect (after death)
-
 **Cheat Codes (Released game!)**
 
 * `SKIP` - Next level
@@ -135,5 +120,6 @@ BBC Computer keyboard layout (your emulator layout may vary!):
 * `BOOST` - Boost health meter (increase max energy)
 * `REST` - Restore health to max
 * `ZAP` - Zap guard to 1 health
+* `EASY` - Easy guard mode
 * `TINA` - Jump to end of game
 
