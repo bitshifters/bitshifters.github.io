@@ -4,7 +4,7 @@ category: [posts, prods]
 tags: 
 
 title: Prince of Persia
-img: bs-pop-beeb.png
+img: pop-beeb.png
 alt: image-alt
 authors: Coded by Kieran, Art by John Blythe, Sounds & Music by Inverse Phase, Support code by Simon
 team: Bitshifters
