@@ -20,10 +20,10 @@ video:
 
 ---
 
-<img src="https://github.com/kieranhj/pop-beeb/raw/master/Notes/TitleScreen.png" width="160" height="128" />
-<img src="https://github.com/kieranhj/pop-beeb/raw/master/Notes/PrincessScreen.png" width="160" height="128" />
-<img src="https://github.com/kieranhj/pop-beeb/raw/master/Notes/LevelScreen1.png" width="160" height="128" />
-<img src="https://github.com/kieranhj/pop-beeb/raw/master/Notes/LevelScreen2.png" width="160" height="128" />
+<img src="../../content/pop/TitleScreen.png" width="160" height="128" />
+<img src="../../content/pop/PrincessScreen.png" width="160" height="128" />
+<img src="../../content/pop/LevelScreen1.png" width="160" height="128" />
+<img src="../../content/pop/LevelScreen2.png" width="160" height="128" />
 
 ### **Introduction by Kieran**
 
