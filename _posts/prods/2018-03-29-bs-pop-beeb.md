@@ -6,15 +6,15 @@ tags:
 title: Prince of Persia
 img: pop-beeb.png
 alt: image-alt
-authors: Coded by Kieran, Art by John Blythe, Sounds & Music by Inverse Phase, Support code by Simon
+authors: Ported by Kieran, Art by John Blythe, Sounds & Music by Inverse Phase, Support code by Simon
 team: Bitshifters
 year: 2018
 type: Game
 platform: BBC Master
 download: pop-beeb.ssd
 source: https://github.com/kieranhj/pop-beeb
-pouet: 
-video: 
+pouet: http://www.pouet.net/prod.php?which=75707
+video: https://www.youtube.com/watch?v=UA1Ne-EPUJ4
 
 
 
