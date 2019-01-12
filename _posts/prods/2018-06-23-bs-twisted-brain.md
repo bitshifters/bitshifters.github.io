@@ -1,7 +1,7 @@
 ---
 layout: prods_post
 category: [posts, prods]
-tags: compo1
+tags: 
 
 title: TWISTED BRAIN
 img: bs-twisted-brain.png
