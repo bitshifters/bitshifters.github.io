@@ -14,7 +14,7 @@ platform: BBC Micro
 download: bs-beebstep.ssd
 source: https://github.com/simondotm/beeb-step
 pouet: 
-video: https://www.youtube.com/watch?v=0cy91N0Aq-I
+video: https://www.youtube.com/watch?v=fCpdaXQ5P-w
 
 
 
