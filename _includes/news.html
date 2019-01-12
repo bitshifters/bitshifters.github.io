@@ -15,7 +15,14 @@
                     {% for post in items limit:8 %} 
                     {% include news_item.html %} 
                     {% endfor %}
+                    <div class="pull-right">
+                        <!-- see more -->
+                        <a href="/prods.html" class="btn btn-md btn-warning ">
+                          See More...
+                      </a>&nbsp;&nbsp;&nbsp;              
+                    </div>                        
                 </div>
+            
             </div>
 
 
@@ -28,6 +35,12 @@
                     {% for post in items limit:8 %} 
                     {% include news_item.html %} 
                     {% endfor %}
+                    <div class="pull-right">
+                        <!-- see more -->
+                        <a href="/archive.html" class="btn btn-md btn-info ">
+                          See More...
+                      </a>&nbsp;&nbsp;&nbsp;              
+                    </div>                       
                 </div>
             </div>
         </div>
