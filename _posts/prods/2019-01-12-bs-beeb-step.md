@@ -13,7 +13,7 @@ type: Demo
 platform: BBC Micro
 download: bs-beebstep.ssd
 source: https://github.com/simondotm/beeb-step
-pouet: 
+pouet: http://www.pouet.net/prod.php?which=79847
 video: https://www.youtube.com/watch?v=fCpdaXQ5P-w
 
 
