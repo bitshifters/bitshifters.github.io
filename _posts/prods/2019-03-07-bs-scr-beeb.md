@@ -13,7 +13,7 @@ type: Game
 platform: BBC Master
 download: bs-scr-beeb.ssd
 source: https://github.com/kieranhj/scr-beeb
-pouet: 
+pouet: https://www.pouet.net/prod.php?which=80525
 video: https://youtu.be/5uWc6cEJSQE
 
 
