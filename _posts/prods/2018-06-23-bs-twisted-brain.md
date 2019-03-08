@@ -14,7 +14,7 @@ platform: BBC Master
 download: bs-twisted.ssd
 source: https://github.com/bitshifters/twisted-brain
 pouet: http://www.pouet.net/prod.php?which=76621
-video: https://youtu.be/faWEqWaoA8A
+video: https://www.youtube.com/watch?v=faWEqWaoA8A
 
 
 

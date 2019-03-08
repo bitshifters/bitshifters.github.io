@@ -14,7 +14,7 @@ platform: BBC Master
 download: bs-scr-beeb.ssd
 source: https://github.com/kieranhj/scr-beeb
 pouet: https://www.pouet.net/prod.php?which=80525
-video: https://youtu.be/5uWc6cEJSQE
+video: https://www.youtube.com/watch?v=5uWc6cEJSQE
 
 
 
