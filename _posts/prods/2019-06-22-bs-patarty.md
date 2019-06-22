@@ -14,7 +14,7 @@ platform: BBC Master
 download: bs-patarty.ssd
 source: 
 pouet: 
-video: 
+video: https://youtu.be/BcmvVjtdTrY
 
 
 
