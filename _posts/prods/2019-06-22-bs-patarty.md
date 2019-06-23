@@ -6,8 +6,8 @@ tags:
 title: PATARTY
 img: bs-patarty.png
 alt: image-alt
-authors: Kieran, Simon, Aldroid, Mrs Beanbag
-team: Bitshifters, Slipstream
+authors: Kieran, Simon, Aldroid & Mrs Beanbag
+team: Bitshifters x Slipstream
 year: 2019
 type: Demo
 platform: BBC Master
@@ -22,4 +22,6 @@ video: https://youtu.be/BcmvVjtdTrY
 
 **PATARTY** aka **NOVA BBC Amiga Emulator**
 
-A loving tribute to the [Patarty](https://www.youtube.com/watch?v=lvaxNn_4x1c) demo that featured at NOVA 2017, dressed up as a tongue-in-cheek Amiga emulator for the BBC Micro. :)
+A loving tribute to the [Patarty](https://www.youtube.com/watch?v=lvaxNn_4x1c) demo that featured at NOVA 2017.
+
+Released as a tongue-in-cheek Amiga emulator for the BBC Micro at the NOVA 2019 demoparty. :)
