@@ -26,4 +26,6 @@ Released at the Nova 2019 demoparty, this demo features 'Stable Raster' and 'Ver
 
 Jointly developed by VectorEyes and Tom Seddon, prototyping started several months before the party and the demo was finished in a mad rush on the day of the competition. Thanks to Henley for the music player and tune conversion, and Hexwab for the player optimisations.
 
-Wave Runner uses several Master-specific features that aren't supported by older emulators. It runs on B2, runs with graphical glitches on B-Em, and won't work on BeebEm or JSBeeb.
+Wave Runner uses several Master-specific features that aren't supported by older emulators. It runs on B2, runs with graphical glitches on B-Em, and won't work on BeebEm or JSBeeb. 
+
+**EDIT: Thanks to Tom Seddon & Matt Godbolt, JSBeeb now runs the demo!**
