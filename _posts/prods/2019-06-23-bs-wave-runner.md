@@ -13,7 +13,7 @@ type: Demo
 platform: BBC Master
 download: bs-wave-runner.ssd
 source: 
-pouet: 
+pouet: https://www.pouet.net/prod.php?which=81619
 video: https://www.youtube.com/watch?v=1_nTOLdhQXY
 
 

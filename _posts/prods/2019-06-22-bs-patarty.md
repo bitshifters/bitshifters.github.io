@@ -13,7 +13,7 @@ type: Demo
 platform: BBC Master
 download: bs-patarty.ssd
 source: 
-pouet: 
+pouet: https://www.pouet.net/prod.php?which=81620
 video: https://youtu.be/BcmvVjtdTrY
 
 
