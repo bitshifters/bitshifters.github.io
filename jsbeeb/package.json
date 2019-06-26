@@ -1,17 +1,22 @@
 {
-  "author": "Matt Godbolt <matt@godbolt.org>",
+  "author": {
+    "name": "Matt Godbolt",
+    "email": "matt@godbolt.org",
+    "url": "https://xania.org"
+  },
   "name": "jsbeeb",
   "description": "Emulate a BBC Micro",
   "repository": "git@github.com:mattgodbolt/jsbeeb.git",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "engines": {
-    "node": "0.10.x"
+    "node": "8"
   },
   "main": "./app.js",
-  "dependencies": {
-      "requirejs": ">=2.1.15",
-      "nodeunit": "0.9.x",
-      "node-png": "0.4.x"
+  "devDependencies": {
+    "jshint": "^2.10.2",
+    "node-png": "0.4.x",
+    "nodeunit": "^0.11.3",
+    "requirejs": "^2.3.6"
   },
-  "license": "GPL-3.0"
+  "license": "GPL-3.0-or-later"
 }

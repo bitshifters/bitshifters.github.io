@@ -11,7 +11,7 @@ define(['jsunzip', 'promise'], function (jsunzip) {
     };
 
     exports.parseAddr = function (s) {
-        if (s[0] == '$' || s[0] == '&') return parseInt(s.substr(1), 16);
+        if (s[0] === '$' || s[0] === '&') return parseInt(s.substr(1), 16);
         if (s.indexOf("0x") === 0) return parseInt(s.substr(2), 16);
         return parseInt(s, 16);
     };
@@ -255,16 +255,16 @@ define(['jsunzip', 'promise'], function (jsunzip) {
             return "UK";
         }
         if (localStorage.keyboardLayout) {
-            return localStorage.keyboardLayout == "US" ? "US" : "UK";
+            return localStorage.keyboardLayout === "US" ? "US" : "UK";
         }
         if (navigator.language) {
-            if (navigator.language.toLowerCase() == "en-gb") return "UK";
-            if (navigator.language.toLowerCase() == "en-us") return "US";
+            if (navigator.language.toLowerCase() === "en-gb") return "UK";
+            if (navigator.language.toLowerCase() === "en-us") return "US";
         }
         return "UK";  // Default guess of UK
     }
 
-    var isUKlayout = detectKeyboardLayout() == "UK";
+    var isUKlayout = detectKeyboardLayout() === "UK";
 
     if (exports.isFirefox()) {
         keyCodes.SEMICOLON = 59;
@@ -290,6 +290,14 @@ define(['jsunzip', 'promise'], function (jsunzip) {
         keyCodes.BACK_QUOTE = isUKlayout ? 223 : 192;
     }
 
+    // Swap APOSTROPHE and BACK_QUOTE keys around for Mac users.  They are the opposite to what jsbeeb expects.
+    // Swap them to what jsbeeb expects, and tidy up the hash key to prevent duplicate key mappings.
+    if (!exports.runningInNode && window.navigator.userAgent.indexOf("Mac") !== -1) {
+        keyCodes.BACK_QUOTE = 192;
+        keyCodes.APOSTROPHE = 222;
+        keyCodes.HASH = 223;
+    }
+
     exports.getKeyMap = function (keyLayout) {
         var keys2 = [];
 
@@ -301,7 +309,7 @@ define(['jsunzip', 'promise'], function (jsunzip) {
 
         // shiftDown MUST be true or false (not undefined)
         function doMap(s, colRow, shiftDown) {
-            if (keys2[shiftDown][s] && keys2[shiftDown][s] != colRow) {
+            if (keys2[shiftDown][s] && keys2[shiftDown][s] !== colRow) {
                 console.log("Warning: duplicate binding for key", (shiftDown ? "<SHIFT>" : "") + s, colRow, keys2[shiftDown][s]);
             }
             keys2[shiftDown][s] = colRow;
@@ -313,7 +321,7 @@ define(['jsunzip', 'promise'], function (jsunzip) {
             if ((!s && s !== 0) || !colRow) {
                 console.log("error binding key", s, colRow);
             }
-            if (typeof(s) == "string") {
+            if (typeof s === "string") {
                 s = s.charCodeAt(0);
             }
 
@@ -387,7 +395,7 @@ define(['jsunzip', 'promise'], function (jsunzip) {
         map(keyCodes.RIGHT, BBC.RIGHT);
         map(keyCodes.DOWN, BBC.DOWN);
 
-        if (keyLayout == "natural") {
+        if (keyLayout === "natural") {
 
             // "natural" keyboard
 
@@ -454,7 +462,7 @@ define(['jsunzip', 'promise'], function (jsunzip) {
 
             map(keyCodes.BACKSLASH, BBC.PIPE_BACKSLASH);
 
-        } else if (keyLayout == "gaming") {
+        } else if (keyLayout === "gaming") {
             // gaming keyboard
 
             // 1st row
@@ -595,13 +603,13 @@ define(['jsunzip', 'promise'], function (jsunzip) {
     };
 
     function hexbyte(value) {
-        return ((value >> 4) & 0xf).toString(16) + (value & 0xf).toString(16);
+        return ((value >>> 4) & 0xf).toString(16) + (value & 0xf).toString(16);
     }
 
     exports.hexbyte = hexbyte;
 
     function hexword(value) {
-        return hexbyte(value >> 8) + hexbyte(value & 0xff);
+        return hexbyte(value >>> 8) + hexbyte(value & 0xff);
     }
 
     exports.hexword = hexword;
@@ -661,7 +669,7 @@ define(['jsunzip', 'promise'], function (jsunzip) {
     };
 
     exports.noteEvent = function noteEvent(category, type, label) {
-        if (!exports.runningInNode && window.location.origin == "http://bbc.godbolt.org") {
+        if (!exports.runningInNode && window.location.origin === "https://bbc.godbolt.org") {
             // Only note events on the public site
             ga('send', 'event', category, type, label);
         }
@@ -678,14 +686,19 @@ define(['jsunzip', 'promise'], function (jsunzip) {
 
     exports.makeBinaryData = makeBinaryData;
 
+    var baseUrl = "";
+    exports.setBaseUrl = function (url) {
+        baseUrl = url;
+    };
+
     function loadDataHttp(url) {
         return new Promise(function (resolve, reject) {
             var request = new XMLHttpRequest();
-            request.open("GET", url, true);
+            request.open("GET", baseUrl + url, true);
             request.overrideMimeType('text/plain; charset=x-user-defined');
             request.onload = function () {
                 if (request.status !== 200) reject(new Error("Unable to load " + url + ", http code " + request.status));
-                if (typeof(request.response) !== "string") {
+                if (typeof request.response !== "string") {
                     resolve(request.response);
                 } else {
                     resolve(makeBinaryData(request.response));
@@ -700,18 +713,18 @@ define(['jsunzip', 'promise'], function (jsunzip) {
 
     function loadDataNode(url) {
         return new Promise(function (resolve, reject) {
-            if (typeof(readbuffer) !== "undefined") {
+            if (typeof readbuffer !== "undefined") {
                 // d8 shell
-                var buffer = readbuffer(url);
+                var buffer = readbuffer(url); // jshint ignore:line
                 resolve(new Uint8Array(buffer));
-            } else if (typeof(read) !== "undefined") {
+            } else if (typeof read !== "undefined") {
                 // SpiderMonkey shell
-                var bytes = read(url, "binary");
+                var bytes = read(url, "binary"); // jshint ignore:line
                 resolve(bytes);
             } else {
                 // Node
                 var fs = require('fs');
-                if (url[0] == '/') url = "." + url;
+                if (url[0] === '/') url = "." + url;
                 resolve(fs.readFileSync(url));
             }
         });
@@ -925,6 +938,44 @@ define(['jsunzip', 'promise'], function (jsunzip) {
         console.log("Unzipped '" + loadedFile + "'");
         return {data: uncompressed.data, name: loadedFile};
     };
+
+    function Fifo(capacity) {
+        this.buffer = new Uint8Array(capacity);
+        this.size = 0;
+        this.wPtr = 0;
+        this.rPtr = 0;
+    }
+
+    Fifo.prototype.full = function () {
+        return this.size === this.buffer.length;
+    };
+
+    Fifo.prototype.empty = function () {
+        return this.size === 0;
+    };
+
+    Fifo.prototype.clear = function () {
+        this.size = 0;
+        this.wPtr = 0;
+        this.rPtr = 0;
+    };
+
+    Fifo.prototype.put = function (b) {
+        if (this.full()) return;
+        this.buffer[this.wPtr % this.buffer.length] = b;
+        this.wPtr++;
+        this.size++;
+    };
+
+    Fifo.prototype.get = function () {
+        if (this.empty()) return;
+        var res = this.buffer[this.rPtr % this.buffer.length];
+        this.rPtr++;
+        this.size--;
+        return res;
+    };
+
+    exports.Fifo = Fifo;
 
     return exports;
 });

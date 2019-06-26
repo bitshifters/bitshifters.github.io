@@ -1,7 +1,8 @@
-require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'cmos', 'sth', 'gamepads', 'fdc', 'discs/cat', 'tapes', 'google-drive', 'models', 'basic-tokenise',
-        'canvas', 'promise', 'bootstrap', 'jquery-visibility'],
-    function ($, utils, Video, SoundChip, DdNoise, Debugger, Cpu6502, Cmos, StairwayToHell, Gamepads, disc,
-              starCat, tapes, GoogleDriveLoader, models, tokeniser, canvasLib) {
+require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'cmos', 'sth', 'gamepads',
+        'fdc', 'discs/cat', 'tapes', 'google-drive', 'models', 'basic-tokenise',
+        'canvas', 'config', 'promise', 'bootstrap', 'jquery-visibility'],
+    function ($, _, utils, Video, SoundChip, DdNoise, Debugger, Cpu6502, Cmos, StairwayToHell, Gamepad, disc,
+              starCat, tapes, GoogleDriveLoader, models, tokeniser, canvasLib, Config) {
         "use strict";
 
         var processor;
@@ -15,10 +16,12 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
         var discSth;
         var tapeSth;
         var running;
-        var gamepad = new Gamepads();
+        var model;
+        var gamepad = new Gamepad();
 
         var availableImages;
         var discImage;
+        var extraRoms = [];
         if (typeof starCat === 'function') {
             availableImages = starCat();
 
@@ -26,7 +29,7 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                 discImage = availableImages[0].file;
             }
         }
-        var queryString = document.location.search;
+        var queryString = document.location.search.substring(1) + "&" + window.location.hash.substring(1);
         var secondDiscImage = null;
         var parsedQuery = {};
         var needsAutoboot = false;
@@ -34,11 +37,11 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
 
         var BBC = utils.BBC;
         var keyCodes = utils.keyCodes;
+        var emuKeyHandlers = {};
         var cpuMultiplier = 1;
 
         if (queryString) {
-            queryString = queryString.substring(1);
-            if (queryString[queryString.length - 1] == '/')  // workaround for shonky python web server
+            if (queryString[queryString.length - 1] === '/')  // workaround for shonky python web server
                 queryString = queryString.substring(0, queryString.length - 1);
             queryString.split("&").forEach(function (keyval) {
                 var keyAndVal = keyval.split("=");
@@ -93,6 +96,9 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                         case "disc1":
                             discImage = val;
                             break;
+                        case "rom":
+                            extraRoms.push(val);
+                            break;
                         case "disc2":
                             secondDiscImage = val;
                             break;
@@ -104,13 +110,31 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                 }
             });
         }
-        function guessModelFromUrl() {
-            if (window.location.hostname.indexOf("bbc") === 0) return "B";
-            if (window.location.hostname.indexOf("master") === 0) return "Master";
-            return "B";
-        }
 
-        var model = models.findModel(parsedQuery.model || guessModelFromUrl());
+        if (parsedQuery.frameSkip)
+            frameSkip = parseInt(parsedQuery.frameSkip);
+
+        var config = new Config(
+            function (changed) {
+                parsedQuery = _.extend(parsedQuery, changed);
+                updateUrl();
+                if (changed.model) {
+                    areYouSure("Changing model requires a restart of the emulator. Restart now?",
+                        "Yes, restart now",
+                        "No, thanks",
+                        function () {
+                            window.location.reload();
+                        });
+                }
+                if (changed.keyLayout) {
+                    window.localStorage.keyLayout = changed.keyLayout;
+                    emulationConfig.keyLayout = changed.keyLayout;
+                    processor.updateKeyLayout();
+                }
+            });
+        config.setModel(parsedQuery.model || guessModelFromUrl());
+        config.setKeyLayout(keyLayout);
+        model = config.model;
 
         function sbBind(div, url, onload) {
             if (!url) return;
@@ -142,17 +166,20 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
         if (parsedQuery.glEnabled !== undefined) {
             tryGl = parsedQuery.glEnabled === "true";
         }
-        var canvas = tryGl ? canvasLib.bestCanvas($('#screen')[0]) : new canvasLib.Canvas($('#screen')[0]);
+        var $screen = $('#screen');
+        var canvas = tryGl ? canvasLib.bestCanvas($screen[0]) : new canvasLib.Canvas($screen[0]);
         video = new Video.Video(canvas.fb32, function paint(minx, miny, maxx, maxy) {
             frames++;
             if (frames < frameSkip) return;
             frames = 0;
             canvas.paint(minx, miny, maxx, maxy);
         });
+        if (parsedQuery.fakeVideo !== undefined)
+            video = new Video.FakeVideo();
 
-        var audioContext = typeof AudioContext !== 'undefined' ? new AudioContext()
-            : typeof webkitAudioContext !== 'undefined'? new webkitAudioContext()
-            : null;
+        var audioContext = typeof AudioContext !== 'undefined' ? new AudioContext() // jshint ignore:line
+            : typeof webkitAudioContext !== 'undefined' ? new webkitAudioContext() // jshint ignore:line
+                : null;
 
         if (audioContext) {
             soundChip = new SoundChip.SoundChip(audioContext.sampleRate);
@@ -176,6 +203,7 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
         var lastAltLocation = 1;
 
         dbgr = new Debugger(video);
+
         function keyCode(evt) {
             var ret = evt.which || evt.charCode || evt.keyCode;
 
@@ -186,7 +214,7 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                     // keyUp events seem to pass location = 0 (Chrome)
                     switch (ret) {
                         case keyCodes.SHIFT:
-                            if (lastShiftLocation == 1) {
+                            if (lastShiftLocation === 1) {
                                 return keyCodes.SHIFT_LEFT;
                             } else {
                                 return keyCodes.SHIFT_RIGHT;
@@ -194,7 +222,7 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                             break;
 
                         case keyCodes.ALT:
-                            if (lastAltLocation == 1) {
+                            if (lastAltLocation === 1) {
                                 return keyCodes.ALT_LEFT;
                             } else {
                                 return keyCodes.ALT_RIGHT;
@@ -202,7 +230,7 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                             break;
 
                         case keyCodes.CTRL:
-                            if (lastCtrlLocation == 1) {
+                            if (lastCtrlLocation === 1) {
                                 return keyCodes.CTRL_LEFT;
                             } else {
                                 return keyCodes.CTRL_RIGHT;
@@ -264,7 +292,8 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
 
         function keyPress(evt) {
             if (running || !dbgr.enabled()) return;
-            if (keyCode(evt) === 103 /* lower case g */) {
+            var code = keyCode(evt);
+            if (code === 103 /* lower case g */) {
                 dbgr.hide();
                 go();
                 return;
@@ -273,13 +302,30 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
             if (handled) evt.preventDefault();
         }
 
+        emuKeyHandlers[utils.keyCodes.S] = function (down, code) {
+            if (down) {
+                utils.noteEvent('keyboard', 'press', 'S');
+                stop(true);
+            }
+        };
+        emuKeyHandlers[utils.keyCodes.R] = function (down, code) {
+            if (down)
+                window.location.reload();
+        };
+
         function keyDown(evt) {
             if (!running) return;
             var code = keyCode(evt);
-            if (code === utils.keyCodes.HOME && evt.ctrlKey) {
+            if (evt.altKey) {
+                var handler = emuKeyHandlers[code];
+                if (handler) {
+                    handler(true, code);
+                    evt.preventDefault();
+                }
+            } else if (code === utils.keyCodes.HOME && evt.ctrlKey) {
                 utils.noteEvent('keyboard', 'press', 'home');
                 stop(true);
-            } else if (code == utils.keyCodes.F12 || code == utils.keyCodes.BREAK) {
+            } else if (code === utils.keyCodes.F12 || code === utils.keyCodes.BREAK) {
                 utils.noteEvent('keyboard', 'press', 'break');
                 processor.setReset(true);
                 evt.preventDefault();
@@ -294,14 +340,31 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
             var code = keyCode(evt);
             processor.sysvia.keyUp(code);
             if (!running) return;
-            if (code == utils.keyCodes.F12 || code == utils.keyCodes.BREAK) {
+            if (evt.altKey) {
+                var handler = emuKeyHandlers[code];
+                if (handler) {
+                    handler(false, code);
+                    evt.preventDefault();
+                }
+            } else if (code === utils.keyCodes.F12 || code === utils.keyCodes.BREAK) {
                 processor.setReset(false);
             }
             evt.preventDefault();
         }
 
+        var $cub = $('#cub-monitor');
+        $cub.on('mousemove mousedown mouseup', function (evt) {
+            var cubOffset = $cub.offset();
+            var screenOffset = $screen.offset();
+            var x = (evt.offsetX - cubOffset.left + screenOffset.left) / $screen.width();
+            var y = (evt.offsetY - cubOffset.top + screenOffset.top) / $screen.height();
+            if (processor.touchScreen)
+                processor.touchScreen.onMouse(x, y, evt.buttons);
+            evt.preventDefault();
+        });
+
         $(window).blur(function () {
-            processor.sysvia.clearKeys();
+            if (processor.sysvia) processor.sysvia.clearKeys();
         });
         document.onkeydown = keyDown;
         document.onkeypress = keyPress;
@@ -325,10 +388,37 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                 window.localStorage.cmosRam = JSON.stringify(data);
             }
         });
+
+        var userPort = null;
+        if (true /* keyswitch */) {
+            var switchState = 0xff;
+
+            var switchKey = function (down, code) {
+                var bit = 1 << (code - utils.keyCodes.K1);
+                if (down)
+                    switchState &= (0xff ^ bit);
+                else
+                    switchState |= bit;
+            };
+
+            for (var idx = utils.keyCodes.K1; idx <= utils.keyCodes.K8; ++idx) {
+                emuKeyHandlers[idx] = switchKey;
+            }
+            userPort = {
+                write: function (val) {
+                },
+                read: function () {
+                    return switchState;
+                }
+            };
+        }
+
         var emulationConfig = {
             keyLayout: keyLayout,
             cpuMultiplier: cpuMultiplier,
-            videoCyclesBatch: parsedQuery.videoCyclesBatch
+            videoCyclesBatch: parsedQuery.videoCyclesBatch,
+            extraRoms: extraRoms,
+            userPort: userPort
         };
         processor = new Cpu6502(model, dbgr, video, soundChip, ddNoise, cmos, emulationConfig);
 
@@ -462,7 +552,7 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                     return;
                 }
 
-                if (lastChar && lastChar != utils.BBC.SHIFT) {
+                if (lastChar && lastChar !== utils.BBC.SHIFT) {
                     processor.sysvia.keyToggleRaw(lastChar);
                 }
 
@@ -612,19 +702,32 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
             if (schema[0] === "!" || schema === "local") {
                 return Promise.resolve(disc.localDisc(processor.fdc, discImage));
             }
+            // TODO: come up with a decent UX for passing an 'onChange' parameter to each of these.
+            // Consider:
+            // * hashing contents and making a local disc image named by original disc hash, save by that, and offer
+            //   to load the modified disc on load.
+            // * popping up a message that notes the disc has changed, and offers a way to make a local image
+            // * Dialog box (ugh) saying "is this ok?"
             if (schema === "|" || schema === "sth") {
                 return discSth.fetch(discImage).then(function (discData) {
                     return disc.discFor(processor.fdc, false, discData);
                 });
             }
             if (schema === "gd") {
-                var splat = discImage.match(/([^/]+)\/?(.*)/);
+                var splat = discImage.match(/([^\/]+)\/?(.*)/);
                 var title = "(unknown)";
                 if (splat) {
                     discImage = splat[1];
                     title = splat[2];
                 }
                 return gdLoad({title: title, id: discImage});
+            }
+            if (schema === "data") {
+                var arr = Array.prototype.map.call(atob(discImage), (x) => x.charCodeAt(0));
+                var unzipped = utils.unzipDiscImage(arr);
+                var discData = unzipped.data;
+                discImage = unzipped.name;
+                return Promise.resolve(disc.discFor(processor.fdc, /\.dsd$/i.test(discImage), discData));
             }
             if (schema === "http" || schema === "https") {
                 return utils.loadData(schema + "://" + discImage).then(function (discData) {
@@ -652,6 +755,23 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                     processor.acia.setTape(tapes.loadTapeFromData(tapeImage, image));
                 });
             }
+            if (schema === "data") {
+                var arr = Array.prototype.map.call(atob(tapeImage), (x) => x.charCodeAt(0));
+                var unzipped = utils.unzipDiscImage(arr);
+                return Promise.resolve(processor.acia.setTape(tapes.loadTapeFromData(unzipped.name, unzipped.data)));
+            }
+
+            if (schema === "http" || schema === "https") {
+                return utils.loadData(schema + "://" + tapeImage).then(function (tapeData) {
+                    if (/\.zip/i.test(tapeImage)) {
+                        var unzipped = utils.unzipDiscImage(tapeData);
+                        tapeData = unzipped.data;
+                        tapeImage = unzipped.name;
+                    }
+                    processor.acia.setTape(tapes.loadTapeFromData(tapeImage, tapeData));
+                });
+            }
+
             return tapes.loadTape("tapes/" + tapeImage).then(function (tape) {
                 processor.acia.setTape(tape);
             });
@@ -697,6 +817,7 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                 go();
             }
         });
+
         function popupLoading(msg) {
             var modal = $('#loading-dialog');
             modal.find(".loading").text(msg);
@@ -860,32 +981,19 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
                 });
         });
 
-        $('#model-menu a').on("click", function (e) {
-            parsedQuery.model = $(e.target).attr("data-target");
-
-            console.log(parsedQuery.model);
-
-            if (parsedQuery.model === "soft-reset") {
-                processor.reset(false);
-            } else if (parsedQuery.model === "hard-reset") {
-                processor.reset(true);
-            } else {
-                updateUrl();
-                areYouSure("Changing model requires a restart of the emulator. Restart now?", "Yes, restart now", "No, thanks", function () {
-                    window.location.reload();
-                });
-            }
+        $('#hard-reset').click(function () {
+            processor.reset(true);
         });
-        $("#bbc-model").text(model.name);
 
-        $('#keyboard-menu a').on("click", function (e) {
-            var type = $(e.target).attr("data-target");
-            window.localStorage.keyLayout = type;
-            parsedQuery.keyLayout = type;
-            updateUrl();
-            emulationConfig.keyLayout = type;
-            processor.updateKeyLayout();
+        $('#soft-reset').click(function () {
+            processor.reset(false);
         });
+
+        function guessModelFromUrl() {
+            if (window.location.hostname.indexOf("bbc") === 0) return "B";
+            if (window.location.hostname.indexOf("master") === 0) return "Master";
+            return "B";
+        }
 
         $('#tape-menu a').on("click", function (e) {
             var type = $(e.target).attr("data-id");
@@ -1014,9 +1122,9 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
             numCycles = numCycles || 10 * 1000 * 1000;
             var oldFS = frameSkip;
             frameSkip = 1000000;
-            var startTime = Date.now();
+            var startTime = performance.now();
             processor.execute(numCycles);
-            var endTime = Date.now();
+            var endTime = performance.now();
             frameSkip = oldFS;
             var msTaken = endTime - startTime;
             var virtualMhz = (numCycles / msTaken) / 1000;
@@ -1028,9 +1136,9 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
             numCycles = numCycles || 10 * 1000 * 1000;
             var oldFS = frameSkip;
             frameSkip = 1000000;
-            var startTime = Date.now();
+            var startTime = performance.now();
             video.polltime(numCycles);
-            var endTime = Date.now();
+            var endTime = performance.now();
             frameSkip = oldFS;
             var msTaken = endTime - startTime;
             var virtualMhz = (numCycles / msTaken) / 1000;
@@ -1052,22 +1160,52 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
 
         var last = 0;
 
+        function VirtualSpeedUpdater() {
+            this.cycles = 0;
+            this.time = 0;
+            this.v = $('.virtualMHz');
+
+            this.update = function (cycles, time) {
+                this.cycles += cycles;
+                this.time += time;
+            };
+
+            this.display = function () {
+                // MRG would be nice to graph instantaneous speed to get some idea where the time goes.
+                if (this.cycles) {
+                    var thisMHz = this.cycles / this.time / 1000;
+                    this.v.text(thisMHz.toFixed(1));
+                    if (this.cycles >= 10 * 2 * 1000 * 1000) {
+                        this.cycles = this.time = 0;
+                    }
+                }
+                setTimeout(this.display.bind(this), 3333);
+            };
+
+            this.display();
+        }
+
+        var virtualSpeedUpdater = new VirtualSpeedUpdater();
+
         function draw(now) {
             if (!running) {
                 last = 0;
                 return;
             }
             requestAnimationFrame(draw);
-            gamepad.update();
+            gamepad.update(processor.sysvia);
             syncLights();
             if (last !== 0) {
                 var sinceLast = now - last;
                 var cycles = (sinceLast * clocksPerSecond / 1000) | 0;
                 cycles = Math.min(cycles, MaxCyclesPerFrame);
                 try {
+                    var begin = performance.now();
                     if (!processor.execute(cycles)) {
                         stop(true);
                     }
+                    var end = performance.now();
+                    virtualSpeedUpdater.update(cycles, end - begin);
                 } catch (e) {
                     running = false;
                     utils.noteEvent('exception', 'thrown', e.stack);
@@ -1114,6 +1252,49 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
             ddNoise.mute();
         }
 
+        (function () {
+            const $cubMonitor = $("#cub-monitor");
+            var isFullscreen = false;
+            var cubOrigHeight = $cubMonitor.height();
+            var cubToScreenHeightRatio = $screen.height() / cubOrigHeight;
+            var cubOrigWidth = $cubMonitor.width();
+            var cubToScreenWidthRatio = $screen.width() / cubOrigWidth;
+            var navbarHeight = $("#header-bar").height();
+            const desiredAspectRatio = cubOrigWidth / cubOrigHeight;
+            const minWidth = cubOrigWidth / 4;
+            const minHeight = cubOrigHeight / 4;
+            const borderReservedSize = 100;
+            const bottomReservedSize = 100;
+
+            function resizeTv() {
+                var width = Math.max(minWidth, window.innerWidth - (isFullscreen ? 0 : borderReservedSize * 2));
+                var height = Math.max(minHeight, window.innerHeight - navbarHeight) -
+                    (isFullscreen ? 0 : bottomReservedSize);
+                if (width / height <= desiredAspectRatio) {
+                    height = width / desiredAspectRatio;
+                } else {
+                    width = height * desiredAspectRatio;
+                }
+                console.log(width / height, desiredAspectRatio);
+                $('#cub-monitor').height(height).width(width);
+                $('#cub-monitor-pic').height(height).width(width);
+                $screen.height(height * cubToScreenHeightRatio).width(width * cubToScreenWidthRatio);
+            }
+
+            function toggleFullscreen() {
+                isFullscreen = !isFullscreen;
+                $cubMonitor.toggleClass("fullscreen", isFullscreen);
+                $("#cub-monitor-pic").toggle(!isFullscreen);
+                $(".sidebar .bottom").toggle(!isFullscreen);
+                $screen.toggleClass("fullscreen", isFullscreen);
+                resizeTv();
+            }
+
+            window.onresize = resizeTv;
+            $("#fs").click(toggleFullscreen);
+            resizeTv();
+        })();
+
         // Handy shortcuts. bench/profile stuff is delayed so that they can be
         // safely run from the JS console in firefox.
         window.benchmarkCpu = _.debounce(benchmarkCpu, 1);
@@ -1136,5 +1317,4 @@ require(['jquery', 'utils', 'video', 'soundchip', 'ddnoise', 'debug', '6502', 'c
             }, 0x7c00, 0x7fe8, {width: 40, gap: false}));
         };
     }
-)
-;
+);

@@ -1,38 +1,59 @@
 // Floppy disc controller and assorted utils.
-define(['utils'], function (utils) {
+define(['./utils'], function (utils) {
     "use strict";
+
+    var DiscTimeSlice = 16 * 16;
+
     function load(name) {
         console.log("Loading disc from " + name); // todo support zip files
         return utils.loadData(name);
     }
 
     function emptySsd(fdc) {
+        var scheduler = fdc.scheduler;
         var result = {
             notFound: 0,
             seek: function () {
                 return 0;
             },
-            poll: function () {
-                if (this.notFound && --this.notFound === 0) fdc.notFound();
-            }
+            notFoundTask: scheduler.newTask(function () {
+                fdc.notFound();
+            })
         };
-
         result.read = result.write = result.address = result.format = function () {
-            this.notFound = 500 * 16;
+            this.notFoundTask.reschedule(500 * DiscTimeSlice);
         };
         return result;
     }
 
-    function discFor(fdc, isDsd, stringData) {
+    function discFor(fdc, isDsd, stringData, onChange) {
         var data;
-        if (typeof(stringData) !== "string") {
+        if (typeof stringData !== "string") {
             data = stringData;
         } else {
             var len = stringData.length;
             data = new Uint8Array(len);
             for (var i = 0; i < len; ++i) data[i] = stringData.charCodeAt(i) & 0xff;
         }
-        return baseDisc(fdc, isDsd, data);
+        var prevData = new Uint8Array(data);
+
+        function changed() {
+            var res = false;
+            for (var i = 0; i < data.length; ++i) {
+                if (data[i] !== prevData[i]) {
+                    prevData[i] = data[i];
+                    res = true;
+                }
+            }
+            return res;
+        }
+
+        return new BaseDisc(fdc, isDsd, data, function () {
+            if (!changed()) return;
+            if (onChange) {
+                onChange(data);
+            }
+        });
     }
 
     function localDisc(fdc, name) {
@@ -51,154 +72,148 @@ define(['utils'], function (utils) {
             data = new Uint8Array(len);
             for (i = 0; i < len; ++i) data[i] = dataString.charCodeAt(i) & 0xff;
         }
-        return baseDisc(fdc, false, data, function () {
+        return new BaseDisc(fdc, false, data, function () {
             var str = "";
             for (var i = 0; i < data.length; ++i) str += String.fromCharCode(data[i]);
             localStorage[discName] = str;
         });
     }
 
-    function baseDisc(fdc, isDsd, data, flusher) {
+    function BaseDisc(fdc, isDsd, data, flusher) {
         if (data === null || data === undefined) throw new Error("Bad disc data");
-        return {
-            dsd: isDsd,
-            inRead: false,
-            inWrite: false,
-            inFormat: false,
-            byteWithinSector: 0,
-            writeProt: !flusher,
-            seekOffset: 0,
-            sectorOffset: 0,
-            formatSector: 0,
-            time: 0,
-            rsector: 0,
-            track: -1,
-            side: -1,
-            notFound: 0,
-            flush: function () {
-                if (flusher) flusher();
-            },
-            seek: function (track) {
-                this.seekOffset = track * 10 * 256;
-                if (this.dsd) this.seekOffset <<= 1;
-                var oldTrack = this.track;
-                this.track = track;
-                return this.track - oldTrack;
-            },
-            check: function (track, side, density) {
-                if (this.track !== track || density || (side && !this.dsd)) {
-                    this.notFound = 500;
-                    return false;
-                }
-                return true;
-            },
-            read: function (sector, track, side, density) {
-                if (!this.check(track, side, density)) return;
-                this.side = side;
-                this.inRead = true;
-                this.sectorOffset = sector * 256 + (side ? 10 * 256 : 0);
+        this.fdc = fdc;
+        this.isDsd = isDsd;
+        this.flusher = flusher;
+        this.data = data;
+        this.byteWithinSector = 0;
+        this.writeProt = !flusher;
+        this.seekOffset = 0;
+        this.sectorOffset = 0;
+        this.formatSector = 0;
+        this.rsector = 0;
+        this.track = -1;
+        this.side = -1;
+        this.notFoundTask = fdc.scheduler.newTask(function () {
+            this.fdc.notFound();
+        }.bind(this));
+        this.readTask = fdc.scheduler.newTask(function () {
+            this.fdc.discData(this.data[this.seekOffset + this.sectorOffset + this.byteWithinSector]);
+            if (++this.byteWithinSector === 256) {
+                this.fdc.discFinishRead();
+            } else {
+                this.readTask.reschedule(DiscTimeSlice);
+            }
+        }.bind(this));
+        this.writeTask = fdc.scheduler.newTask(function () {
+            if (this.writeProt) {
+                this.fdc.writeProtect();
+                return;
+            }
+            var c = this.fdc.readDiscData(this.byteWithinSector === 255);
+            this.data[this.seekOffset + this.sectorOffset + this.byteWithinSector] = c;
+            if (++this.byteWithinSector === 256) {
+                this.fdc.discFinishRead();
+                this.flush();
+            } else {
+                this.writeTask.reschedule(DiscTimeSlice);
+            }
+        }.bind(this));
+        this.readAddrTask = fdc.scheduler.newTask(function () {
+            switch (this.byteWithinSector) {
+                case 0:
+                    this.fdc.discData(this.track);
+                    break;
+                case 1:
+                    this.fdc.discData(this.side);
+                    break;
+                case 2:
+                    this.fdc.discData(this.rsector);
+                    break;
+                case 3:
+                    this.fdc.discData(1);
+                    break;
+                case 4:
+                case 5:
+                    this.fdc.discData(0);
+                    break;
+                case 6:
+                    this.fdc.discFinishRead();
+                    this.rsector++;
+                    if (this.rsector === 10) this.rsector = 0;
+                    return;
+            }
+            this.byteWithinSector++;
+            this.readAddrTask.reschedule(DiscTimeSlice);
+        }.bind(this));
+        this.formatTask = fdc.scheduler.newTask(function () {
+            if (this.writeProt) {
+                this.fdc.writeProtect();
+                return;
+            }
+            this.data[this.seekOffset + this.sectorOffset + this.byteWithinSector] = 0;
+            if (++this.byteWithinSector === 256) {
                 this.byteWithinSector = 0;
-            },
-            write: function (sector, track, side, density) {
-                if (!this.check(track, side, density)) return;
-                this.side = side;
-                this.inWrite = true;
-                this.sectorOffset = sector * 256 + (side ? 10 * 256 : 0);
-                this.byteWithinSector = 0;
-                this.time = -1000; // TODO wtf?
-            },
-            address: function (track, side, density) {
-                if (!this.check(track, side, density)) return;
-                this.side = side;
-                this.inReadAddr = true;
-                this.byteWithinSector = 0;
-                this.rsector = 0;
-            },
-            format: function (track, side, density) {
-                if (!this.check(track, side, density)) return;
-                this.side = side;
-                this.inFormat = true;
-                this.formatSector = 0;
-                this.sectorOffset = side ? 10 * 256 : 0;
-                this.byteWithinSector = 0;
-            },
-            poll: function () {
-                this.time++;
-                if (this.time < 16) return;
-                this.time = 0;
-                if (this.notFound && --this.notFound === 0) {
-                    fdc.notFound();
-                }
-                if (this.inRead) {
-                    fdc.discData(data[this.seekOffset + this.sectorOffset + this.byteWithinSector]);
-                    if (++this.byteWithinSector == 256) {
-                        this.inRead = false;
-                        fdc.discFinishRead();
-                    }
-                }
-                if (this.inWrite) {
-                    if (this.writeProt) {
-                        fdc.writeProtect();
-                        this.inWrite = false;
-                        return;
-                    }
-                    var c = fdc.readDiscData(this.byteWithinSector == 255);
-                    data[this.seekOffset + this.sectorOffset + this.byteWithinSector] = c;
-                    if (++this.byteWithinSector == 256) {
-                        this.inWrite = false;
-                        fdc.discFinishRead();
-                        this.flush();
-                    }
-                }
-                if (this.inReadAddr) {
-                    switch (this.byteWithinSector) {
-                        case 0:
-                            fdc.discData(this.track);
-                            break;
-                        case 1:
-                            fdc.discData(this.side);
-                            break;
-                        case 2:
-                            fdc.discData(this.rsector);
-                            break;
-                        case 3:
-                            fdc.discData(1);
-                            break;
-                        case 4:
-                        case 5:
-                            fdc.discData(0);
-                            break;
-                        case 6:
-                            this.inRead = false;
-                            fdc.discFinishRead();
-                            this.rsector++;
-                            if (this.rsector === 10) this.rsector = 0;
-                            break;
-                    }
-                    this.byteWithinSector++;
-                }
-                if (this.inFormat) {
-                    if (this.writeProt) {
-                        fdc.writeProtect();
-                        this.inFormat = false;
-                        return;
-                    }
-                    data[this.seekOffset + this.sectorOffset + this.byteWithinSector] = 0;
-                    if (++this.byteWithinSector == 256) {
-                        this.byteWithinSector = 0;
-                        this.sectorOffset += 256;
-                        if (++this.formatSector === 10) {
-                            this.inFormat = false;
-                            fdc.discFinishRead();
-                            this.flush();
-                        }
-                    }
+                this.sectorOffset += 256;
+                if (++this.formatSector === 10) {
+                    this.fdc.discFinishRead();
+                    this.flush();
+                    return;
                 }
             }
+            this.formatTask.reschedule(DiscTimeSlice);
+        }.bind(this));
+        BaseDisc.prototype.flush = function () {
+            if (this.flusher) this.flusher();
+        };
+        BaseDisc.prototype.seek = function (track) {
+            this.seekOffset = track * 10 * 256;
+            if (this.isDsd) this.seekOffset <<= 1;
+            var oldTrack = this.track;
+            this.track = track;
+            return this.track - oldTrack;
+        };
+        BaseDisc.prototype.check = function (track, side, density) {
+            if (this.track !== track || density || (side && !this.isDsd)) {
+                this.notFoundTask.reschedule(500 * DiscTimeSlice);
+                return false;
+            }
+            return true;
+        };
+        BaseDisc.prototype.read = function (sector, track, side, density) {
+            if (!this.check(track, side, density)) return;
+            this.side = side;
+            this.readTask.reschedule(DiscTimeSlice);
+            this.sectorOffset = sector * 256 + (side ? 10 * 256 : 0);
+            this.byteWithinSector = 0;
+        };
+        BaseDisc.prototype.write = function (sector, track, side, density) {
+            if (!this.check(track, side, density)) return;
+            this.side = side;
+            // NB in old code this used to override "time" to be -1000, which immediately forced a write.
+            // I'm not sure why that was required. So I'm ignoring it here. Any funny disc write bugs might be
+            // traceable to this change.
+            this.writeTask.reschedule(DiscTimeSlice);
+            this.sectorOffset = sector * 256 + (side ? 10 * 256 : 0);
+            this.byteWithinSector = 0;
+        };
+        BaseDisc.prototype.address = function (track, side, density) {
+            if (!this.check(track, side, density)) return;
+            this.side = side;
+            this.readAddrTask.reschedule(DiscTimeSlice);
+            this.byteWithinSector = 0;
+            this.rsector = 0;
+        };
+        BaseDisc.prototype.format = function (track, side, density) {
+            if (!this.check(track, side, density)) return;
+            this.side = side;
+            this.formatTask.reschedule(DiscTimeSlice);
+            this.formatSector = 0;
+            this.sectorOffset = side ? 10 * 256 : 0;
+            this.byteWithinSector = 0;
         };
     }
 
-    function I8271(cpu, noise) {
+    function I8271(cpu, noise, scheduler) {
         var self = this;
         self.status = 0;
         self.result = 0;
@@ -212,19 +227,32 @@ define(['utils'], function (utils) {
         self.curSector = 0;
         self.phase = 0;
         self.command = 0xff;
-        self.time = 0;
+        self.callbackTask = scheduler.newTask(function () {
+            callback();
+        });
         self.paramNum = 0;
         self.paramReq = 0;
-        self.driveTime = 0;
-        self.motorTime = 0;
         self.params = new Uint8Array(8);
-        self.isActive = false;
         self.motorOn = [false, false];
-        self.motorSpin = [0, 0];
+        self.motorSpinDownTask = [
+            scheduler.newTask(function () {
+                self.motorOn[0] = false;
+                noise.spinDown(); // TODO multiple discs!
+            }),
+            scheduler.newTask(function () {
+                self.motorOn[1] = false;
+                noise.spinDown(); // TODO multiple discs!
+            })
+        ];
         self.written = false;
         self.verify = false;
+        self.scheduler = scheduler;
         self.drives = [emptySsd(this), emptySsd(this)];
-        self.readyTimer = 0;
+        self.pendingReady = false;
+        self.ready = true;
+        self.readyTask = scheduler.newTask(function () {
+            self.pendingReady = true;
+        });
 
         self.NMI = function () {
             cpu.NMI(self.status & 8);
@@ -254,7 +282,7 @@ define(['utils'], function (utils) {
             self.result = result;
             self.status = 0x18;
             self.NMI();
-            self.time = 0;
+            self.callbackTask.cancel();
             setspindown();
         }
 
@@ -291,7 +319,8 @@ define(['utils'], function (utils) {
             return self.data;
         };
         self.discFinishRead = function () {
-            this.time = 200;
+            self.callbackTask.cancel();
+            self.callbackTask.schedule(200);
         };
 
         var paramMap = {
@@ -308,7 +337,7 @@ define(['utils'], function (utils) {
         function command(val) {
             if (self.status & 0x80) return;
             self.command = val & 0x3f;
-            if (self.command == 0x17) self.command = 0x13;
+            if (self.command === 0x17) self.command = 0x13;
             self.driveSel = val >>> 6;
             self.curDrive = (val & 0x80) ? 1 : 0;
             self.paramNum = 0;
@@ -319,15 +348,15 @@ define(['utils'], function (utils) {
                     // read drive status
                     self.status = 0x10;
                     self.result = 0x88 | (self.curTrack[self.curDrive] ? 0 : 2);
-                    if (self.readyTimer === 0) {
+                    if (self.ready) {
                         if (self.driveSel & 1) self.result |= 0x04;
                         if (self.driveSel & 2) self.result |= 0x40;
-                    } else if (self.readyTimer === 1) self.readyTimer = 0; // Ready for next time
+                    } else if (self.pendingReady) self.ready = true; // Ready for next time
                 } else {
                     self.result = 0x18;
                     self.status = 0x18;
                     self.NMI();
-                    self.time = 0;
+                    self.callbackTask.cancel();
                 }
             }
         }
@@ -349,7 +378,7 @@ define(['utils'], function (utils) {
                 default:
                     self.result = self.status = 0x18;
                     self.NMI();
-                    self.time = 0;
+                    self.callbackTask.cancel();
                     break;
             }
         }
@@ -372,35 +401,40 @@ define(['utils'], function (utils) {
                 default:
                     self.result = self.status = 0x18;
                     self.NMI();
-                    self.time = 0;
+                    self.callbackTask.cancel();
                     break;
             }
         }
 
         function spinup() {
             // TODO: not sure where this should go, or for how long. This is a workaround for EliteA
+            self.ready = false;
+            self.pendingReady = false;
+            self.readyTask.cancel();
             if (!self.motorOn[self.curDrive]) {
-                self.readyTimer = (0.5 * cpu.peripheralCyclesPerSecond) | 0; // Apparently takes a half second to spin up
+                self.readyTask.schedule((0.5 * cpu.peripheralCyclesPerSecond) | 0); // Apparently takes a half second to spin up
             } else {
-                self.readyTimer = 1000;  // little bit of time for each command (so, really, spinup is a bad place to put this)
+                self.readyTask.schedule(1000);  // little bit of time for each command (so, really, spinup is a bad place to put this)
             }
-            self.isActive = true;
             self.motorOn[self.curDrive] = true;
-            self.motorSpin[self.curDrive] = 0;
+            self.motorSpinDownTask[self.curDrive].cancel();
             noise.spinUp();
         }
 
         function setspindown() {
-            if (self.motorOn[self.curDrive])
-                self.motorSpin[self.curDrive] = 40000;
+            if (self.motorOn[self.curDrive]) {
+                self.motorSpinDownTask[self.curDrive].reschedule(40000 * 128);
+            }
         }
 
         function seek(track) {
             spinup();
             self.realTrack[self.curDrive] += track - self.curTrack[self.curDrive];
             var diff = self.drives[self.curDrive].seek(self.realTrack[self.curDrive]);
-            var seekLen = (noise.seek(diff) * cpu.peripheralCyclesPerSecond) | 0;
-            self.time = Math.max(200, seekLen);
+            // Let disc noises overlap by ~10%
+            var seekLen = (noise.seek(diff) * 0.9 * cpu.peripheralCyclesPerSecond) | 0;
+            self.callbackTask.cancel();
+            self.callbackTask.schedule(Math.max(200, seekLen));
         }
 
         var debugByte = 0;
@@ -416,7 +450,7 @@ define(['utils'], function (utils) {
 
         function parameter(val) {
             if (self.paramNum < 5) self.params[self.paramNum++] = val;
-            if (self.paramNum != self.paramReq) return;
+            if (self.paramNum !== self.paramReq) return;
             switch (self.command) {
                 case 0x35: // Specify.
                     self.status = 0;
@@ -445,7 +479,7 @@ define(['utils'], function (utils) {
                     self.result = 0x18;
                     self.status = 0x18;
                     self.NMI();
-                    self.time = 0;
+                    self.callbackTask.cancel();
                     break;
             }
         }
@@ -494,7 +528,6 @@ define(['utils'], function (utils) {
         }
 
         function callback() {
-            self.time = 0;
             switch (self.command) {
                 case 0x29: // Seek
                     self.curTrack[self.curDrive] = self.params[0];
@@ -560,44 +593,11 @@ define(['utils'], function (utils) {
                     break;
             }
         }
-
-        self.polltime = function (cycles) {
-            cycles = cycles | 0;
-            if (!self.isActive) return;
-            if (self.time) {
-                self.time -= cycles;
-                if (self.time <= 0) {
-                    callback();
-                }
-            }
-            self.driveTime -= cycles;
-            if (self.driveTime <= 0) {
-                self.driveTime += 16;
-                if (self.drives[self.curDrive])
-                    self.drives[self.curDrive].poll();
-            }
-            self.motorTime -= cycles;
-            if (self.motorTime <= 0) {
-                self.motorTime += 128;
-                for (var i = 0; i < 2; ++i) {
-                    if (self.motorSpin[i] && --self.motorSpin[i] === 0) {
-                        self.motorOn[i] = false;
-                        noise.spinDown(); // TODO multiple discs!
-                    }
-                }
-                self.isActive = self.motorOn[0] || self.motorOn[1];
-            }
-            if (this.readyTimer > 1) {
-                this.readyTimer -= cycles;
-                if (this.readyTimer < 1) this.readyTimer = 1;
-            }
-        };
     }
 
-    function WD1770(cpu, noise) {
+    function WD1770(cpu, noise, scheduler) {
         this.cpu = cpu;
         this.noise = noise;
-        this.isActive = false;
         this.command = 0;
         this.sector = 0;
         this.track = 0;
@@ -610,34 +610,47 @@ define(['utils'], function (utils) {
         this.density = false;
         this.stepIn = false;
         this.motorOn = [false, false];
-        this.motorSpin = [0, 0];
-        this.motorTime = 0;
-        this.driveTime = 0;
-        this.time = 0;
+        this.motorSpinDownTask = [
+            scheduler.newTask(function () {
+                this.motorOn[0] = false;
+                this.checkSpinDownNoise();
+            }.bind(this)),
+            scheduler.newTask(function () {
+                this.motorOn[1] = false;
+                this.checkSpinDownNoise();
+            }.bind(this))
+        ];
+        this.scheduler = scheduler;
         this.drives = [emptySsd(this), emptySsd(this)];
+        this.callbackTask = scheduler.newTask(function () {
+            this.callback();
+        }.bind(this));
     }
 
+    WD1770.prototype.checkSpinDownNoise = function () {
+        if (!this.motorOn[0] && !this.motorOn[1])
+            this.noise.spinDown();
+    };
+
     WD1770.prototype.spinUp = function () {
-        this.isActive = true;
         this.status |= 0x80;
         this.motorOn[this.curDrive] = true;
-        this.motorSpin[this.curDrive] = 0;
+        this.motorSpinDownTask[this.curDrive].cancel();
         this.noise.spinUp();
     };
 
     WD1770.prototype.spinDown = function () {
-        this.isActive = 0;
         this.status &= ~0x80;
         this.motorOn[this.curDrive] = false;
-        this.noise.spinDown();
+        this.checkSpinDownNoise();
     };
 
     WD1770.prototype.setSpinDown = function () {
-        this.motorSpin[this.curDrive] = 45000;
+        this.motorSpinDownTask[this.curDrive].reschedule(45000 * 128);
     };
 
     WD1770.prototype.track0 = function () {
-        return this.curTrack === 0 ? 0x04 : 0x00;
+        return this.curTrack === 0 ? 0x00 : 0x04;
     };
 
     WD1770.prototype.callback = function () {
@@ -677,34 +690,6 @@ define(['utils'], function (utils) {
                 this.cpu.NMI(true);
                 this.sector = this.track;
                 break;
-        }
-    };
-
-    WD1770.prototype.polltime = function (cycles) {
-        cycles = cycles | 0;
-        if (!this.isActive) return;
-        if (this.time) {
-            this.time -= cycles;
-            if (this.time <= 0) {
-                this.time = 0;
-                this.callback();
-            }
-        }
-        this.driveTime -= cycles;
-        if (this.driveTime <= 0) {
-            this.driveTime += 16;
-            if (this.drives[this.curDrive])
-                this.drives[this.curDrive].poll();
-        }
-        this.motorTime -= cycles;
-        if (this.motorTime <= 0) {
-            this.motorTime += 128;
-            for (var i = 0; i < 2; ++i) {
-                if (this.motorSpin[i] && --this.motorSpin[i] === 0)
-                    this.motorOn[i] = false;
-            }
-            this.isActive = this.motorOn[0] || this.motorOn[1];
-            if (!this.isActive) this.noise.spinDown();
         }
     };
 
@@ -774,10 +759,10 @@ define(['utils'], function (utils) {
         return this.drives[this.curDrive];
     };
 
-    WD1770.prototype.seek = function(addr) {
+    WD1770.prototype.seek = function (addr) {
         var diff = this.curDisc().seek(addr);
-        var seekTime = (this.noise.seek(diff) * this.cpu.peripheralCyclesPerSecond)|0;
-        this.time = Math.max(200, seekTime);
+        var seekTime = (this.noise.seek(diff) * this.cpu.peripheralCyclesPerSecond) | 0;
+        this.callbackTask.reschedule(Math.max(200, seekTime));
     };
 
     WD1770.prototype.handleCommand = function (command) {
@@ -836,7 +821,7 @@ define(['utils'], function (utils) {
                 this.curDisc().format(this.track, this.side, this.density);
                 break;
             default: // Unsupported
-                this.time = 0;
+                this.callbackTask.cancel();
                 this.status = 0x90;
                 this.cpu.NMI(true);
                 this.spinDown();
@@ -861,15 +846,14 @@ define(['utils'], function (utils) {
     };
 
     WD1770.prototype.error = function (code) {
-        this.time = 0;
+        this.callbackTask.cancel();
         this.cpu.NMI(true);
         this.status = code;
         this.spinDown();
     };
 
     WD1770.prototype.discFinishRead = function () {
-//        console.log("finish read");
-        this.time = 200;
+        this.callbackTask.reschedule(200);
     };
 
     WD1770.prototype.notFound = function () {
@@ -896,6 +880,6 @@ define(['utils'], function (utils) {
         localDisc: localDisc,
         emptySsd: emptySsd,
         discFor: discFor,
-        baseDisc: baseDisc
+        BaseDisc: BaseDisc
     };
 });

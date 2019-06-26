@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'utils'], function ($, _, utils) {
+define(['jquery', 'underscore', './utils'], function ($, _, utils) {
     "use strict";
     var hexbyte = utils.hexbyte;
     var hexword = utils.hexword;
@@ -7,7 +7,7 @@ define(['jquery', 'underscore', 'utils'], function ($, _, utils) {
         var disass = $('#disassembly');
         var memview = $('#memory');
         var memloc = 0;
-        var debugNode = $('#debug, #hardware_debug');
+        var debugNode = $('#debug, #hardware_debug, #crtc_debug');
 
         function setupGoto(form, func) {
             var addr = form.find(".goto-addr");
@@ -50,6 +50,7 @@ define(['jquery', 'underscore', 'utils'], function ($, _, utils) {
 
         var uservia;
         var sysvia;
+        var crtc;
 
         function updateElem(elem, val) {
             var prevVal = elem.text();
@@ -73,8 +74,8 @@ define(['jquery', 'underscore', 'utils'], function ($, _, utils) {
                 if (elem.match(/t[12][cl]/)) {
                     updates.push(function () {
                         var reg = via[elem];
-                        updateElem(value, hexbyte((reg >> 16) & 0xff) +
-                            hexbyte((reg >> 8) & 0xff) + hexbyte(reg & 0xff));
+                        updateElem(value, hexbyte((reg >>> 16) & 0xff) +
+                            hexbyte((reg >>> 8) & 0xff) + hexbyte(reg & 0xff));
                     });
                 } else {
                     updates.push(function () {
@@ -91,11 +92,60 @@ define(['jquery', 'underscore', 'utils'], function ($, _, utils) {
             return update;
         }
 
+        function setupCrtc(node, video) {
+            if (!video) return utils.noop;
+            var updates = [];
+
+            var regNode = node.find('.crtc_regs');
+
+            function makeRow(node, text) {
+                var row = node.find(".template").clone().removeClass("template").appendTo(node);
+                row.find(".register").text(text);
+                return row.find(".value");
+            }
+
+            for (var i = 0; i < 16; ++i) {
+                (function (i) { // jshint ignore:line
+                    var value = makeRow(regNode, "R" + i);
+                    updates.push(function () {
+                        updateElem(value, hexbyte(video.regs[i]));
+                    });
+                })(i);
+            }
+
+            var stateNode = node.find('.crtc_state');
+            var others = [
+                'bitmapX', 'bitmapY', 'dispEnabled',
+                'horizCounter', 'inHSync', 'scanlineCounter', 'vertCounter', 'inVSync', 'inVertAdjust',
+                'addr', 'addrLine', 'lineStartAddr', 'nextLineStartAddr'];
+            $.each(others, function (_, elem) {
+                var value = makeRow(stateNode, elem);
+                if (typeof video[elem] === "boolean") {
+                    updates.push(function () {
+                        updateElem(value, video[elem] ? "true" : "false");
+                    });
+                } else {
+                    updates.push(function () {
+                        updateElem(value, hexword(video[elem]));
+                    });
+                }
+            });
+
+            var update = function () {
+                $.each(updates, function (_, up) {
+                    up();
+                });
+            };
+            update();
+            return update;
+        }
+
         this.setCpu = function (c) {
             cpu = c;
             disassemble = c.disassembler.disassemble;
             sysvia = setupVia($('#sysvia'), c.sysvia);
             uservia = setupVia($('#uservia'), c.uservia);
+            crtc = setupCrtc($('#crtc_debug'), c.video);
         };
 
         var disassPc = null;
@@ -107,6 +157,7 @@ define(['jquery', 'underscore', 'utils'], function ($, _, utils) {
             updateMemory();
             sysvia();
             uservia();
+            crtc();
             video.debugPaint();
         };
 
@@ -199,7 +250,7 @@ define(['jquery', 'underscore', 'utils'], function ($, _, utils) {
                 var addr = startingPoint & 0xffff;
                 while (addr < address) {
                     var result = disassemble(addr);
-                    if (result[0] == cpu.pc) score += 10; // huge boost if this instruction was executed
+                    if (result[0] === cpu.pc) score += 10; // huge boost if this instruction was executed
                     if (result[0].match(commonInstructions) && !result[0].match(uncommonInstrucions)) {
                         score++;
                     }

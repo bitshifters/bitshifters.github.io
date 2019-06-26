@@ -13,6 +13,7 @@ requirejs.config({
 
 requirejs(['video', 'fake6502', 'soundchip', 'fdc', 'models', 'tests/test.js', 'utils'],
     function (Video, Fake6502, SoundChip, disc, models, test, utils) {
+        "use strict";
         var fb32 = new Uint32Array(1280 * 768);
         var frame = 0;
         var screenshotRequest = null;
@@ -80,6 +81,7 @@ requirejs(['video', 'fake6502', 'soundchip', 'fdc', 'models', 'tests/test.js', '
             });
             cpu.sysvia.disableKeyboard();
             cpu.sysvia.keyToggleRaw(utils.BBC.SHIFT);
+
             function exec(c) {
                 //var thing = 2000000;
                 var thing = 1;
@@ -89,6 +91,7 @@ requirejs(['video', 'fake6502', 'soundchip', 'fdc', 'models', 'tests/test.js', '
                 }
                 return cpu.execute(c);
             }
+
             var first = 1564809;
             console.log(first);
             exec(first);
@@ -114,7 +117,6 @@ requirejs(['video', 'fake6502', 'soundchip', 'fdc', 'models', 'tests/test.js', '
             screenshotRequest = "/tmp/" + discName + "-end.png";
             cpu.execute(1000 * 1000);
         }).catch(function (err) {
-            "use strict";
             console.log("Got error: ", err);
         });
     });

@@ -1,4 +1,4 @@
-define(['jquery', 'utils', 'fdc'], function ($, utils, fdc) {
+define(['jquery', 'utils', 'fdc', 'underscore', 'promise'], function ($, utils, fdc, _) {
     "use strict";
     return function GoogleDriveLoader() {
         var self = this;
@@ -6,7 +6,7 @@ define(['jquery', 'utils', 'fdc'], function ($, utils, fdc) {
         var CLIENT_ID = '356883185894-bhim19837nroivv18p0j25gecora60r5.apps.googleusercontent.com';
         var SCOPES = 'https://www.googleapis.com/auth/drive.file';
         var gapi = null;
-        var baseSsd = fdc.baseDisc;
+        var BaseSsd = fdc.BaseDisc;
 
         self.initialise = function () {
             return new Promise(function (resolve) {
@@ -127,7 +127,7 @@ define(['jquery', 'utils', 'fdc'], function ($, utils, fdc) {
                     xhr.onload = function () {
                         if (xhr.status !== 200) {
                             reject(new Error("Unable to load " + file.title + ", http code " + xhr.status));
-                        } else if (typeof(xhr.response) !== "string") {
+                        } else if (typeof xhr.response !== "string") {
                             resolve(xhr.response);
                         } else {
                             resolve(utils.makeBinaryData(xhr.response));
@@ -159,7 +159,7 @@ define(['jquery', 'utils', 'fdc'], function ($, utils, fdc) {
             } else {
                 console.log("Making read-only disc");
             }
-            return baseSsd(fdc, false, data, flusher);
+            return new BaseSsd(fdc, false, data, flusher);
         }
 
         self.load = function (fdc, fileId) {

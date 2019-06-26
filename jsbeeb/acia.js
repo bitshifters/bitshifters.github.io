@@ -3,17 +3,19 @@ define([], function () {
     // Some info:
     // http://www.playvectrex.com/designit/lecture/UP12.HTM
     // https://books.google.com/books?id=wUecAQAAQBAJ&pg=PA431&lpg=PA431&dq=acia+tdre&source=bl&ots=mp-yF-mK-P&sig=e6aXkFRfiIOb57WZmrvdIGsCooI&hl=en&sa=X&ei=0g2fVdDyFIXT-QG8-JD4BA&ved=0CCwQ6AEwAw#v=onepage&q=acia%20tdre&f=false
-    return function Acia(cpu, toneGen) {
+    // http://www.classiccmp.org/dunfield/r/6850.pdf
+    return function Acia(cpu, toneGen, scheduler, rs423Handler) {
         var self = this;
         self.sr = 0x02;
         self.cr = 0x00;
         self.dr = 0x00;
+        self.rs423Handler = rs423Handler;
+        self.rs423Selected = false;
         self.motorOn = false;
         // TODO: set clearToSend accordingly; at the moment it stays low.
         // would need to be updated based on the "other end" of the link, and
         // we would need to generate IRQs appropriately when TDRE goes high.
         self.clearToSend = false;
-        self.txTimeRemaining = 0;
 
         function updateIrq() {
             if (self.sr & self.cr & 0x80) {
@@ -35,49 +37,57 @@ define([], function () {
         };
 
         self.setMotor = function (on) {
+            if (on && !self.motorOn)
+                runTape();
+            else {
+                toneGen.mute();
+                self.runTapeTask.cancel();
+            }
             self.motorOn = on;
-            if (!on) toneGen.mute();
         };
 
         self.read = function (addr) {
             if (addr & 1) {
-                self.sr &= ~0x81;
+                self.sr &= ~0xa1;
                 updateIrq();
                 return self.dr;
             } else {
                 var result = (self.sr & 0x7f) | (self.sr & self.cr & 0x80);
                 if (!self.clearToSend) result &= ~0x02; // Mask off TDRE if not CTS
+                result = result | 0x02 | 0x08;
                 return result;
             }
         };
 
         self.write = function (addr, val) {
             if (addr & 1) {
-                // Ignore sends, except for clearing the TDRE.
                 self.sr &= ~0x02;
                 // It's not clear how long this can take; it's when the shift register is loaded.
                 // That could be straight away if not already tx-ing, but as we don't really tx,
                 // be conservative here.
-                self.txTimeRemaining = 2000;
+                self.txCompleteTask.reschedule(2000);
                 updateIrq();
+                if (self.rs423Selected && self.rs423Handler) self.rs423Handler.onTransmit(val);
             } else {
                 if ((val & 0x03) === 0x03) {
                     // According to the 6850 docs writing 3 here doesn't affect any CR bits, but
                     // just resets the device.
                     self.reset();
-                    return;
                 } else {
                     self.cr = val;
+                    self.setSerialReceive(self.serialReceiveRate);
                 }
             }
         };
 
         self.selectRs423 = function (selected) {
-            if (selected) {
+            self.rs423Selected = !!selected;
+            if (self.rs423Selected) {
                 self.sr &= ~0x04; // Clear DCD
             } else {
                 self.sr &= ~0x08; // Clear CTS
             }
+            self.runRs423Task.ensureScheduled(self.rs423Selected, self.serialReceiveCyclesPerByte);
         };
 
         self.setDCD = function (level) {
@@ -92,8 +102,14 @@ define([], function () {
 
         self.receive = function (byte) {
             byte |= 0;
-            self.dr = byte;
-            self.sr |= 0x81;
+            if (self.sr & 0x01) {
+                // Overrun.
+                console.log("Serial overrun");
+                self.sr |= 0xa0;
+            } else {
+                self.dr = byte;
+                self.sr |= 0x81;
+            }
             updateIrq();
         };
 
@@ -108,80 +124,83 @@ define([], function () {
             }
         };
 
-        var runCounter = 0;
-        var cyclesPerPoll = (2 * 1000 * 1000) / 30;
-        var serialReceiveRate = 19200;
+        self.secondsToCycles = function (sec) {
+            return Math.floor(2 * 1000 * 1000 * sec) | 0;
+        };
+
+        self.serialReceiveRate = 0;
+        self.serialReceiveCyclesPerByte = 0;
+
+        self.numBitsPerByte = function () {
+            var wordLength = (self.cr & 0x10) ? 8 : 7;
+            var stopBits, parityBits;
+            switch ((self.cr >>> 2) & 7) {
+                case 0:
+                    stopBits = 2;
+                    parityBits = 1;
+                    break;
+                case 1:
+                    stopBits = 2;
+                    parityBits = 1;
+                    break;
+                case 2:
+                    stopBits = 1;
+                    parityBits = 1;
+                    break;
+                case 3:
+                    stopBits = 1;
+                    parityBits = 1;
+                    break;
+                case 4:
+                    stopBits = 2;
+                    parityBits = 0;
+                    break;
+                case 5:
+                    stopBits = 1;
+                    parityBits = 0;
+                    break;
+                case 6:
+                    stopBits = 1;
+                    parityBits = 1;
+                    break;
+                case 7:
+                    stopBits = 1;
+                    parityBits = 1;
+                    break;
+            }
+            return wordLength + stopBits + parityBits;
+        };
+
+        self.rts = function () {
+            // True iff CR6 = 0 or CR5 and CR6 are both 1.
+            if ((self.cr & 0x40) === 0) return true;
+            if ((self.cr & 0x60) === 0x60) return true;
+            return false;
+        };
 
         self.setSerialReceive = function (rate) {
-            serialReceiveRate = rate;
+            self.serialReceiveRate = rate;
+            self.serialReceiveCyclesPerByte = self.secondsToCycles(self.numBitsPerByte() / rate);
         };
+        self.setSerialReceive(19200);
 
-        function run() {
-            if (self.tape) return self.tape.poll(self);
-            return 100000;
+        self.txCompleteTask = scheduler.newTask(function () {
+            self.sr |= 0x02; // set the TDRE
+        });
+
+        function runTape() {
+            if (self.tape) self.runTapeTask.reschedule(self.tape.poll(self));
         }
 
-        self.polltime = function (cycles) {
-            if (self.txTimeRemaining) {
-                if (--self.txTimeRemaining === 0) {
-                    self.sr |= 0x02; // set the TDRE
-                }
-            }
-            if (!self.motorOn) return;
-            runCounter -= cycles;
-            if (runCounter <= 0) {
-                runCounter += run();
-            }
-        };
+        self.runTapeTask = scheduler.newTask(runTape);
 
-        self.secondsToPolls = function (sec) {
-            return Math.floor(2 * 1000 * 1000 * sec / cyclesPerPoll);
-        };
+        function runRs423() {
+            if (!rs423Handler) return;
+            var rcv = self.rs423Handler.tryReceive(self.rts());
+            if (rcv >= 0) self.receive(rcv);
+            self.runRs423Task.reschedule(self.serialReceiveCyclesPerByte);
+        }
+
+        self.runRs423Task = scheduler.newTask(runRs423);
     };
 });
-
-function TapefileTape(stream) {
-    "use strict";
-    var self = this;
-
-    self.count = 0;
-    self.stream = stream;
-
-    var dividerTable = [1, 16, 64, -1];
-
-    function rate(acia) {
-        var bitsPerByte = 9;
-        if (!(acia.cr & 0x80)) {
-            bitsPerByte++; // Not totally correct if the AUG is to be believed.
-        }
-        var divider = dividerTable[acia.cr & 0x03];
-        // http://beebwiki.mdfs.net/index.php/Serial_ULA says the serial rate is ignored
-        // for cassette mode.
-        var cpp = (2 * 1000 * 1000) / (19200 / divider);
-        return Math.floor(bitsPerByte * cpp);
-    }
-
-    self.rewind = function () {
-        stream.seek(10);
-    };
-
-    self.poll = function (acia) {
-        if (stream.eof()) return 100000;
-        var byte = stream.readByte();
-        if (byte === 0xff) {
-            byte = stream.readByte();
-            if (byte === 0) {
-                acia.setDCD(false);
-                return 0;
-            } else if (byte === 0x04) {
-                acia.setDCD(true);
-                // Simulate 5 seconds of carrier.
-                return 5 * 2 * 1000 * 1000;
-            } else if (byte !== 0xff) {
-                throw "Got a weird byte in the tape";
-            }
-        }
-        acia.receive(byte);
-        return rate(acia);
-    };
-}
