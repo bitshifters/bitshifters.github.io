@@ -11,8 +11,8 @@ team: Bitshifters
 year: 2019
 type: Demo
 platform: BBC Master
-download: bs-wave-runner.ssd
-source: 
+download: bs-wave-runner-v1-1.ssd
+source: https://github.com/bitshifters/wave-runner
 pouet: https://www.pouet.net/prod.php?which=81619
 video: https://www.youtube.com/watch?v=1_nTOLdhQXY
 
@@ -26,6 +26,8 @@ Released at the Nova 2019 demoparty, this demo features 'Stable Raster' and 'Ver
 
 Jointly developed by VectorEyes and Tom Seddon, prototyping started several months before the party and the demo was finished in a mad rush on the day of the competition. Thanks to Henley for the music player and tune conversion, and Hexwab for the player optimisations.
 
-Wave Runner uses several Master-specific features that aren't supported by older emulators. It runs on B2, runs with graphical glitches on B-Em, and won't work on BeebEm or JSBeeb. 
+Wave Runner uses several Master-specific features that aren't supported by older emulators. It runs on B2, runs with graphical glitches on B-Em, and won't work on BeebEm or JSBeeb.
 
 **EDIT: Thanks to Tom Seddon & Matt Godbolt, JSBeeb now runs the demo!**
+
+The latest version (linked above) is v1.1, released in August 2019. It fixes one obvious bug (bad scrolltext colours) and improves the timing of some effect transitions. If you're looking for the original 'party' version, it's [here](https://github.com/bitshifters/wave-runner).
