@@ -30,4 +30,4 @@ Wave Runner uses several Master-specific features that aren't supported by older
 
 **EDIT: Thanks to Tom Seddon & Matt Godbolt, JSBeeb now runs the demo!**
 
-The latest version (linked above) is v1.1, released in August 2019. It fixes one obvious bug (bad scrolltext colours) and improves the timing of some effect transitions. If you're looking for the original 'party' version, it's [here](https://github.com/bitshifters/wave-runner).
+The latest and best version is v1.1, released in August 2019. It fixes one obvious bug (bad scrolltext colours) and improves the timing of some effect transitions. If you're looking for the original 'party' version, it's [here](https://bitshifters.github.io/content/bs-wave-runner.ssd).
