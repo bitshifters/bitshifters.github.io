@@ -1,4 +1,5 @@
-define(['utils'], function (utils) {
+define(['./utils'], function (utils) {
+    "use strict";
     const ORB = 0x0,
         ORA = 0x1,
         DDRB = 0x2,
@@ -23,7 +24,6 @@ define(['utils'], function (utils) {
         INT_CB2 = 0x08;
 
     function via(cpu, irq) {
-        "use strict";
         var self = {
             ora: 0, orb: 0, ira: 0, irb: 0,
             ddra: 0, ddrb: 0,
@@ -37,8 +37,10 @@ define(['utils'], function (utils) {
             justhit: 0,
 
             reset: function (hard) {
-                self.ora = self.orb = 0xff;
-                self.ddra = self.ddrb = 0xff;
+                // http://archive.6502.org/datasheets/mos_6522_preliminary_nov_1977.pdf
+                // "Reset sets all registers to zero except t1 t2 and sr"
+                self.ora = self.orb = 0x00;
+                self.ddra = self.ddrb = 0x00;
                 self.ifr = self.ier = 0x00;
                 self.t1c = self.t1l = self.t2c = self.t2l = 0x1fffe;
                 self.t1hit = self.t2hit = true;
@@ -97,16 +99,16 @@ define(['utils'], function (utils) {
                 switch (addr & 0xf) {
                     case ORA:
                         self.ifr &= ~INT_CA1;
-                        if ((self.pcr & 0x0a) != 0x02) {
+                        if ((self.pcr & 0x0a) !== 0x02) {
                             // b-em: Not independent interrupt for CA2
                             self.ifr &= ~INT_CA2;
                         }
                         self.updateIFR();
 
                         mode = (self.pcr & 0x0e);
-                        if (mode == 8) { // Handshake mode
+                        if (mode === 8) { // Handshake mode
                             self.setca2(false);
-                        } else if (mode == 0x0a) { // Pulse mode
+                        } else if (mode === 0x0a) { // Pulse mode
                             self.setca2(false);
                             self.setca2(true);
                         }
@@ -118,7 +120,7 @@ define(['utils'], function (utils) {
 
                     case ORB:
                         self.ifr &= ~INT_CB1;
-                        if ((self.pcr & 0xa0) != 0x20) {
+                        if ((self.pcr & 0xa0) !== 0x20) {
                             // b-em: Not independent interrupt for CB2
                             self.ifr &= ~INT_CB2;
                         }
@@ -128,9 +130,9 @@ define(['utils'], function (utils) {
                         self.writePortB(((self.orb & self.ddrb) | ~self.ddrb) & 0xff);
 
                         mode = (self.pcr & 0xe0) >>> 4;
-                        if (mode == 8) { // Handshake mode
+                        if (mode === 8) { // Handshake mode
                             self.setcb2(0);
-                        } else if (mode == 0x0a) { // Pulse mode
+                        } else if (mode === 0x0a) { // Pulse mode
                             self.setcb2(0);
                             self.setcb2(1);
                         }
@@ -152,9 +154,9 @@ define(['utils'], function (utils) {
 
                     case PCR:
                         self.pcr = val;
-                        if ((val & 0xe) == 0xc) self.setca2(false);
+                        if ((val & 0xe) === 0xc) self.setca2(false);
                         else if (val & 0x08) self.setca2(true);
-                        if ((val & 0xe0) == 0xc0) self.setcb2(0);
+                        if ((val & 0xe0) === 0xc0) self.setcb2(0);
                         else if (val & 0x80) self.setcb2(1);
                         break;
 
@@ -178,7 +180,7 @@ define(['utils'], function (utils) {
                         break;
 
                     case T1CH:
-                        if ((self.acr & 0xc0) == 0x80) self.orb &= ~0x80; // One-shot timer
+                        if ((self.acr & 0xc0) === 0x80) self.orb &= ~0x80; // One-shot timer
                         self.t1l &= 0x1fe;
                         self.t1l |= (val << 9);
                         self.t1c = self.t1l + 1;
@@ -221,7 +223,7 @@ define(['utils'], function (utils) {
                 switch (addr & 0xf) {
                     case ORA:
                         self.ifr &= ~INT_CA1;
-                        if ((self.pcr & 0xa) != 0x2)
+                        if ((self.pcr & 0xa) !== 0x2)
                             self.ifr &= ~INT_CA2;
                         self.updateIFR();
                     /* falls through */
@@ -235,7 +237,7 @@ define(['utils'], function (utils) {
 
                     case ORB:
                         self.ifr &= ~INT_CB1;
-                        if ((self.pcr & 0xa0) != 0x20)
+                        if ((self.pcr & 0xa0) !== 0x20)
                             self.ifr &= ~INT_CB2;
                         self.updateIFR();
 
@@ -298,7 +300,7 @@ define(['utils'], function (utils) {
                     if (self.acr & 1) self.ira = self.readPortA();
                     self.ifr |= INT_CA1;
                     self.updateIFR();
-                    if ((self.pcr & 0xc) == 0x8) { // handshaking
+                    if ((self.pcr & 0xc) === 0x8) { // handshaking
                         self.setca2(1);
                     }
                 }
@@ -325,7 +327,7 @@ define(['utils'], function (utils) {
                     if (self.acr & 2) self.irb = self.readPortB();
                     self.ifr |= INT_CB1;
                     self.updateIFR();
-                    if ((self.pcr & 0xc0) == 0x80) { // handshaking
+                    if ((self.pcr & 0xc0) === 0x80) { // handshaking
                         self.setcb2(1);
                     }
                 }
@@ -348,7 +350,6 @@ define(['utils'], function (utils) {
     }
 
     function sysvia(cpu, video, soundChip, cmos, isMaster, initialLayout) {
-        "use strict";
         var self = via(cpu, 0x01);
 
         self.IC32 = 0;
@@ -528,8 +529,7 @@ define(['utils'], function (utils) {
         return self;
     }
 
-    function uservia(cpu, isMaster) {
-        "use strict";
+    function uservia(cpu, isMaster, userPortPeripheral) {
         var self = via(cpu, 0x02);
 
         self.writePortA = function (val) {
@@ -537,7 +537,7 @@ define(['utils'], function (utils) {
         };
 
         self.writePortB = function (val) {
-            // user port
+            userPortPeripheral.write(val);
         };
 
         self.readPortA = function () {
@@ -545,7 +545,7 @@ define(['utils'], function (utils) {
         };
 
         self.readPortB = function () {
-            return 0xff; // user port (TODO: mouse, compact joystick)
+            return userPortPeripheral.read();
         };
         self.reset();
         return self;

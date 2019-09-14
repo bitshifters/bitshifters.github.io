@@ -1,9 +1,8 @@
-define(['teletext_data', 'utils'], function (ttData, utils) {
+define(['./teletext_data', './utils'], function (ttData, utils) {
     "use strict";
 
     function Teletext() {
         this.prevCol = 0;
-        this.holdClear = false;
         this.holdOff = false;
         this.col = 7;
         this.bg = 0;
@@ -50,7 +49,7 @@ define(['teletext_data', 'utils'], function (ttData, utils) {
                 if (row < 0 || row >= 20) {
                     return 0;
                 } else {
-                    var index = c * 60 + (row >> 1) * 6;
+                    var index = c * 60 + (row >>> 1) * 6;
                     var result = 0;
                     for (var x = 0; x < 6; ++x) {
                         result |= ((charData[index++] * 3) << (x * 2));
@@ -60,7 +59,7 @@ define(['teletext_data', 'utils'], function (ttData, utils) {
             }
 
             function combineRows(a, b) {
-                return a | ((a >> 1) & b & ~(b >> 1)) | ((a << 1) & b & ~(b << 1));
+                return a | ((a >>> 1) & b & ~(b >>> 1)) | ((a << 1) & b & ~(b << 1));
             }
 
             function makeHiResGlyphs(dest, graphicsGlyphs) {
@@ -85,7 +84,7 @@ define(['teletext_data', 'utils'], function (ttData, utils) {
             function setGraphicsBlock(c, x, y, w, h, sep, n) {
                 for (var yy = 0; yy < h; ++yy) {
                     for (var xx = 0; xx < w; ++xx) {
-                        charData[c * 60 + (y + yy) * 6 + (x + xx)] = (sep && (xx === 0 || yy === (h-1))) ? 0 : n;
+                        charData[c * 60 + (y + yy) * 6 + (x + xx)] = (sep && (xx === 0 || yy === (h - 1))) ? 0 : n;
                     }
                 }
             }
@@ -134,7 +133,6 @@ define(['teletext_data', 'utils'], function (ttData, utils) {
     };
 
     Teletext.prototype.handleControlCode = function (data) {
-        this.holdClear = false;
         this.holdOff = false;
 
         switch (data) {
@@ -148,7 +146,6 @@ define(['teletext_data', 'utils'], function (ttData, utils) {
                 this.gfx = false;
                 this.col = data;
                 this.setNextChars();
-                this.holdClear = true;
                 break;
             case 8:
                 this.flash = true;
@@ -201,6 +198,7 @@ define(['teletext_data', 'utils'], function (ttData, utils) {
             if (data >= 0x40 && data < 0x60) data = 0x20;
             this.curGlyphs = this.heldGlyphs;
         } else {
+            this.heldChar = 0x20;
             data = 0x20;
         }
         return data;
@@ -252,9 +250,6 @@ define(['teletext_data', 'utils'], function (ttData, utils) {
 
         if (this.holdOff) {
             this.holdChar = false;
-            this.heldChar = 32;
-        }
-        if (this.holdClear) {
             this.heldChar = 32;
         }
     };

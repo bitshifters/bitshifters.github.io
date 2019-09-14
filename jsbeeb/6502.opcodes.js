@@ -1,4 +1,4 @@
-define(['utils'], function (utils) {
+define(['./utils'], function (utils) {
     "use strict";
     var hexword = utils.hexword;
     var hexbyte = utils.hexbyte;
@@ -28,7 +28,7 @@ define(['utils'], function (utils) {
     }
 
     function pull(reg) {
-        if (reg == 'p') {
+        if (reg === 'p') {
             return [
                 "var tempFlags = cpu.pull();",
                 "cpu.p.c = !!(tempFlags & 0x01);",
@@ -43,7 +43,7 @@ define(['utils'], function (utils) {
     }
 
     function push(reg) {
-        if (reg == 'p') return "cpu.push(cpu.p.asByte());";
+        if (reg === 'p') return "cpu.push(cpu.p.asByte());";
         return "cpu.push(cpu." + reg + ");";
     }
 
@@ -59,7 +59,7 @@ define(['utils'], function (utils) {
                 cycle = self.cycle;
             }
             exact = exact || false;
-            if (typeof(op) == "string") op = [op];
+            if (typeof op === "string") op = [op];
             if (self.ops[cycle]) {
                 self.ops[cycle].op = combiner(self.ops[cycle].op, op);
                 if (exact) self.ops[cycle].exact = true;
@@ -244,7 +244,7 @@ define(['utils'], function (utils) {
             case "SBC":
                 return {op: "cpu.sbc(REG);", read: true};
             case "BIT":
-                if (arg == "imm") {
+                if (arg === "imm") {
                     // According to: http://forum.6502.org/viewtopic.php?f=2&t=2241&p=27243#p27239
                     // the v and n flags are unaffected by BIT #xx
                     return {op: "cpu.p.z = !(cpu.a & REG);", read: true};
@@ -353,7 +353,7 @@ define(['utils'], function (utils) {
                 return {
                     op: [
                         "var pushAddr = cpu.pc - 1;",
-                        "cpu.push(pushAddr >> 8);",
+                        "cpu.push(pushAddr >>> 8);",
                         "cpu.push(pushAddr & 0xff);",
                         "cpu.pc = addr;"], extra: 3
                 };
@@ -875,7 +875,7 @@ define(['utils'], function (utils) {
         0xC8: "INY",
         0xC9: "CMP imm",
         0xCA: "DEX",
-        0xCB: "WAI",
+        //0xCB: "WAI", // was "WAI" but testing by @tom-seddon indicate this isn't a 65c12 thing
         0xCC: "CPY abs",
         0xCD: "CMP abs",
         0xCE: "DEC abs",
@@ -940,7 +940,7 @@ define(['utils'], function (utils) {
                 case "zpx":  // Seems to be enough to keep tests happy, but needs investigation.
                 case "zp,x":
                 case "zp,y":
-                    if (arg == "zp") {
+                    if (arg === "zp") {
                         ig.tick(2);
                         ig.append("var addr = cpu.getb() | 0;");
                     } else {
@@ -1103,16 +1103,18 @@ define(['utils'], function (utils) {
             }
         }
 
-        function getIndentedSource(indent, opcodeNum) {
+        function getIndentedSource(indent, opcodeNum, needsReg) {
             var opcode = opcodes[opcodeNum];
             var lines = null;
             if (opcode) {
-                lines = getInstruction(opcode, false);
+                lines = getInstruction(opcode, !!needsReg);
             }
             if (!lines) {
                 lines = ["this.invalidOpcode(cpu, 0x" + utils.hexbyte(opcodeNum) + ");"];
             }
-            lines = ["// " + utils.hexbyte(opcodeNum) + " - " + opcode + "\n"].concat(lines);
+            lines = [
+                "\"use strict\";",
+                "// " + utils.hexbyte(opcodeNum) + " - " + opcode + "\n"].concat(lines);
             return indent + lines.join("\n" + indent);
         }
 
@@ -1150,10 +1152,10 @@ define(['utils'], function (utils) {
         function generate6502JumpTable() {
             var funcs = [];
             for (var opcode = 0; opcode < 256; ++opcode) {
-                funcs[opcode] = new Function("cpu", getIndentedSource("  ", opcode)); // jshint ignore:line
+                funcs[opcode] = new Function("cpu", getIndentedSource("  ", opcode, true)); // jshint ignore:line
             }
             return function exec(opcode) {
-                return funcs[opcode](this.cpu);
+                return funcs[opcode].call(this, this.cpu);
             };
         }
 
@@ -1195,7 +1197,7 @@ define(['utils'], function (utils) {
                     case "imm":
                         return [split[0] + " #$" + hexbyte(cpu.peekmem(addr + 1)) + suffix, addr + 2];
                     case "abs":
-                        var formatter = (split[0] == "JMP" || split[0] == "JSR") ? formatJumpAddr : formatAddr;
+                        var formatter = (split[0] === "JMP" || split[0] === "JSR") ? formatJumpAddr : formatAddr;
                         destAddr = cpu.peekmem(addr + 1) | (cpu.peekmem(addr + 2) << 8);
                         return [split[0] + " $" + formatter(destAddr) + suffix, addr + 3, destAddr];
                     case "branch":
@@ -1225,6 +1227,8 @@ define(['utils'], function (utils) {
         function invalidOpcode(cpu, opcode) {
             if (is65c12) {
                 // All undefined opcodes are NOPs on 65c12 (of varying lengths)
+                // http://6502.org/tutorials/65c02opcodes.html has a list.
+                // The default case is to treat them as one-cycle NOPs. Anything more than this is picked up below.
                 switch (opcode) {
                     case 0x02:
                     case 0x22:
@@ -1233,16 +1237,41 @@ define(['utils'], function (utils) {
                     case 0x82:
                     case 0xc2:
                     case 0xe2:
+                        // two bytes, two cycles
+                        cpu.getb();
+                        cpu.polltime(2);
+                        break;
+
                     case 0x44:
+                        // two bytes, three cycles
+                        cpu.getb();
+                        cpu.polltime(3);
+                        break;
+
                     case 0x54:
                     case 0xd4:
                     case 0xf4:
+                        // two bytes, four cycles
                         cpu.getb();
+                        cpu.polltime(4);
                         break;
+
                     case 0x5c:
+                        // three bytes, eight cycles
+                        cpu.getw();
+                        cpu.polltime(8);
+                        break;
+
                     case 0xdc:
                     case 0xfc:
+                        // three bytes, four cycles
                         cpu.getw();
+                        cpu.polltime(4);
+                        break;
+
+                    default:
+                        // one byte one cycle
+                        cpu.polltime(1);
                         break;
                 }
                 return;
@@ -1254,16 +1283,10 @@ define(['utils'], function (utils) {
 
         Runner.prototype.invalidOpcode = invalidOpcode;
         Runner.prototype.cpu = cpu;
-        if (utils.isFirefox()) {
-            // Firefox seems to be fastest with a jump table.
-            // Would be nicer to benchmark this.
-            Runner.prototype.run = generate6502JumpTable();
-        } else {
-            // The binary search seems to be the win in general.
-            Runner.prototype.run = generate6502Binary();
-        }
-        // Chrome doesn't like having 256 entries in a switch.
-        //Runner.prototype.run = generate6502Switch();
+        // We used to use jump tables for Firefox, and binary search for everything else.
+        // Chrome used to have a problem with 256 entries in a switch, but that seems to have been fixed.
+        // We now use a jump table for everything.
+        Runner.prototype.run = generate6502JumpTable();
 
         return {
             Disassemble: Disassemble6502,

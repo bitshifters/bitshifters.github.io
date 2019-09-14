@@ -1,7 +1,6 @@
-define([], function () {
+define(['utils'], function (utils) {
+    "use strict";
     return function Serial(acia) {
-        "use strict";
-
         var self = this;
 
         function reset() {
