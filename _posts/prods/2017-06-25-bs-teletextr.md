@@ -6,7 +6,7 @@ tags: compo1
 title: TELETEXTR
 img: bs-teletextr.png
 alt: image-alt
-authors: Kieran, Simon & Horsenburger
+authors: Kieran, Simon & Horsenburger. Music by JRLEPage, Svetlana & Fyra Javel.
 team: Bitshifters
 year: 2017
 type: Demo
@@ -14,7 +14,7 @@ platform: BBC Master
 download: bs-teletextr.ssd
 source: https://github.com/bitshifters/teletextr
 pouet: http://www.pouet.net/prod.php?which=70465
-video: https://www.youtube.com/watch?v=y2knYNDNKfY
+video: https://www.youtube.com/watch?v=J_JA5mcKRqc
 
 
 
