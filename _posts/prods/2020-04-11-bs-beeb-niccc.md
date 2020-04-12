@@ -13,7 +13,7 @@ type: Demo
 platform: BBC Micro
 download: bs-beeb-niccc.dsd
 source: https://github.com/kieranhj/stnicc-beeb
-pouet: 
+pouet: https://www.pouet.net/prod.php?which=85252
 video: https://youtu.be/_mVI9d2Acyw
 
 
