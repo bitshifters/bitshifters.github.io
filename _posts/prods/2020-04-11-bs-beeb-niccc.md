@@ -14,7 +14,7 @@ platform: BBC Micro
 download: bs-beeb-niccc.dsd
 source: https://github.com/kieranhj/stnicc-beeb
 pouet: https://www.pouet.net/prod.php?which=85252
-video: https://youtu.be/_mVI9d2Acyw
+video: https://www.youtube.com/watch?v=_mVI9d2Acyw
 
 
 ---
