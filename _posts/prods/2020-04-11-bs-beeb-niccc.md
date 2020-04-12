@@ -11,7 +11,7 @@ team: Bitshifters
 year: 2020
 type: Demo
 platform: BBC Micro
-download: bs-beeb-niccc.ssd
+download: bs-beeb-niccc.dsd
 source: https://github.com/kieranhj/stnicc-beeb
 pouet: 
 video: https://youtu.be/_mVI9d2Acyw
