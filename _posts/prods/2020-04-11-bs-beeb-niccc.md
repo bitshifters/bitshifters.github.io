@@ -25,5 +25,7 @@ A loving recreation of the classic demo STNICCC-2000 by Oxygene. Released at the
 
 Version 1.1 now supports the Video NuLA colour board for the BBC Micro to provide full 12-bit colour, same as the Atari STe demo, albeit at a slightly lower resolution. ;) If you would like to experience this version without the hardware then use the excellent [b2 emulator](https://github.com/tom-seddon/b2).
 
+<img src="../../content/nula-niccc.gif"/>
+
 ***Known Issues***
 This demo only works correctly on real floppy disc hardware or Gotek devices. DataCentre and MMC/MMFS devices may suffer slowdown and audio issues due to incompatible interrupt behaviour.
