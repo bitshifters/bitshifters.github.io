@@ -21,9 +21,9 @@ video: https://www.youtube.com/watch?v=_mVI9d2Acyw
 
 **BEEB-NICCC**
 
-A loving recreation of the classic demo STNICCC-2000 by Oxygene. Released at the Revision 2020 demoparty in the Oldskool Demo compo.
+A loving recreation of the classic demo STNICCC-2000 by Oxygene. Released at the Revision 2020 demoparty in the Oldskool Demo compo, winning 1st place!
+
+Version 1.1 now supports the Video NuLA colour board for the BBC Micro to provide full 12-bit colour, same as the Atari STe demo, albeit at a slightly lower resolution. ;) If you would like to experience this version without the hardware then use the excellent [b2 emulator](https://github.com/tom-seddon/b2).
 
 ***Known Issues***
-16K Sideways RAM is required in slot 4. This will be made configurable in an update coming soon.
-
-This party version only works on real floppy disc hardware or Gotek. DataCentre and MMC devices may suffer slowdown issues. Known bug sometimes causes freeze on Model B. Version 1.1 will be released asap!
+This demo only works correctly on real floppy disc hardware or Gotek devices. DataCentre and MMC/MMFS devices may suffer slowdown and audio issues due to incompatible interrupt behaviour.
