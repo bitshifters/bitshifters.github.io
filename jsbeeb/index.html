@@ -78,14 +78,14 @@
                 <li class="dropdown embed-hide">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Reset<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#reset" id="soft-reset">Soft reset</a></li>
-                        <li><a href="#reset" id="hard-reset">Hard reset</a></li>
+                        <li><a href="#" id="soft-reset">Soft reset</a></li>
+                        <li><a href="#" id="hard-reset">Hard reset</a></li>
                     </ul>
                 </li>
                 <li class="dropdown embed-hide">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">More<b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#fs" id="fs">Fullscreen</a></li>
+                        <li><a href="#" id="fs">Fullscreen</a></li>
                         <li><a href="#help" data-toggle="modal" data-target="#help">Help</a></li>
                         <li><a href="mailto:matt@godbolt.org">Contact the Author</a></li>
                         <li><a href="http://xania.org/MattGodbolt" rel="author" target="_blank">
@@ -94,9 +94,16 @@
                     </ul>
                 </li>
             </ul>
+            <div style="float:left; padding-top:12px; padding-left:32px;">
+                <input id="paste-text" type="text" maxlength="0" placeholder="Paste text or drop files here..." style="width:200px;"></input>
+            </div>
         </div>
         <!--/.nav-collapse -->
     </div>
+</div>
+
+<div id="audio-warning" class="alert alert-warning initially-hidden">
+Your browser has suspended audio -- mouse click or key press for sound.
 </div>
 
 <div>
@@ -118,7 +125,7 @@
                 <th>shift<br>lock</th>
                 <th>drive<br>0/2</th>
                 <th>drive<br>1/3</th>
-                <th>virtual<br>MHz</th>
+                <th id="virtual-mhz-header">virtual<br>MHz</th>
             </tr>
             </thead>
             <tbody>

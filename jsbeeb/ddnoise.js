@@ -53,14 +53,18 @@ define(['./utils', 'underscore', 'promise'], function (utils, _) {
     };
 
     DdNoise.prototype.oneShot = function (sound) {
-        var source = this.context.createBufferSource();
+        var duration = sound.duration;
+        var context = this.context;
+        if (context.state !== "running") return duration;
+        var source = context.createBufferSource();
         source.buffer = sound;
         source.connect(this.gain);
         source.start();
-        return sound.duration;
+        return duration;
     };
 
     DdNoise.prototype.play = function (sound, loop) {
+        if (this.context.state !== "running") return Promise.reject();
         var self = this;
         return new Promise(function (resolve, reject) {
             var source = self.context.createBufferSource();
@@ -83,12 +87,17 @@ define(['./utils', 'underscore', 'promise'], function (utils, _) {
         if (this.state === SPINNING || this.state === SPIN_UP) return;
         this.state = SPIN_UP;
         var self = this;
-        self.play(self.sounds.motorOn).then(function () {
+        this.play(this.sounds.motorOn).then(function () {
+            // Handle race: we may have had spinDown() called on us before the
+            // spinUp() initial sound finished playing.
+            if (self.state === IDLE) {
+                return;
+            }
             self.play(self.sounds.motor, true).then(function (source) {
                 self.motor = source;
                 self.state = SPINNING;
             });
-        });
+        }, function () {});
     };
 
     DdNoise.prototype.spinDown = function () {
@@ -125,7 +134,7 @@ define(['./utils', 'underscore', 'promise'], function (utils, _) {
     FakeDdNoise.prototype.seek = function () {
         return 0;
     };
-    FakeDdNoise.prototype.initialize = function () {
+    FakeDdNoise.prototype.initialise = function () {
         return Promise.resolve();
     };
 

@@ -7,8 +7,8 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
 
         var processor;
         var video;
-        var soundChip;
-        var ddNoise;
+        var soundChip = null;
+        var ddNoise = null;
         var dbgr;
         var frames = 0;
         var frameSkip = 0;
@@ -39,6 +39,13 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
         var keyCodes = utils.keyCodes;
         var emuKeyHandlers = {};
         var cpuMultiplier = 1;
+        var fastAsPossible = false;
+        var fastTape = false;
+        var noSeek = false;
+        var pauseEmu = false;
+        var stepEmuWhenPaused = false;
+        var audioFilterFreq = 7000;
+        var audioFilterQ = 5;
 
         if (queryString) {
             if (queryString[queryString.length - 1] === '/')  // workaround for shonky python web server
@@ -106,6 +113,18 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                             $(".embed-hide").hide();
                             $("#about").append(" jsbeeb");
                             break;
+                        case "fasttape":
+                            fastTape = true;
+                            break;
+                        case "noseek":
+                            noSeek = true;
+                            break;
+                        case "audiofilterfreq":
+                            audioFilterFreq = Number(val);
+                            break;
+                        case "audiofilterq":
+                            audioFilterQ = Number(val);
+                            break;
                     }
                 }
             });
@@ -168,7 +187,7 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
         }
         var $screen = $('#screen');
         var canvas = tryGl ? canvasLib.bestCanvas($screen[0]) : new canvasLib.Canvas($screen[0]);
-        video = new Video.Video(canvas.fb32, function paint(minx, miny, maxx, maxy) {
+        video = new Video.Video(model.isMaster, canvas.fb32, function paint(minx, miny, maxx, maxy) {
             frames++;
             if (frames < frameSkip) return;
             frames = 0;
@@ -177,11 +196,28 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
         if (parsedQuery.fakeVideo !== undefined)
             video = new Video.FakeVideo();
 
+        // Recent browsers, particularly Safari and Chrome, require a user
+        // interaction in order to enable sound playback.
+        function userInteraction() {
+            if (audioContext) audioContext.resume();
+        }
+
         var audioContext = typeof AudioContext !== 'undefined' ? new AudioContext() // jshint ignore:line
             : typeof webkitAudioContext !== 'undefined' ? new webkitAudioContext() // jshint ignore:line
                 : null;
+        var $audioWarningNode = $('#audio-warning');
+        $audioWarningNode.on('mousedown', function () {
+            userInteraction();
+        });
+
+        function checkAudioSuspended() {
+            if (audioContext.state === "suspended") $audioWarningNode.fadeIn();
+        }
 
         if (audioContext) {
+            audioContext.onstatechange = function () {
+                if (audioContext.state === "running") $audioWarningNode.fadeOut();
+            };
             soundChip = new SoundChip.SoundChip(audioContext.sampleRate);
             // NB must be assigned to some kind of object else it seems to get GC'd by
             // Safari...
@@ -191,18 +227,36 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                 var chan = outBuffer.getChannelData(0);
                 soundChip.render(chan, 0, chan.length);
             };
-            soundChip.jsAudioNode.connect(audioContext.destination);
-            ddNoise = new DdNoise.DdNoise(audioContext);
-        } else {
-            soundChip = new SoundChip.FakeSoundChip();
-            ddNoise = new DdNoise.FakeDdNoise();
+
+            if (audioFilterFreq !== 0) {
+                soundChip.filterNode = audioContext.createBiquadFilter();
+                soundChip.filterNode.type = "lowpass";
+                soundChip.filterNode.frequency.value = audioFilterFreq;
+                soundChip.filterNode.Q.value = audioFilterQ;
+                soundChip.jsAudioNode.connect(soundChip.filterNode);
+                soundChip.filterNode.connect(audioContext.destination);
+            } else {
+                soundChip.jsAudioNode.connect(audioContext.destination);
+            }
+
+            if (!noSeek) ddNoise = new DdNoise.DdNoise(audioContext);
+
+            $audioWarningNode.toggle(false);
+            // Firefox will report that audio is suspended even when it will
+            // start playing without user interaction, so we need to delay a
+            // little to get a reliable indication.
+            window.setTimeout(checkAudioSuspended, 1000);
         }
+        if (!soundChip) soundChip = new SoundChip.FakeSoundChip();
+        if (!ddNoise) ddNoise = new DdNoise.FakeDdNoise();
 
         var lastShiftLocation = 1;
         var lastCtrlLocation = 1;
         var lastAltLocation = 1;
 
         dbgr = new Debugger(video);
+
+        $('.initially-hidden').removeClass('initially-hidden');
 
         function keyCode(evt) {
             var ret = evt.which || evt.charCode || evt.keyCode;
@@ -242,17 +296,14 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                     switch (ret) {
                         case keyCodes.SHIFT:
                             lastShiftLocation = 1;
-                            //console.log("left shift");
                             return keyCodes.SHIFT_LEFT;
 
                         case keyCodes.ALT:
                             lastAltLocation = 1;
-                            //console.log("left alt");
                             return keyCodes.ALT_LEFT;
 
                         case keyCodes.CTRL:
                             lastCtrlLocation = 1;
-                            //console.log("left ctrl");
                             return keyCodes.CTRL_LEFT;
                     }
                     break;
@@ -260,28 +311,23 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                     switch (ret) {
                         case keyCodes.SHIFT:
                             lastShiftLocation = 2;
-                            //console.log("right shift");
                             return keyCodes.SHIFT_RIGHT;
 
                         case keyCodes.ALT:
                             lastAltLocation = 2;
-                            //console.log("right alt");
                             return keyCodes.ALT_RIGHT;
 
                         case keyCodes.CTRL:
                             lastCtrlLocation = 2;
-                            //console.log("right ctrl");
                             return keyCodes.CTRL_RIGHT;
                     }
                     break;
                 case 3: // numpad
                     switch (ret) {
                         case keyCodes.ENTER:
-                            console.log("numpad enter");
                             return utils.keyCodes.NUMPADENTER;
 
                         case keyCodes.DELETE:
-                            console.log("numpad dot");
                             return utils.keyCodes.NUMPAD_DECIMAL_POINT;
                     }
                     break;
@@ -291,12 +337,24 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
         }
 
         function keyPress(evt) {
-            if (running || !dbgr.enabled()) return;
+            if (document.activeElement.id === 'paste-text') return;
+            if (running || (!dbgr.enabled() && !pauseEmu)) return;
             var code = keyCode(evt);
-            if (code === 103 /* lower case g */) {
+            if (dbgr.enabled() && code === 103 /* lower case g */) {
                 dbgr.hide();
                 go();
                 return;
+            }
+            if (pauseEmu) {
+                if (code === 103 /* lower case g */) {
+                    pauseEmu = false;
+                    go();
+                    return;
+                } else if (code === 110 /* lower case n */) {
+                    stepEmuWhenPaused = true;
+                    go();
+                    return;
+                }
             }
             var handled = dbgr.keyPress(keyCode(evt));
             if (handled) evt.preventDefault();
@@ -314,6 +372,8 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
         };
 
         function keyDown(evt) {
+            userInteraction();
+            if (document.activeElement.id === 'paste-text') return;
             if (!running) return;
             var code = keyCode(evt);
             if (evt.altKey) {
@@ -325,10 +385,23 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             } else if (code === utils.keyCodes.HOME && evt.ctrlKey) {
                 utils.noteEvent('keyboard', 'press', 'home');
                 stop(true);
+            } else if (code === utils.keyCodes.INSERT && evt.ctrlKey) {
+                utils.noteEvent('keyboard', 'press', 'insert');
+                fastAsPossible = !fastAsPossible;
+            } else if (code === utils.keyCodes.END && evt.ctrlKey) {
+                utils.noteEvent('keyboard', 'press', 'end');
+                pauseEmu = true;
+                stop(false);
             } else if (code === utils.keyCodes.F12 || code === utils.keyCodes.BREAK) {
                 utils.noteEvent('keyboard', 'press', 'break');
                 processor.setReset(true);
                 evt.preventDefault();
+            } else if (code === utils.keyCodes.B && evt.ctrlKey) {
+                // Ctrl-B turns on the printer, so we open a printer output
+                // window in addition to passing the keypress along to the beeb.
+                processor.sysvia.keyDown(keyCode(evt), evt.shiftKey);
+                evt.preventDefault();
+                checkPrinterWindow();
             } else {
                 processor.sysvia.keyDown(keyCode(evt), evt.shiftKey);
                 evt.preventDefault();
@@ -336,9 +409,11 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
         }
 
         function keyUp(evt) {
+            if (document.activeElement.id === 'paste-text') return;
             // Always let the key ups come through. That way we don't cause sticky keys in the debugger.
             var code = keyCode(evt);
-            processor.sysvia.keyUp(code);
+            if (processor && processor.sysvia)
+                processor.sysvia.keyUp(code);
             if (!running) return;
             if (evt.altKey) {
                 var handler = emuKeyHandlers[code];
@@ -352,8 +427,39 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             evt.preventDefault();
         }
 
+        function loadHTMLFile(file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                processor.fdc.loadDisc(0, disc.discFor(processor.fdc, file.name, e.target.result));
+                delete parsedQuery.disc;
+                delete parsedQuery.disc1;
+                updateUrl();
+                $('#discs').modal("hide");
+            };
+            reader.readAsBinaryString(file);
+        }
+
+        var $pastetext = $('#paste-text');
+        $pastetext.on('paste', function (event) {
+            var text = event.originalEvent.clipboardData.getData('text/plain');
+            sendRawKeyboardToBBC(utils.stringToBBCKeys(text), true);
+        });
+        $pastetext.on('dragover', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            event.originalEvent.dataTransfer.dropEffect = "copy";
+        });
+        $pastetext.on('drop', function (event) {
+            utils.noteEvent('local', 'drop');
+            var file = event.originalEvent.dataTransfer.files[0];
+            loadHTMLFile(file);
+        });
+
         var $cub = $('#cub-monitor');
         $cub.on('mousemove mousedown mouseup', function (evt) {
+            userInteraction();
+            if (document.activeElement !== document.body)
+                document.activeElement.blur();
             var cubOffset = $cub.offset();
             var screenOffset = $screen.offset();
             var x = (evt.offsetX - cubOffset.left + screenOffset.left) / $screen.width();
@@ -366,9 +472,25 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
         $(window).blur(function () {
             if (processor.sysvia) processor.sysvia.clearKeys();
         });
+
+        $('#fs').click(function (event) {
+            $screen[0].requestFullscreen();
+            event.preventDefault();
+        });
+
         document.onkeydown = keyDown;
         document.onkeypress = keyPress;
         document.onkeyup = keyUp;
+
+        // To lower chance of data loss, only accept drop events in the drop
+        // zone in the menu bar.
+        document.ondragover = function (event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = "none";
+        };
+        document.ondrop = function (event) {
+            event.preventDefault();
+        };
 
         window.onbeforeunload = function () {
             if (running && processor.sysvia.hasAnyKeyDown()) {
@@ -413,14 +535,48 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             };
         }
 
+        var printerWindow = null;
+        var printerTextArea = null;
+
+        function checkPrinterWindow() {
+            if (printerWindow && !printerWindow.closed) return;
+
+            printerWindow = window.open('', '_blank', 'height=300,width=400');
+            printerWindow.document.write('<textarea id="text" rows="15" cols="40" placeholder="Printer outputs here..."></textarea>');
+            printerTextArea = printerWindow.document.getElementById('text');
+
+            processor.uservia.setca1(true);
+        }
+
+        var printerPort = {
+            outputStrobe: function (level, output) {
+                if (!printerTextArea) return;
+                if (!output || level) return;
+
+                var uservia = processor.uservia;
+                // Ack the character by pulsing CA1 low.
+                uservia.setca1(false);
+                uservia.setca1(true);
+                var newChar = String.fromCharCode(uservia.ora);
+                printerTextArea.value += newChar;
+            }
+        };
+
         var emulationConfig = {
             keyLayout: keyLayout,
             cpuMultiplier: cpuMultiplier,
             videoCyclesBatch: parsedQuery.videoCyclesBatch,
             extraRoms: extraRoms,
-            userPort: userPort
+            userPort: userPort,
+            printerPort: printerPort,
         };
         processor = new Cpu6502(model, dbgr, video, soundChip, ddNoise, cmos, emulationConfig);
+
+        function setDisc1Image(name) {
+            delete parsedQuery.disc;
+            parsedQuery.disc1 = name;
+            updateUrl();
+        }
 
         function sthClearList() {
             $("#sth-list li:not('.template')").remove();
@@ -434,14 +590,13 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
 
         function discSthClick(item) {
             utils.noteEvent('sth', 'click', item);
-            parsedQuery.disc = "sth:" + item;
-            updateUrl();
+            setDisc1Image("sth:" + item);
             var needsAutoboot = parsedQuery.autoboot !== undefined;
             if (needsAutoboot) {
                 processor.reset(true);
             }
             popupLoading("Loading " + item);
-            loadDiscImage(parsedQuery.disc).then(function (disc) {
+            loadDiscImage(parsedQuery.disc1).then(function (disc) {
                 processor.fdc.loadDisc(0, disc);
             }).then(
                 function () {
@@ -494,7 +649,6 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                     if (all.length) _.delay(doSome, Delay, remaining);
                 }
 
-                console.log("Found", cat.length, "STH entries");
                 doSome(cat);
             };
         }
@@ -540,11 +694,20 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             setSthFilter($('#sth-filter').val());
         });
 
-        function sendRawKeyboardToBBC() {
-            var keysToSend = Array.prototype.slice.call(arguments, 0);
+        function sendRawKeyboardToBBC(keysToSend, checkCapsAndShiftLocks) {
             var lastChar;
             var nextKeyMillis = 0;
             processor.sysvia.disableKeyboard();
+
+            if (checkCapsAndShiftLocks) {
+                var toggleKey = null;
+                if (!processor.sysvia.capsLockLight) toggleKey = BBC.CAPSLOCK;
+                else if (processor.sysvia.shiftLockLight) toggleKey = BBC.SHIFTLOCK;
+                if (toggleKey) {
+                    keysToSend.unshift(toggleKey);
+                    keysToSend.push(toggleKey);
+                }
+            }
 
             var sendCharHook = processor.debugInstruction.add(function nextCharHook() {
                 var millis = processor.cycleSeconds * 1000 + processor.currentCycles / (clocksPerSecond / 1000);
@@ -594,11 +757,8 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             console.log("Autobooting disc");
             utils.noteEvent('init', 'autoboot', image);
 
-            sendRawKeyboardToBBC(0,
-                // Shift on power-on -> run !Boot from the disc
-                BBC.SHIFT,
-                1000 // pause in ms
-            );
+            // Shift-break simulation, hold SHIFT for 1000ms.
+            sendRawKeyboardToBBC([BBC.SHIFT, 1000], false);
         }
 
         function autoChainTape() {
@@ -607,26 +767,8 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             console.log("Auto Chaining Tape");
             utils.noteEvent('init', 'autochain');
 
-            sendRawKeyboardToBBC(1000,
-                // *TAPE
-                // CH.""
-                BBC.SHIFT,
-                BBC.COLON_STAR,
-                BBC.SHIFT,
-                BBC.T,
-                BBC.A,
-                BBC.P,
-                BBC.E,
-                BBC.RETURN,
-                BBC.C,
-                BBC.H,
-                BBC.PERIOD,
-                BBC.SHIFT,
-                BBC.K2,
-                BBC.K2,
-                BBC.SHIFT,
-                BBC.RETURN
-            );
+            var bbcKeys = utils.stringToBBCKeys('*TAPE\nCH.""\n');
+            sendRawKeyboardToBBC([1000].concat(bbcKeys), false);
         }
 
         function autoRunTape() {
@@ -635,23 +777,8 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             console.log("Auto Running Tape");
             utils.noteEvent('init', 'autorun');
 
-            sendRawKeyboardToBBC(1000,
-                // *TAPE
-                // */
-                BBC.SHIFT,
-                BBC.COLON_STAR,
-                BBC.SHIFT,
-                BBC.T,
-                BBC.A,
-                BBC.P,
-                BBC.E,
-                BBC.RETURN,
-                BBC.SHIFT,
-                BBC.COLON_STAR,
-                BBC.SHIFT,
-                BBC.SLASH,
-                BBC.RETURN
-            );
+            var bbcKeys = utils.stringToBBCKeys('*TAPE\n*/\n');
+            sendRawKeyboardToBBC([1000].concat(bbcKeys), false);
         }
 
         function autoRunBasic() {
@@ -660,13 +787,8 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             console.log("Auto Running basic");
             utils.noteEvent('init', 'autorunbasic');
 
-            sendRawKeyboardToBBC(1000,
-                // RUN
-                BBC.R,
-                BBC.U,
-                BBC.N,
-                BBC.RETURN
-            );
+            var bbcKeys = utils.stringToBBCKeys('RUN\n');
+            sendRawKeyboardToBBC([1000].concat(bbcKeys), false);
         }
 
         function updateUrl() {
@@ -710,7 +832,7 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             // * Dialog box (ugh) saying "is this ok?"
             if (schema === "|" || schema === "sth") {
                 return discSth.fetch(discImage).then(function (discData) {
-                    return disc.discFor(processor.fdc, false, discData);
+                    return disc.discFor(processor.fdc, discImage, discData);
                 });
             }
             if (schema === "gd") {
@@ -727,7 +849,7 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                 var unzipped = utils.unzipDiscImage(arr);
                 var discData = unzipped.data;
                 discImage = unzipped.name;
-                return Promise.resolve(disc.discFor(processor.fdc, /\.dsd$/i.test(discImage), discData));
+                return Promise.resolve(disc.discFor(processor.fdc, discImage, discData));
             }
             if (schema === "http" || schema === "https") {
                 return utils.loadData(schema + "://" + discImage).then(function (discData) {
@@ -736,12 +858,12 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                         discData = unzipped.data;
                         discImage = unzipped.name;
                     }
-                    return disc.discFor(processor.fdc, /\.dsd$/i.test(discImage), discData);
+                    return disc.discFor(processor.fdc, discImage, discData);
                 });
             }
 
             return disc.load("discs/" + discImage).then(function (discData) {
-                return disc.discFor(processor.fdc, /\.dsd$/i.test(discImage), discData);
+                return disc.discFor(processor.fdc, discImage, discData);
             });
         }
 
@@ -778,16 +900,9 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
         }
 
         $('#disc_load').change(function (evt) {
-            var file = evt.target.files[0];
-            var reader = new FileReader();
             utils.noteEvent('local', 'click'); // NB no filename here
-            reader.onload = function (e) {
-                processor.fdc.loadDisc(0, disc.discFor(processor.fdc, /\.dsd$/i.test(file.name), e.target.result));
-                delete parsedQuery.disc;
-                updateUrl();
-                $('#discs').modal("hide");
-            };
-            reader.readAsBinaryString(file);
+            var file = evt.target.files[0];
+            loadHTMLFile(file);
         });
 
         $('#tape_load').change(function (evt) {
@@ -865,15 +980,12 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
         });
 
         function gdLoad(cat) {
-            utils.noteEvent('google-drive', 'click', cat.title);
             // TODO: have a onclose flush event, handle errors
             /*
              $(window).bind("beforeunload", function() {
              return confirm("Do you really want to close?");
              });
              */
-            parsedQuery.disc = "gd:" + cat.id + "/" + cat.title;
-            updateUrl();
             popupLoading("Loading '" + cat.title + "' from Google Drive");
             return googleDrive.initialise()
                 .then(function (available) {
@@ -938,6 +1050,8 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                     var row = template.clone().removeClass("template").appendTo(dbList);
                     row.find(".name").text(cat.title);
                     $(row).on("click", function () {
+                        utils.noteEvent('google-drive', 'click', cat.title);
+                        setDisc1Image("gd:" + cat.id + "/" + cat.title);
                         gdLoad(cat).then(function (ssd) {
                             processor.fdc.loadDisc(0, ssd);
                         });
@@ -954,9 +1068,8 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             elem.find(".description").text(image.desc);
             $(elem).on("click", function () {
                 utils.noteEvent('images', 'click', image.file);
-                parsedQuery.disc = image.file;
-                updateUrl();
-                loadDiscImage(parsedQuery.disc).then(function (disc) {
+                setDisc1Image(image.file);
+                loadDiscImage(parsedQuery.disc1).then(function (disc) {
                     processor.fdc.loadDisc(0, disc);
                 });
                 $('#discs').modal("hide");
@@ -972,21 +1085,22 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             popupLoading("Creating '" + text + "' on Google Drive");
             googleDrive.create(processor.fdc, text)
                 .then(function (result) {
-                    parsedQuery.disc = "gd:" + result.fileId + "/" + text;
+                    setDisc1Image("gd:" + result.fileId + "/" + text);
                     processor.fdc.loadDisc(0, result.disc);
-                    updateUrl();
                     loadingFinished();
                 }, function (error) {
                     loadingFinished(error);
                 });
         });
 
-        $('#hard-reset').click(function () {
+        $('#hard-reset').click(function (event) {
             processor.reset(true);
+            event.preventDefault();
         });
 
-        $('#soft-reset').click(function () {
+        $('#soft-reset').click(function (event) {
             processor.reset(false);
+            event.preventDefault();
         });
 
         function guessModelFromUrl() {
@@ -1044,14 +1158,9 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                 }));
                 if (parsedQuery.tape) imageLoads.push(loadTapeImage(parsedQuery.tape));
 
-                if (parsedQuery.loadBasic) {
-                    var needsRun = needsAutoboot === "run";
-                    needsAutoboot = "";
-                    imageLoads.push(utils.loadData(parsedQuery.loadBasic).then(function (data) {
-                        var prog = String.fromCharCode.apply(null, data);
-                        return tokeniser.create().then(function (t) {
-                            return t.tokenise(prog);
-                        });
+                function insertBasic(getBasicPromise,needsRun){
+                    imageLoads.push(getBasicPromise.then(function (prog) {
+                        return tokeniser.create().then(function (t) { return t.tokenise(prog); });
                     }).then(function (tokenised) {
                         var idleAddr = processor.model.isMaster ? 0xe7e6 : 0xe581;
                         var hook = processor.debugInstruction.add(function (addr) {
@@ -1074,6 +1183,22 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                             }
                         });
                     }));
+                }
+
+                if (parsedQuery.loadBasic) {
+                    var needsRun = needsAutoboot === "run";
+                    needsAutoboot = "";
+                    insertBasic(new Promise(function(resolve,reject){
+                        utils.loadData(parsedQuery.loadBasic).then(function (data) {
+                            resolve(String.fromCharCode.apply(null, data));
+                        });
+                    }),needsRun);
+                }
+
+                if (parsedQuery.embedBasic) {
+                    insertBasic(new Promise(function(resolve,reject){
+                        resolve(parsedQuery.embedBasic);
+                    }),true);
                 }
 
                 return Promise.all(imageLoads);
@@ -1164,10 +1289,13 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             this.cycles = 0;
             this.time = 0;
             this.v = $('.virtualMHz');
+            this.header = $('#virtual-mhz-header');
+            this.speedy = false;
 
-            this.update = function (cycles, time) {
+            this.update = function (cycles, time, speedy) {
                 this.cycles += cycles;
                 this.time += time;
+                this.speedy = speedy;
             };
 
             this.display = function () {
@@ -1178,6 +1306,11 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                     if (this.cycles >= 10 * 2 * 1000 * 1000) {
                         this.cycles = this.time = 0;
                     }
+                    var colour = "white";
+                    if (this.speedy) {
+                        colour = "red";
+                    }
+                    this.header.css("color", colour);
                 }
                 setTimeout(this.display.bind(this), 3333);
             };
@@ -1192,32 +1325,68 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
                 last = 0;
                 return;
             }
-            requestAnimationFrame(draw);
+            // If we got here via setTimeout, we don't get passed the time.
+            if (now === undefined) {
+                now = window.performance.now();
+            }
+
+            var motorOn = processor.acia.motorOn;
+            var speedy = fastAsPossible || (fastTape && motorOn);
+            var useTimeout = speedy || motorOn;
+            var timeout = speedy ? 0 : (1000.0 / 50);
+
+            // In speedy mode, we still run all the state machines accurately
+            // but we paint less often because painting is the most expensive
+            // part of jsbeeb at this time.
+            // We need need to paint per odd number of frames so that interlace
+            // modes, i.e. MODE 7, still look ok.
+            var frameSkipCount = speedy ? 9 : 0;
+            video.frameSkipCount = frameSkipCount;
+
+            // We use setTimeout instead of requestAnimationFrame in two cases:
+            // a) We're trying to run as fast as possible.
+            // b) Tape is playing, normal speed but backgrounded tab should run.
+            if (useTimeout) {
+                window.setTimeout(draw, timeout);
+            } else {
+                window.requestAnimationFrame(draw);
+            }
+
             gamepad.update(processor.sysvia);
             syncLights();
             if (last !== 0) {
-                var sinceLast = now - last;
-                var cycles = (sinceLast * clocksPerSecond / 1000) | 0;
-                cycles = Math.min(cycles, MaxCyclesPerFrame);
+                var cycles;
+                if (!speedy) {
+                    // Now and last are DOMHighResTimeStamp, just a double.
+                    var sinceLast = now - last;
+                    cycles = sinceLast * clocksPerSecond / 1000;
+                    cycles = Math.min(cycles, MaxCyclesPerFrame);
+                } else {
+                    cycles = clocksPerSecond / 50;
+                }
+                cycles |= 0;
                 try {
-                    var begin = performance.now();
                     if (!processor.execute(cycles)) {
                         stop(true);
                     }
                     var end = performance.now();
-                    virtualSpeedUpdater.update(cycles, end - begin);
+                    virtualSpeedUpdater.update(cycles, end - now, speedy);
                 } catch (e) {
                     running = false;
                     utils.noteEvent('exception', 'thrown', e.stack);
                     dbgr.debug(processor.pc);
                     throw e;
                 }
+                if (stepEmuWhenPaused) {
+                    stop(false);
+                    stepEmuWhenPaused = false;
+                }
             }
             last = now;
         }
 
         function run() {
-            requestAnimationFrame(draw);
+            window.requestAnimationFrame(draw);
         }
 
         var wasPreviouslyRunning = false;
@@ -1254,7 +1423,6 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
 
         (function () {
             const $cubMonitor = $("#cub-monitor");
-            var isFullscreen = false;
             var cubOrigHeight = $cubMonitor.height();
             var cubToScreenHeightRatio = $screen.height() / cubOrigHeight;
             var cubOrigWidth = $cubMonitor.width();
@@ -1267,31 +1435,19 @@ require(['jquery', 'underscore', 'utils', 'video', 'soundchip', 'ddnoise', 'debu
             const bottomReservedSize = 100;
 
             function resizeTv() {
-                var width = Math.max(minWidth, window.innerWidth - (isFullscreen ? 0 : borderReservedSize * 2));
-                var height = Math.max(minHeight, window.innerHeight - navbarHeight) -
-                    (isFullscreen ? 0 : bottomReservedSize);
+                var width = Math.max(minWidth, window.innerWidth - borderReservedSize * 2);
+                var height = Math.max(minHeight, window.innerHeight - navbarHeight - bottomReservedSize);
                 if (width / height <= desiredAspectRatio) {
                     height = width / desiredAspectRatio;
                 } else {
                     width = height * desiredAspectRatio;
                 }
-                console.log(width / height, desiredAspectRatio);
                 $('#cub-monitor').height(height).width(width);
                 $('#cub-monitor-pic').height(height).width(width);
                 $screen.height(height * cubToScreenHeightRatio).width(width * cubToScreenWidthRatio);
             }
 
-            function toggleFullscreen() {
-                isFullscreen = !isFullscreen;
-                $cubMonitor.toggleClass("fullscreen", isFullscreen);
-                $("#cub-monitor-pic").toggle(!isFullscreen);
-                $(".sidebar .bottom").toggle(!isFullscreen);
-                $screen.toggleClass("fullscreen", isFullscreen);
-                resizeTv();
-            }
-
             window.onresize = resizeTv;
-            $("#fs").click(toggleFullscreen);
             resizeTv();
         })();
 

@@ -75,7 +75,8 @@ define(['jquery', 'utils', 'fdc', 'underscore', 'promise'], function ($, utils, 
                 'mimeType': MIME_TYPE
             };
 
-            var base64Data = btoa(String.fromCharCode.apply(null, data));
+            var str = utils.uint8ArrayToString(data);
+            var base64Data = btoa(str);
             var multipartRequestBody =
                 delimiter +
                 'Content-Type: application/json\r\n\r\n' +
@@ -104,10 +105,10 @@ define(['jquery', 'utils', 'fdc', 'underscore', 'promise'], function ($, utils, 
         }
 
         self.create = function (fdc, name) {
-            console.log("Creating disc image");
-            var data = new Uint8Array(100 * 1024);
-            for (var i = 0; i < Math.max(12, name.length); ++i)
-                data[i] = name.charCodeAt(i) & 0xff;
+            console.log("Google Drive: creating disc image: '" + name + "'");
+            var byteSize = utils.discImageSize(name).byteSize;
+            var data = new Uint8Array(byteSize);
+            utils.setDiscName(data, name);
             return saveFile(name, data)
                 .then(function (response) {
                     var meta = response.result;
@@ -126,11 +127,11 @@ define(['jquery', 'utils', 'fdc', 'underscore', 'promise'], function ($, utils, 
 
                     xhr.onload = function () {
                         if (xhr.status !== 200) {
-                            reject(new Error("Unable to load " + file.title + ", http code " + xhr.status));
+                            reject(new Error("Unable to load '" + file.title + "', http code " + xhr.status));
                         } else if (typeof xhr.response !== "string") {
                             resolve(xhr.response);
                         } else {
-                            resolve(utils.makeBinaryData(xhr.response));
+                            resolve(utils.stringToUint8Array(xhr.response));
                         }
                     };
                     xhr.onerror = function () {
@@ -145,21 +146,18 @@ define(['jquery', 'utils', 'fdc', 'underscore', 'promise'], function ($, utils, 
 
         function makeDisc(fdc, data, meta) {
             var flusher = null;
-            if (data.length < 100 * 1024) {
-                throw new Error("Invalid disc data: expected at least 100KB image (found " + data.length + " byte image)");
-                //data = new Uint8Array(100*1024);
-            }
+            var name = meta.title;
             if (meta.editable) {
                 console.log("Making editable disc");
                 flusher = _.debounce(function () {
-                    saveFile(meta.title, data, meta.id).then(function () {
+                    saveFile(this.name, this.data, meta.id).then(function () {
                         console.log("Saved ok");
                     });
                 }, 200);
             } else {
                 console.log("Making read-only disc");
             }
-            return new BaseSsd(fdc, false, data, flusher);
+            return new BaseSsd(fdc, name, data, flusher);
         }
 
         self.load = function (fdc, fileId) {

@@ -60,6 +60,7 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
 
             cpu.checkInt = function () {
                 cpu.takeInt = !!(cpu.interrupt && !cpu.p.i);
+                cpu.takeInt |= cpu.nmi;
             };
 
             cpu.setzn = function (v) {
@@ -83,16 +84,44 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                 cpu.nmi = !!nmi;
             };
 
-            cpu.brk = function () {
-                var nextByte = cpu.pc + 1;
-                cpu.push(nextByte >>> 8);
-                cpu.push(nextByte & 0xff);
-                cpu.push(cpu.p.asByte());
-                cpu.pc = cpu.readmem(0xfffe) | (cpu.readmem(0xffff) << 8);
+            cpu.brk = function (isIrq) {
+                // Behavior here generally discovered via Visual 6502 analysis.
+                // 6502 has a quirky BRK; it was sanitized in 65c12.
+                // See also https://wiki.nesdev.com/w/index.php/CPU_interrupts
+                var pushAddr = cpu.pc;
+                if (!isIrq) pushAddr = (pushAddr + 1) & 0xffff;
+                cpu.readmem(pushAddr);
+
+                cpu.push(pushAddr >>> 8);
+                cpu.push(pushAddr & 0xff);
+                var pushFlags = cpu.p.asByte();
+                if (isIrq) pushFlags &= ~0x10;
+                cpu.push(pushFlags);
+
+                // NMI status is determined part way through the BRK / IRQ
+                // sequence, and yes, on 6502, an NMI can redirect the vector
+                // for a half-way done BRK instruction.
+                cpu.polltime(4);
+                var vector = 0xfffe;
+                if ((model.nmos || isIrq) && this.nmi) {
+                    vector = 0xfffa;
+                    cpu.nmi = false;
+                }
+                cpu.takeInt = false;
+                cpu.pc = cpu.readmem(vector) | (cpu.readmem(vector + 1) << 8);
                 cpu.p.i = true;
-                if (!model.nmos) {
+                if (model.nmos) {
+                    cpu.polltime(3);
+                } else {
                     cpu.p.d = false;
-                    cpu.takeInt = false;
+                    if (isIrq) {
+                        cpu.polltime(3);
+                    } else {
+                        cpu.polltime(2);
+                        // TODO: check 65c12 BRK interrupt poll timing.
+                        cpu.checkInt();
+                        cpu.polltime(1);
+                    }
                 }
             };
 
@@ -107,9 +136,26 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                 var newPc = (cpu.pc + offset) & 0xffff;
                 var pageCrossed = !!((cpu.pc & 0xff00) ^ (newPc & 0xff00));
                 cpu.pc = newPc;
-                cpu.polltime(pageCrossed ? 3 : 2);
-                cpu.checkInt();
-                cpu.polltime(1);
+                if (!model.nmos) {
+                    cpu.polltime(2 + pageCrossed);
+                    cpu.checkInt();
+                    cpu.polltime(1);
+                } else if (!pageCrossed) {
+                    cpu.polltime(1);
+                    cpu.checkInt();
+                    cpu.polltime(2);
+                } else {
+                    // 6502 polls twice during a taken branch with page
+                    // crossing and either is sufficient to trigger IRQ.
+                    // See https://wiki.nesdev.com/w/index.php/CPU_interrupts
+                    cpu.polltime(1);
+                    cpu.checkInt();
+                    var sawInt = cpu.takeInt;
+                    cpu.polltime(2);
+                    cpu.checkInt();
+                    cpu.takeInt |= sawInt;
+                    cpu.polltime(1);
+                }
             };
 
             function adcNonBCD(addend) {
@@ -329,26 +375,7 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                     var opcode = this.readmem(this.pc);
                     this.incpc();
                     this.runner.run(opcode);
-                    if (this.takeInt) {
-                        this.takeInt = false;
-                        this.push(this.pc >>> 8);
-                        this.push(this.pc & 0xff);
-                        this.push(this.p.asByte() & ~0x10);
-                        this.pc = this.readmem(0xfffe) | (this.readmem(0xffff) << 8);
-                        this.p.i = true;
-                        this.polltime(7);
-                    }
-                    if (this.nmi) {
-                        this.push(this.pc >>> 8);
-                        this.push(this.pc & 0xff);
-                        this.push(this.p.asByte() & ~0x10);
-                        this.pc = this.readmem(0xfffa) | (this.readmem(0xfffb) << 8);
-                        this.p.i = true;
-                        this.polltime(7);
-                        this.nmi = false;
-                        if (!model.nmos)
-                            this.p.d = false;
-                    }
+                    if (this.takeInt) this.brk(true);
                 }
             };
 
@@ -395,6 +422,8 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                 config.cpuMultiplier = 1;
             if (!config.userPort)
                 config.userPort = new FakeUserPort();
+            if (config.printerPort === undefined)
+                config.printerPort = null;
             config.extraRoms = config.extraRoms || [];
             return config;
         }
@@ -468,17 +497,33 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                 // as the video circuitry will already be looking at 0x3000 or so above
                 // the offset.
                 this.videoDisplayPage = (b & 1) ? 0x8000 : 0x0000;
-                // The RAM the processor sees for writes when executing OS instructions
-                // is controlled by the "E" bit.
-                this.memStatOffsetByIFetchBank[0xc] = this.memStatOffsetByIFetchBank[0xd] = (b & 2) ? 256 : 0;
+
+                var bitE = !!(b & 2);
+                var bitX = !!(b & 4);
+                var bitY = !!(b & 8);
                 var i;
                 // The "X" bit controls the "illegal" paging 20KB region overlay of LYNNE.
-                var lowRamOffset = (b & 4) ? 0x8000 : 0;
-                for (i = 48; i < 128; ++i) this.memLook[i] = lowRamOffset;
+                // This loop rewires which paged RAM 0x3000 - 0x7fff hits.
+                for (i = 48; i < 128; ++i) {
+                    // For "normal" access, it's simple: shadow or not.
+                    this.memLook[i] = bitX ? 0x8000 : 0;
+                    // For special Master opcode access at 0xc000 - 0xdfff,
+                    // it's more involved.
+                    if (bitY) {
+                       // If 0xc000 is mapped as RAM, the Master opcode access
+                       // is disabled; follow what normal access does.
+                       this.memLook[i + 256] = this.memLook[i];
+                    } else {
+                       // Master opcode access enabled; bit E determines whether
+                       // it hits shadow RAM or normal RAM. This is independent
+                       // of bit X.
+                       this.memLook[i + 256] = bitE ? 0x8000 : 0;
+                    }
+                }
                 // The "Y" bit pages in HAZEL at c000->dfff. HAZEL is mapped in our RAM
                 // at 0x9000, so (0x9000 - 0xc000) = -0x3000 is needed as an offset.
-                var hazelRAM = (b & 8) ? 1 : 2;
-                var hazelOff = (b & 8) ? -0x3000 : this.osOffset - 0xc000;
+                var hazelRAM = bitY ? 1 : 2;
+                var hazelOff = bitY ? -0x3000 : this.osOffset - 0xc000;
                 for (i = 192; i < 224; ++i) {
                     this.memLook[i] = this.memLook[i + 256] = hazelOff;
                     this.memStat[i] = this.memStat[i + 256] = hazelRAM;
@@ -581,6 +626,9 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                     case 0xfe24:
                     case 0xfe28:
                         if (model.isMaster) return this.fdc.read(addr);
+                        break;
+                    case 0xfe30:
+                        if (model.isMaster) return this.romsel & 0x8f;
                         break;
                     case 0xfe34:
                         if (model.isMaster) return this.acccon;
@@ -717,13 +765,14 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                     case 0xfe20:
                         return this.ula.write(addr, b);
                     case 0xfe24:
+                    case 0xfe28:
                         if (model.isMaster) {
                             return this.fdc.write(addr, b);
                         }
                         return this.ula.write(addr, b);
-                    case 0xfe28:
-                        if (model.isMaster) {
-                            return this.fdc.write(addr, b);
+                    case 0xfe2c:
+                        if (!model.isMaster) {
+                            return this.ula.write(addr, b);
                         }
                         break;
                     case 0xfe30:
@@ -731,6 +780,12 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                     case 0xfe34:
                         if (model.isMaster) {
                             return this.writeAcccon(b);
+                        }
+                        return this.romSelect(b);
+                    case 0xfe38:
+                    case 0xfe3c:
+                        if (!model.isMaster) {
+                            return this.romSelect(b);
                         }
                         break;
                     case 0xfe40:
@@ -791,6 +846,10 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                 console.log("Loading ROM from " + name);
                 var ramRomOs = this.ramRomOs;
                 return utils.loadData(name).then(function (data) {
+                    if (/\.zip/i.test(name)) {
+                        data = utils.unzipRomImage(data).data;
+                    }
+
                     var len = data.length;
                     if (len !== 16384 && len !== 8192) {
                         throw new Error("Broken rom file");
@@ -841,11 +900,17 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                 var i;
                 if (hard) {
                     for (i = 0; i < 16; ++i) this.memStatOffsetByIFetchBank[i] = 0;
+                    if (model.isMaster) {
+                        // On the Master, opcodes exeucting from 0xc000 - 0xdfff
+                        // can have optionally have their memory accesses
+                        // redirected to shadow RAM.
+                        this.memStatOffsetByIFetchBank[0xc] = 256;
+                        this.memStatOffsetByIFetchBank[0xd] = 256;
+                    }
                     if (!model.isTest) {
                         for (i = 0; i < 128; ++i) this.memStat[i] = this.memStat[256 + i] = 1;
                         for (i = 128; i < 256; ++i) this.memStat[i] = this.memStat[256 + i] = 2;
                         for (i = 0; i < 128; ++i) this.memLook[i] = this.memLook[256 + i] = 0;
-                        for (i = 48; i < 128; ++i) this.memLook[256 + i] = 32768;
                         for (i = 128; i < 192; ++i) this.memLook[i] = this.memLook[256 + i] = this.romOffset - 0x8000;
                         for (i = 192; i < 256; ++i) this.memLook[i] = this.memLook[256 + i] = this.osOffset - 0xc000;
 
@@ -857,16 +922,29 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                             this.memLook[i] = this.memLook[256 + i] = 0;
                         }
                     }
-                    for (i = 0; i < this.romOffset; ++i)
-                        this.ramRomOs[i] = 0xff;
+                    // DRAM content is not guaranteed to contain any particular
+                    // value on start up, so we choose values that help avoid
+                    // bugs in various games.
+                    for (i = 0; i < this.romOffset; ++i) {
+                        if (i < 0x100) {
+                            // For Clogger.
+                            this.ramRomOs[i] = 0x00;
+                        } else {
+                            // For Eagle Empire.
+                            this.ramRomOs[i] = 0xff;
+                        }
+                    }
                     this.videoDisplayPage = 0;
                     this.scheduler = new scheduler.Scheduler();
                     this.soundChip.setScheduler(this.scheduler);
                     this.sysvia = via.SysVia(this, this.video, this.soundChip, cmos, model.isMaster, config.keyLayout);
                     this.uservia = via.UserVia(this, model.isMaster, config.userPort);
+                    if (config.printerPort)
+                        this.uservia.ca2changecallback = config.printerPort.outputStrobe;
                     this.touchScreen = new TouchScreen(this.scheduler);
                     this.acia = new Acia(this, this.soundChip.toneGenerator, this.scheduler, this.touchScreen);
                     this.serial = new Serial(this.acia);
+                    this.ddNoise.spinDown();
                     this.fdc = new model.Fdc(this, this.ddNoise, this.scheduler);
                     this.crtc = this.video.crtc;
                     this.ula = this.video.ula;
@@ -941,27 +1019,6 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                 this.polltime = this.polltimeSlow;
             }
 
-            this.handleIrq = function () {
-                this.takeInt = false;
-                this.push(this.pc >>> 8);
-                this.push(this.pc & 0xff);
-                this.push(this.p.asByte() & ~0x10);
-                this.pc = this.readmem(0xfffe) | (this.readmem(0xffff) << 8);
-                this.p.i = true;
-                this.polltime(7);
-            };
-
-            this.handleNmi = function () {
-                this.push(this.pc >>> 8);
-                this.push(this.pc & 0xff);
-                this.push(this.p.asByte() & ~0x10);
-                this.pc = this.readmem(0xfffa) | (this.readmem(0xfffb) << 8);
-                this.p.i = true;
-                this.polltime(7);
-                this.nmi = false;
-                if (!model.nmos)
-                    this.p.d = false;
-            };
             this.execute = function (numCyclesToRun) {
                 this.halted = false;
                 this.targetCycles += numCyclesToRun;
@@ -1003,9 +1060,8 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                         this.oldXArray[this.oldPcIndex] = this.x;
                         this.oldYArray[this.oldPcIndex] = this.y;
                     }
+                    if (this.takeInt) this.brk(true);
                     if (!this.resetLine) this.reset(false);
-                    if (this.takeInt) this.handleIrq();
-                    if (this.nmi) this.handleNmi();
                 }
                 return true;
             };
@@ -1015,9 +1071,8 @@ define(['./utils', './6502.opcodes', './via', './acia', './serial', './tube', '.
                     var opcode = this.readmem(this.pc);
                     this.incpc();
                     this.runner.run(opcode);
+                    if (this.takeInt) this.brk(true);
                     if (!this.resetLine) this.reset(false);
-                    if (this.takeInt) this.handleIrq();
-                    if (this.nmi) this.handleNmi();
                 }
                 return true;
             };

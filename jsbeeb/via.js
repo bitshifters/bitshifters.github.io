@@ -32,9 +32,13 @@ define(['./utils'], function (utils) {
             t1c: 0, t2c: 0,
             acr: 0, pcr: 0, ifr: 0, ier: 0,
             t1hit: false, t2hit: false,
-            porta: 0, portb: 0,
-            ca1: 0, ca2: 0,
+            portapins: 0, portbpins: 0,
+            ca1: false, ca2: false,
+            cb1: false, cb2: false,
+            ca2changecallback: null,
+            cb2changecallback: null,
             justhit: 0,
+            t1_pb7: 0,
 
             reset: function (hard) {
                 // http://archive.6502.org/datasheets/mos_6522_preliminary_nov_1977.pdf
@@ -45,6 +49,7 @@ define(['./utils'], function (utils) {
                 self.t1c = self.t1l = self.t2c = self.t2l = 0x1fffe;
                 self.t1hit = self.t2hit = true;
                 self.acr = self.pcr = 0;
+                self.t1_pb7 = 1;
             },
 
             polltime: function (cycles) {
@@ -58,8 +63,7 @@ define(['./utils'], function (utils) {
                         if (newT1c === -3) {
                             self.justhit |= 1;
                         }
-                        // b-em comment is "Output to PB7"
-                        self.orb ^= (self.acr & 0x80);
+                        self.t1_pb7 = !self.t1_pb7;
                     }
                     if (!(this.acr & 0x40)) self.t1hit = true;
                 }
@@ -115,7 +119,7 @@ define(['./utils'], function (utils) {
                     /* falls through */
                     case ORAnh:
                         self.ora = val;
-                        self.writePortA(((self.ora & self.ddra) | ~self.ddra) & 0xff);
+                        self.recalculatePortAPins();
                         break;
 
                     case ORB:
@@ -127,37 +131,38 @@ define(['./utils'], function (utils) {
                         self.updateIFR();
 
                         self.orb = val;
-                        self.writePortB(((self.orb & self.ddrb) | ~self.ddrb) & 0xff);
+                        self.recalculatePortBPins();
 
                         mode = (self.pcr & 0xe0) >>> 4;
                         if (mode === 8) { // Handshake mode
-                            self.setcb2(0);
+                            self.setcb2(false);
                         } else if (mode === 0x0a) { // Pulse mode
-                            self.setcb2(0);
-                            self.setcb2(1);
+                            self.setcb2(false);
+                            self.setcb2(true);
                         }
                         break;
 
                     case DDRA:
                         self.ddra = val;
-                        self.writePortA(((self.ora & self.ddra) | ~self.ddra) & 0xff);
+                        self.recalculatePortAPins();
                         break;
 
                     case DDRB:
                         self.ddrb = val;
-                        self.writePortB(((self.orb & self.ddrb) | ~self.ddrb) & 0xff);
+                        self.recalculatePortBPins();
                         break;
 
                     case ACR:
                         self.acr = val;
+                        if ((self.justhit & 1) && !(val & 0x40)) self.t1hit = true;
                         break;
 
                     case PCR:
                         self.pcr = val;
                         if ((val & 0xe) === 0xc) self.setca2(false);
                         else if (val & 0x08) self.setca2(true);
-                        if ((val & 0xe0) === 0xc0) self.setcb2(0);
-                        else if (val & 0x80) self.setcb2(1);
+                        if ((val & 0xe0) === 0xc0) self.setcb2(false);
+                        else if (val & 0x80) self.setcb2(true);
                         break;
 
                     case SR:
@@ -173,20 +178,22 @@ define(['./utils'], function (utils) {
                     case T1LH:
                         self.t1l &= 0x1fe;
                         self.t1l |= (val << 9);
-                        if (self.acr & 0x40) {
+                        if (!(self.justhit & 1)) {
                             self.ifr &= ~TIMER1INT;
                             self.updateIFR();
                         }
                         break;
 
                     case T1CH:
-                        if ((self.acr & 0xc0) === 0x80) self.orb &= ~0x80; // One-shot timer
                         self.t1l &= 0x1fe;
                         self.t1l |= (val << 9);
                         self.t1c = self.t1l + 1;
                         self.t1hit = false;
-                        self.ifr &= ~TIMER1INT;
-                        self.updateIFR();
+                        if (!(self.justhit & 1)) {
+                            self.ifr &= ~TIMER1INT;
+                            self.updateIFR();
+                        }
+                        self.t1_pb7 = 0;
                         break;
 
                     case T2CL:
@@ -198,8 +205,11 @@ define(['./utils'], function (utils) {
                         self.t2l &= 0x1fe;
                         self.t2l |= (val << 9);
                         self.t2c = self.t2l + 1;
-                        self.ifr &= ~TIMER2INT;
-                        self.updateIFR();
+                        if (self.acr & 0x20) self.t2c -= 2;
+                        if (!(self.justhit & 2)) {
+                            self.ifr &= ~TIMER2INT;
+                            self.updateIFR();
+                        }
                         self.t2hit = false;
                         break;
 
@@ -213,6 +223,8 @@ define(['./utils'], function (utils) {
 
                     case IFR:
                         self.ifr &= ~(val & 0x7f);
+                        if (self.justhit & 1) self.ifr |= TIMER1INT;
+                        if (self.justhit & 2) self.ifr |= TIMER2INT;
                         self.updateIFR();
                         break;
                 }
@@ -228,11 +240,15 @@ define(['./utils'], function (utils) {
                         self.updateIFR();
                     /* falls through */
                     case ORAnh:
-                        temp = self.ora & self.ddra;
-                        if (self.acr & 1)
-                            return temp | (self.ira & ~self.ddra);
-                        else
-                            return temp | (self.readPortA() & ~self.ddra);
+                        // Reading ORA reads pin levels regardless of DDRA.
+                        // Of the various 6522 datasheets, this one is clear:
+                        // http://archive.6502.org/datasheets/wdc_w65c22s_mar_2004.pdf
+                        if (self.acr & 1) {
+                            return self.ira;
+                        } else {
+                            self.recalculatePortAPins();
+                            return self.portapins;
+                        }
                         break;
 
                     case ORB:
@@ -241,12 +257,19 @@ define(['./utils'], function (utils) {
                             self.ifr &= ~INT_CB2;
                         self.updateIFR();
 
+                        self.recalculatePortBPins();
                         temp = self.orb & self.ddrb;
                         if (self.acr & 2)
-                            return temp | (self.irb & ~self.ddrb);
+                            temp |= (self.irb & ~self.ddrb);
                         else
-                            return temp | (self.readPortB() & ~self.ddrb);
-                        break;
+                            temp |= (self.portbpins & ~self.ddrb);
+                        // If PB7 is active, it is mixed in regardless of
+                        // whether bit 7 is an input or output.
+                        if (self.acr & 0x80) {
+                            temp &= 0x7f;
+                            temp |= (self.t1_pb7 << 7);
+                        }
+                        return temp;
 
                     case DDRA:
                         return self.ddra;
@@ -292,58 +315,72 @@ define(['./utils'], function (utils) {
                 }
             },
 
-            setca1: function (val) {
-                var level = !!val;
+            recalculatePortAPins: function () {
+                self.portapins = self.ora & self.ddra;
+                self.portapins |= ~self.ddra & 0xff;
+                self.drivePortA();
+                self.portAUpdated();
+            },
+
+            recalculatePortBPins: function () {
+                self.portbpins = self.orb & self.ddrb;
+                self.portbpins |= ~self.ddrb & 0xff;
+                self.drivePortB();
+                self.portBUpdated();
+            },
+
+            setca1: function (level) {
                 if (level === self.ca1) return;
                 var pcrSet = !!(self.pcr & 1);
                 if (pcrSet === level) {
-                    if (self.acr & 1) self.ira = self.readPortA();
+                    if (self.acr & 1) self.ira = self.portapins;
                     self.ifr |= INT_CA1;
                     self.updateIFR();
                     if ((self.pcr & 0xc) === 0x8) { // handshaking
-                        self.setca2(1);
+                        self.setca2(true);
                     }
                 }
                 self.ca1 = level;
             },
 
-            setca2: function (val) {
-                var level = !!val;
+            setca2: function (level) {
                 if (level === self.ca2) return;
-                if (self.pcr & 8) return; // output
+                self.ca2 = level;
+                var output = !!(self.pcr & 0x08);
+                if (self.ca2changecallback) self.ca2changecallback(level, output);
+                if (output) return;
                 var pcrSet = !!(self.pcr & 4);
                 if (pcrSet === level) {
                     self.ifr |= INT_CA2;
                     self.updateIFR();
                 }
-                self.ca2 = level;
             },
 
-            setcb1: function (val) {
-                var level = !!val;
+            setcb1: function (level) {
                 if (level === self.cb1) return;
                 var pcrSet = !!(self.pcr & 0x10);
                 if (pcrSet === level) {
-                    if (self.acr & 2) self.irb = self.readPortB();
+                    if (self.acr & 2) self.irb = self.portbpins;
                     self.ifr |= INT_CB1;
                     self.updateIFR();
                     if ((self.pcr & 0xc0) === 0x80) { // handshaking
-                        self.setcb2(1);
+                        self.setcb2(true);
                     }
                 }
                 self.cb1 = level;
             },
 
-            setcb2: function (val) {
-                var level = !!val;
+            setcb2: function (level) {
                 if (level === self.cb2) return;
-                if (self.pcr & 0x80) return; // output
+                self.cb2 = level;
+                var output = !!(self.pcr & 0x80);
+                if (self.cb2changecallback) self.cb2changecallback(level, output);
+                if (output) return;
                 var pcrSet = !!(self.pcr & 0x40);
                 if (pcrSet === level) {
                     self.ifr |= INT_CB2;
                     self.updateIFR();
                 }
-                self.cb2 = level;
             }
         };
         return self;
@@ -353,10 +390,6 @@ define(['./utils'], function (utils) {
         var self = via(cpu, 0x01);
 
         self.IC32 = 0;
-        self.keycol = 0;
-        self.keyrow = 0;
-        self.sdbout = 0;
-        self.sdbval = 0;
         self.capsLockLight = false;
         self.shiftLockLight = false;
         self.keys = [];
@@ -367,7 +400,6 @@ define(['./utils'], function (utils) {
         self.setVBlankInt = self.setca1;
 
         self.setKeyLayout = function (map) {
-            console.log("Using " + map + " key layout");
             self.keycodeToRowCol = utils.getKeyMap(map);
         };
         self.setKeyLayout(initialLayout);
@@ -460,9 +492,22 @@ define(['./utils'], function (utils) {
                     }
                 }
             } else {
-                if (self.keycol < numCols) {
+                // Keyboard sets bit 7 to 0 or 1, and testing shows it always
+                // "wins" vs. CMOS.
+                // At 0 also wins against an output pin.
+
+                var portapins = self.portapins;
+                var keyrow = (portapins >>> 4) & 7;
+                var keycol = portapins & 0xf;
+                if (!self.keys[keycol][keyrow]) {
+                    self.portapins &= 0x7f;
+                } else if (!(self.ddra & 0x80)) {
+                    self.portapins |= 0x80;
+                }
+
+                if (keycol < numCols) {
                     for (j = 1; j < 8; ++j) {
-                        if (self.keys[self.keycol][j]) {
+                        if (self.keys[keycol][j]) {
                             self.setca2(true);
                             return;
                         }
@@ -472,57 +517,43 @@ define(['./utils'], function (utils) {
             self.setca2(false);
         };
 
-        self.updateSdb = function () {
-            self.sdbval = self.sdbout;
-            if (isMaster) self.sdbval &= cmos.read(self.IC32);
-            var keyrow = (self.sdbval >>> 4) & 7;
-            self.keycol = self.sdbval & 0xf;
+        self.portAUpdated = function () {
             self.updateKeys();
-            if (!(self.IC32 & 8) && !self.keys[self.keycol][keyrow]) {
-                self.sdbval &= 0x7f;
-            }
-            if (!isMaster && !(self.IC32 & 4)) {
-                self.sdbval = 0xff; // unsure; taken from beebem
-            }
-            if (!isMaster && !(self.IC32 & 2)) {
-                self.sdbval = 0x00;  // no speech
-            }
+            soundChip.updateSlowDataBus(self.portapins, !(self.IC32 & 1));
         };
 
-        self.writeIC32 = function (val) { // addressable latch
-            if (val & 8)
-                self.IC32 |= (1 << (val & 7));
+        self.portBUpdated = function () {
+            var portbpins = self.portbpins;
+            if (portbpins & 8)
+                self.IC32 |= (1 << (portbpins & 7));
             else
-                self.IC32 &= ~(1 << (val & 7));
-
-            self.updateSdb();
-            soundChip.updateSlowDataBus(self.sdbval, !(self.IC32 & 1));
+                self.IC32 &= ~(1 << (portbpins & 7));
 
             self.capsLockLight = !(self.IC32 & 0x40);
             self.shiftLockLight = !(self.IC32 & 0x80);
 
             video.setScreenAdd(((self.IC32 & 16) ? 2 : 0) | ((self.IC32 & 32) ? 1 : 0));
-            if (isMaster) cmos.write(self.IC32, self.sdbval);
+
+            if (isMaster) cmos.writeControl(portbpins, self.portapins, self.IC32);
+
+            // Updating IC32 may have enabled peripherals attached to port A.
+            self.recalculatePortAPins();
         };
 
-        self.writePortA = function (val) {
-            self.sdbout = val;
-            self.updateSdb();
-            if (isMaster) cmos.write(self.IC32, self.sdbval);
+        self.drivePortA = function () {
+            // For experiments where we tested these behaviors, see:
+            // https://stardot.org.uk/forums/viewtopic.php?f=4&t=17597
+            // If either keyboard or CMOS pulls a given pin low, it "wins"
+            // vs. via output.
+            var busval = 0xff;
+            if (isMaster) busval &= cmos.read(self.IC32);
+            self.portapins &= busval;
+            self.updateKeys();
         };
 
-        self.writePortB = function (val) {
-            self.writeIC32(val);
-            if (isMaster) cmos.writeAddr(val, self.sdbval);
-        };
-
-        self.readPortA = function () {
-            self.updateSdb();
-            return self.sdbval;
-        };
-
-        self.readPortB = function () {
-            return 0xff;
+        self.drivePortB = function () {
+            // Nothing driving here.
+            // Note that if speech were fitted, it drives bit 7 low.
         };
 
         self.reset();
@@ -532,21 +563,22 @@ define(['./utils'], function (utils) {
     function uservia(cpu, isMaster, userPortPeripheral) {
         var self = via(cpu, 0x02);
 
-        self.writePortA = function (val) {
-            // printer port
+        self.portAUpdated = function () {
+            // Printer port.
         };
 
-        self.writePortB = function (val) {
-            userPortPeripheral.write(val);
+        self.portBUpdated = function () {
+            userPortPeripheral.write(self.portbpins);
         };
 
-        self.readPortA = function () {
-            return 0xff; // printer port
+        self.drivePortA = function () {
+            // Printer port.
         };
 
-        self.readPortB = function () {
-            return userPortPeripheral.read();
+        self.drivePortB = function () {
+            self.portbpins &= userPortPeripheral.read();
         };
+
         self.reset();
         return self;
     }

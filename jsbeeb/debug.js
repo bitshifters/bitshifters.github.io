@@ -39,7 +39,6 @@ define(['jquery', 'underscore', './utils'], function ($, _, utils) {
         };
 
         enable(false);
-        $('.initially-hidden').removeClass('initially-hidden');
 
         var numToShow = 16;
         var i;
@@ -65,7 +64,7 @@ define(['jquery', 'underscore', './utils'], function ($, _, utils) {
             if (!via) return utils.noop;
             var regs = ["ora", "orb", "ira", "irb", "ddra", "ddrb",
                 "acr", "pcr", "ifr", "ier",
-                "t1c", "t1l", "t2c", "t2l", "IC32", "sdbval", "sdbout"];
+                "t1c", "t1l", "t2c", "t2l", "portapins", "portbpins", "IC32"];
             $.each(regs, function (_, elem) {
                 if (via[elem] === undefined) return;
                 var row = node.find(".template").clone().removeClass("template").appendTo(node);
@@ -116,8 +115,9 @@ define(['jquery', 'underscore', './utils'], function ($, _, utils) {
             var stateNode = node.find('.crtc_state');
             var others = [
                 'bitmapX', 'bitmapY', 'dispEnabled',
-                'horizCounter', 'inHSync', 'scanlineCounter', 'vertCounter', 'inVSync', 'inVertAdjust',
-                'addr', 'addrLine', 'lineStartAddr', 'nextLineStartAddr'];
+                'horizCounter', 'inHSync', 'scanlineCounter', 'vertAdjustCounter', 'vertCounter',
+                'inVSync', 'endOfMainLatched', 'endOfVertAdjustLatched', 'inVertAdjust', 'inDummyRaster',
+                'addr', 'lineStartAddr', 'nextLineStartAddr'];
             $.each(others, function (_, elem) {
                 var value = makeRow(stateNode, elem);
                 if (typeof video[elem] === "boolean") {

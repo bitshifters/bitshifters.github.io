@@ -25,7 +25,15 @@ define(['webgl-debug'], function (webglDebug) {
     };
 
     function GlCanvas(canvas) {
-        var glAttrs = {depth: false, stencil: false};
+        // failIfMajorPerformanceCaveat prevents the use of CPU based WebGL
+        // rendering, which is much worse than simply using a 2D canvas for
+        // rendering.
+        var glAttrs = { alpha: false,
+                        antialias: false,
+                        depth: false,
+                        preserveDrawingBuffer: false,
+                        stencil: false,
+                        failIfMajorPerformanceCaveat: true };
         var gl = canvas.getContext('webgl', glAttrs) || canvas.getContext('experimental-webgl', glAttrs);
         this.gl = gl;
         if (!gl) {

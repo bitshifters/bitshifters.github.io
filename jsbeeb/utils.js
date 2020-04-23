@@ -128,6 +128,132 @@ define(['jsunzip', 'promise'], function (jsunzip) {
 
     };
 
+    exports.stringToBBCKeys = function(str) {
+        var BBC = exports.BBC;
+        var array = [];
+        var i;
+        var shiftState = false;
+        var capsLockState = true;
+        for (i = 0; i < str.length; ++i) {
+            var c = str.charCodeAt(i);
+            var charStr = str.charAt(i);
+            var bbcKey = null;
+            var needsShift = false;
+            var needsCapsLock = true;
+            if (c >= 65 && c <= 90) {
+                // A-Z
+                bbcKey = BBC[charStr];
+            } else if (c >= 97 && c <= 122) {
+                // a-z
+                charStr = String.fromCharCode(c - 32);
+                bbcKey = BBC[charStr];
+                needsCapsLock = false;
+            } else if (c >= 48 && c <= 57) {
+                // 0-9
+                bbcKey = BBC["K" + charStr];
+            } else if (c >= 33 && c <= 41) {
+                // ! to )
+                charStr = String.fromCharCode(c + 16);
+                bbcKey = BBC["K" + charStr];
+                needsShift = true;
+            } else {
+                switch (charStr) {
+                case '\n':
+                    bbcKey = BBC.RETURN;
+                    break;
+                case '\t':
+                    bbcKey = BBC.TAB;
+                    break;
+                case ' ':
+                    bbcKey = BBC.SPACE;
+                    break;
+                case '-':
+                    bbcKey = BBC.MINUS;
+                    break;
+                case '=':
+                    bbcKey = BBC.MINUS; needsShift = true;
+                    break;
+                case '^':
+                    bbcKey = BBC.HAT_TILDE;
+                    break;
+                case '~':
+                    bbcKey = BBC.HAT_TILDE; needsShift = true;
+                    break;
+                case '\\':
+                    bbcKey = BBC.PIPE_BACKSLASH;
+                    break;
+                case '|':
+                    bbcKey = BBC.PIPE_BACKSLASH; needsShift = true;
+                    break;
+                case '@':
+                    bbcKey = BBC.AT;
+                    break;
+                case '[':
+                    bbcKey = BBC.LEFT_SQUARE_BRACKET;
+                    break;
+                case '{':
+                    bbcKey = BBC.LEFT_SQUARE_BRACKET; needsShift = true;
+                    break;
+                case '_':
+                    bbcKey = BBC.UNDERSCORE_POUND;
+                    break;
+                case ';':
+                    bbcKey = BBC.SEMICOLON_PLUS;
+                    break;
+                case '+':
+                    bbcKey = BBC.SEMICOLON_PLUS; needsShift = true;
+                    break;
+                case ':':
+                    bbcKey = BBC.COLON_STAR;
+                    break;
+                case '*':
+                    bbcKey = BBC.COLON_STAR; needsShift = true;
+                    break;
+                case ']':
+                    bbcKey = BBC.RIGHT_SQUARE_BRACKET;
+                    break;
+                case '}':
+                    bbcKey = BBC.RIGHT_SQUARE_BRACKET; needsShift = true;
+                    break;
+                case ',':
+                    bbcKey = BBC.COMMA;
+                    break;
+                case '<':
+                    bbcKey = BBC.COMMA; needsShift = true;
+                    break;
+                case '.':
+                    bbcKey = BBC.PERIOD;
+                    break;
+                case '>':
+                    bbcKey = BBC.PERIOD; needsShift = true;
+                    break;
+                case '/':
+                    bbcKey = BBC.SLASH;
+                    break;
+                case '?':
+                    bbcKey = BBC.SLASH; needsShift = true;
+                    break;
+                }
+            }
+
+            if (!bbcKey) continue;
+
+            if ((needsShift && !shiftState) || (!needsShift && shiftState)) {
+                array.push(BBC.SHIFT);
+                shiftState = !shiftState;
+            }
+            if ((needsCapsLock && !capsLockState) || (!needsCapsLock && capsLockState)) {
+                array.push(BBC.CAPSLOCK);
+                capsLockState = !capsLockState;
+            }
+            array.push(bbcKey);
+        }
+
+        if (shiftState) array.push(BBC.SHIFT);
+        if (!capsLockState) array.push(BBC.CAPSLOCK);
+        return array;
+    };
+
     /**
      * Useful references:
      * http://www.cambiaresearch.com/articles/15/javascript-char-codes-key-codes
@@ -561,7 +687,12 @@ define(['jsunzip', 'promise'], function (jsunzip) {
             map(keyCodes.DOWN, BBC.DOWN); // arrow down
             map(keyCodes.APOSTROPHE, BBC.COLON_STAR);
             map(keyCodes.HASH, BBC.RIGHT_SQUARE_BRACKET);
+
+            // None of this last group in great locations.
+            // But better to have them mapped at least somewhere.
             map(keyCodes.BACK_QUOTE, BBC.AT);
+            map(keyCodes.BACKSLASH, BBC.PIPE_BACKSLASH);
+            map(keyCodes.PAGEUP, BBC.UNDERSCORE_POUND);
         }
 
         // Master
@@ -676,20 +807,28 @@ define(['jsunzip', 'promise'], function (jsunzip) {
         console.log('event noted:', category, type, label);
     };
 
-    function makeBinaryData(dataIn) {
-        if (dataIn instanceof Uint8Array) return dataIn;
-        var len = dataIn.length;
-        var result = new Uint8Array(len);
-        for (var i = 0; i < len; ++i) result[i] = dataIn.charCodeAt(i) & 0xff;
-        return result;
-    }
-
-    exports.makeBinaryData = makeBinaryData;
-
     var baseUrl = "";
     exports.setBaseUrl = function (url) {
         baseUrl = url;
     };
+
+    function uint8ArrayToString(array) {
+        var str = "";
+        for (var i = 0; i < array.length; ++i) str += String.fromCharCode(array[i]);
+        return str;
+    }
+
+    exports.uint8ArrayToString = uint8ArrayToString;
+
+    function stringToUint8Array(str) {
+        if (str instanceof Uint8Array) return str;
+        var len = str.length;
+        var array = new Uint8Array(len);
+        for (var i = 0; i < len; ++i) array[i] = str.charCodeAt(i) & 0xff;
+        return array;
+    }
+
+    exports.stringToUint8Array = stringToUint8Array;
 
     function loadDataHttp(url) {
         return new Promise(function (resolve, reject) {
@@ -701,7 +840,7 @@ define(['jsunzip', 'promise'], function (jsunzip) {
                 if (typeof request.response !== "string") {
                     resolve(request.response);
                 } else {
-                    resolve(makeBinaryData(request.response));
+                    resolve(stringToUint8Array(request.response));
                 }
             };
             request.onerror = function () {
@@ -816,7 +955,7 @@ define(['jsunzip', 'promise'], function (jsunzip) {
         var self = this;
         self.name = name_;
         self.pos = 0;
-        self.data = makeBinaryData(data_);
+        self.data = stringToUint8Array(data_);
         if (!dontUnzip_ && self.data && self.data.length > 4 && self.data[0] === 0x1f && self.data[1] === 0x8b) {
             console.log("Ungzipping " + name_);
             self.data = ungzip(self.data);
@@ -902,19 +1041,24 @@ define(['jsunzip', 'promise'], function (jsunzip) {
         return new Int32Array(u32.buffer);
     };
 
-    exports.unzipDiscImage = function unzipDiscImage(data) {
+    var knownDiscExtensions = {
+        'uef': true,
+        'ssd': true,
+        'dsd': true
+    };
+
+    var knownRomExtensions = {
+        'rom': true
+    };
+
+    function unzipImage(data, knownExtensions) {
         var unzip = new jsunzip.JSUnzip();
         console.log("Attempting to unzip");
         var result = unzip.open(data);
         if (!result.status) {
-            throw new Error("Error unzipping ", result.error);
+            throw new Error("Error unzipping " + result.error);
         }
         var uncompressed = null;
-        var knownExtensions = {
-            'uef': true,
-            'ssd': true,
-            'dsd': true
-        };
         var loadedFile;
         for (var f in unzip.files) {
             var match = f.match(/.*\.([a-z]+)/i);
@@ -937,6 +1081,39 @@ define(['jsunzip', 'promise'], function (jsunzip) {
         }
         console.log("Unzipped '" + loadedFile + "'");
         return {data: uncompressed.data, name: loadedFile};
+    }
+
+    exports.unzipDiscImage = function unzipDiscImage(data) {
+        return unzipImage(data, knownDiscExtensions);
+    };
+    exports.unzipRomImage = function unzipDiscImage(data) {
+        return unzipImage(data, knownRomExtensions);
+    };
+    exports.discImageSize = function(name) {
+        // SSD, aka. single-sided disc, is:
+        // - 1 side :)
+        // - 80 tracks.
+        // - 10 sectors per track.
+        // - 256 bytes per sector.
+        var isDsd = false;
+        var byteSize = 80 * 10 * 256;
+        // DSD, aka. double-sided disc is twice the size.
+        if (name.toLowerCase().endsWith(".dsd")) {
+            byteSize *= 2;
+            isDsd = true;
+        }
+        return { isDsd: isDsd, byteSize: byteSize };
+    };
+
+    exports.setDiscName = function(data, name) {
+        for (var i = 0; i < 8; ++i)
+            data[i] = name.charCodeAt(i) & 0xff;
+    };
+
+    exports.resizeUint8Array = function(array, byteSize) {
+        var newArray = new Uint8Array(byteSize);
+        newArray.set(array.subarray(0, byteSize));
+        return newArray;
     };
 
     function Fifo(capacity) {

@@ -67,12 +67,6 @@ define(['./utils'], function (utils) {
         function toneChannel(channel, out, offset, length) {
             var i;
             var reg = register[channel], vol = volume[channel];
-            if (reg === 1) {
-                for (i = 0; i < length; ++i) {
-                    out[i + offset] += vol;
-                }
-                return;
-            }
             if (reg === 0) reg = 1024;
             for (i = 0; i < length; ++i) {
                 counter[channel] -= sampleDecrement;
@@ -80,7 +74,7 @@ define(['./utils'], function (utils) {
                     counter[channel] += reg;
                     outputBit[channel] = !outputBit[channel];
                 }
-                out[i + offset] += outputBit[channel] ? vol : -vol;
+                out[i + offset] += (outputBit[channel] * vol);
             }
         }
 
@@ -126,7 +120,7 @@ define(['./utils'], function (utils) {
                     outputBit[channel] = !outputBit[channel];
                     if (outputBit[channel]) shiftLfsr();
                 }
-                out[i + offset] += (lfsr & 1) ? vol : -vol;
+                out[i + offset] += ((lfsr & 1) * vol);
             }
         }
 
@@ -160,7 +154,6 @@ define(['./utils'], function (utils) {
         this.setScheduler = function (scheduler_) {
             scheduler = scheduler_;
             lastRunEpoch = scheduler.epoch;
-            // TODO: need to retest with Repton2
             activeTask = scheduler.newTask(function () {
                 if (this.active) {
                     poke(this.slowDataBus);
@@ -245,10 +238,15 @@ define(['./utils'], function (utils) {
         this.slowDataBus = 0;
         this.updateSlowDataBus = function (slowDataBus, active) {
             this.slowDataBus = slowDataBus;
-            if (active && !this.active) {
-                activeTask.reschedule(minCyclesWELow);
-            }
             this.active = active;
+            // TODO: this probably isn't modeled correctly. Currently the
+            // sound chip "notices" a new data bus value some fixed number of
+            // cycles after WE (write enable) is triggered.
+            // In reality, the sound chip likely pulls data off the bus at a
+            // fixed point in its cycle, iff WE is active.
+            if (active) {
+                activeTask.ensureScheduled(true, minCyclesWELow);
+            }
         };
         this.reset = function (hard) {
             if (!hard) return;
