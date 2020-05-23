@@ -13,7 +13,7 @@ type: Demo
 platform: BBC Master
 download: bs-nova-invite.ssd
 source: https://github.com/kieranhj/nova-invite
-pouet: 
+pouet: https://www.pouet.net/prod.php?which=85687
 video: https://www.youtube.com/watch?v=3enYi0IijFE
 
 
