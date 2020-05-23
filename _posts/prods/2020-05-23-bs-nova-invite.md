@@ -3,10 +3,10 @@ layout: prods_post
 category: [posts, prods]
 tags: 
 
-title: NOVA Online Invite
+title: NOVA ONLINE INVITE
 img: bs-nova-invite.gif
 alt: image-alt
-authors: Kieran, Rhino, Spiny, Henley, 0xC0DE
+authors: Kieran, Rhino, Spiny, Henley & 0xC0DE
 team: Bitshifters & Torment
 year: 2020
 type: Demo
