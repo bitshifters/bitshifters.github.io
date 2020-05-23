@@ -11,7 +11,7 @@ team: Bitshifters & Torment
 year: 2020
 type: Demo
 platform: BBC Master
-download: bs-nova-invite.dsd
+download: bs-nova-invite.ssd
 source: https://github.com/kieranhj/nova-invite
 pouet: 
 video: https://www.youtube.com/watch?v=3enYi0IijFE
@@ -21,4 +21,4 @@ video: https://www.youtube.com/watch?v=3enYi0IijFE
 
 **NOVA Online Invite**
 
-Come join us at the UK's only demoparty, now taking place online between 19-21 June 2020. More details at novaparty.org!
+Come join us at the UK's only demoparty, now taking place online between 19-21 June 2020. More details at [novaparty.org](http://novaparty.org)!
