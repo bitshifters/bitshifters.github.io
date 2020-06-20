@@ -1,0 +1,27 @@
+---
+layout: prods_post
+category: [posts, prods]
+tags: [nova, 2020]
+
+title: EVIL INFLUENCES
+img: evil-influences.png
+alt: image-alt
+authors: VectorEyes, Dya, Luther, Visionvortex, Dethmunk & Henley
+team: Bitshifters & Desire
+year: 2020
+type: Demo
+platform: BBC Master
+download: evil-inf-v1-0.ssd
+video: https://www.youtube.com/watch?v=oK2D1EdFXMM
+
+---
+
+**Evil Influences**
+
+A Bitshifters/Desire collaboration for the BBC Master, released at the Nova Online 2020 demoparty.
+
+Featuring music by Dya, images from Dethmunk, Luther and Visionvortex, and code and FX by VectorEyes and Henley.
+
+208 git commits, almost a thousand lines of hand-coded script events, several months of cross-continental collaboration and one final all-night coding session went into this demo!
+
+Unsurprisingly for a demo whose primary theme is abuse of the CRTC chip, this production does not run on older emulators. As of June 2020, B2 or JSBeeb are the only two emulators that can run it without glitches.
