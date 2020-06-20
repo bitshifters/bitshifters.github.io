@@ -21,4 +21,4 @@ video: https://www.youtube.com/watch?v=LkufnMO4gwU
 
 **Back by Popular Demand**
 
-We couldn't turn up to our home demoparty [NOVA](http://novaparty.org) empty handed, now could we?
+We couldn't turn up to our home demoparty [NOVA](http://novaparty.org) empty-handed, now could we?
