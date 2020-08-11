@@ -27,4 +27,4 @@ Featuring music by Dya, images from Dethmunk, Luther and Visionvortex, and code 
 
 Unsurprisingly for a demo whose primary theme is abuse of the CRTC chip, this production does not run on older emulators. As of August 2020, B2 or JSBeeb are the only two emulators that can run it without glitches.
 
-Version 1.1 (released two months after Nova) is the 'final' release. If you really want to wwatch the original version shown at the party, it's [here](https://bitshifters.github.io/content/evil-inf-v1-0.ssd).
+Version 1.1 (released two months after Nova) is the 'final' release. If you really want to watch the original version shown at the party, it's [here](https://bitshifters.github.io/content/evil-inf-v1-0.ssd).
