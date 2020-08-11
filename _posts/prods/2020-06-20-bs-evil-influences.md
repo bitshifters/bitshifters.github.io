@@ -11,7 +11,7 @@ team: Bitshifters & Desire
 year: 2020
 type: Demo
 platform: BBC Master
-download: evil-inf-v1-0.ssd
+download: EvilIn11.ssd
 video: https://www.youtube.com/watch?v=oK2D1EdFXMM
 pouet: https://www.pouet.net/prod.php?which=85915
 
