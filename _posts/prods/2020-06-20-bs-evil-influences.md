@@ -21,7 +21,7 @@ pouet: https://www.pouet.net/prod.php?which=85915
 
 A Bitshifters/Desire collaboration for the BBC Master, released at the Nova Online 2020 demoparty.
 
-Featuring music by Dya, images from Dethmunk, Luther and Visionvortex, and code and FX by VectorEyes and Henley.
+Featuring music by Dya, images from Dethmunk, Luther and Visionvortex, and code and FX by VectorEyes and Henley. Sk!n even made us an awesome [ASCII-art info file!](https://bitshifters.github.io/content/evil-influences-info.txt)
 
 208 git commits, almost a thousand lines of hand-coded script events, several months of cross-continental collaboration and one final all-night coding session went into this demo!
 
