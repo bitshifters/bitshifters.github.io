@@ -12,7 +12,7 @@ year: 2020
 type: Demo
 platform: BBC Master
 download: EvilIn11.ssd
-video: https://www.youtube.com/watch?v=oK2D1EdFXMM
+video: https://www.youtube.com/watch?v=HvjhKY67fPI
 pouet: https://www.pouet.net/prod.php?which=85915
 
 ---
