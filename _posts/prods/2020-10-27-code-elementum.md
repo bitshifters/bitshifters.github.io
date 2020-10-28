@@ -7,7 +7,7 @@ title: Elementum
 img: 0xc0de-elementum.png
 alt: image-alt
 authors: <a href="https://twitter.com/0xC0DE6502">0xC0DE</a>
-team: 0xC0DE
+team: <span>0xC0DE</span>
 year: 2020
 type: Game
 platform: Acorn Electron, BBC Micro, BBC Master
