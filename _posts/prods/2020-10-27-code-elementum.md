@@ -24,4 +24,4 @@ Its 8 status flags are scattered all over each of the 32 levels.
 You, a brave electron, have to collect the flags and free the 6502.
 Watch out for bad caps, leaky batteries, rogue Z80s and your nemesis: the positron!
 
-UEF cassette version can also be downloaded [here](https://bitshifters.github.io/content/0xc0de-elementum.ssd).
+UEF cassette version can also be downloaded [here](https://bitshifters.github.io/content/0xc0de-elementum.uef).
