@@ -1,6 +1,6 @@
 ---
 layout: prods_post
-category: [posts, prods]
+category: [posts, archives]
 tags: 
 
 title: Elementum
