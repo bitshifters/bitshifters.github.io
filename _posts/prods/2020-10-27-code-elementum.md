@@ -6,7 +6,7 @@ tags:
 title: Elementum
 img: 0xc0de-elementum.png
 alt: image-alt
-authors: [0xC0DE](https://twitter.com/0xC0DE6502)
+authors: 0xC0DE (https://twitter.com/0xC0DE6502)
 team: 0xC0DE
 year: 2020
 type: Game
