@@ -6,7 +6,7 @@ tags:
 title: Elementum
 img: 0xc0de-elementum.png
 alt: image-alt
-authors: 0xC0DE (https://twitter.com/0xC0DE6502)
+authors: <a href="https://twitter.com/0xC0DE6502">0xC0DE</a>
 team: 0xC0DE
 year: 2020
 type: Game
@@ -23,3 +23,5 @@ In a strange, hostile world electronic components have taken the 6502 CPU hostag
 Its 8 status flags are scattered all over each of the 32 levels.
 You, a brave electron, have to collect the flags and free the 6502.
 Watch out for bad caps, leaky batteries, rogue Z80s and your nemesis: the positron!
+
+UEF cassette version can also be downloaded [here](https://bitshifters.github.io/content/0xc0de-elementum.ssd).
