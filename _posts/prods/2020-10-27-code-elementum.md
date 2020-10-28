@@ -12,7 +12,6 @@ year: 2020
 type: Game
 platform: Acorn Electron, BBC Micro, BBC Master
 download: 0xc0de-elementum.ssd
-download: 0xc0de-elementum.uef
 video: https://www.youtube.com/watch?v=H4u5kEM5As4
 
 
