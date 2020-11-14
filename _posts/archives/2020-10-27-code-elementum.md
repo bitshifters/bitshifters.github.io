@@ -25,3 +25,5 @@ You, a brave electron, have to collect the flags and free the 6502.
 Watch out for bad caps, leaky batteries, rogue Z80s and your nemesis: the positron!
 
 UEF cassette version can also be downloaded [here](https://bitshifters.github.io/content/0xc0de-elementum.uef).
+
+Latest version 1.04. More info can be found on the [Stardot forum](https://stardot.org.uk/forums/viewtopic.php?f=74&t=20872).
