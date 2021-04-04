@@ -11,8 +11,9 @@ team: Bitshifters & Desire
 year: 2020
 type: Demo
 platform: BBC Master
-download: evil-inf-v1-0.ssd
-video: https://www.youtube.com/watch?v=oK2D1EdFXMM
+download: EvilIn11.ssd
+video: https://www.youtube.com/watch?v=HvjhKY67fPI
+pouet: https://www.pouet.net/prod.php?which=85915
 
 ---
 
@@ -20,8 +21,10 @@ video: https://www.youtube.com/watch?v=oK2D1EdFXMM
 
 A Bitshifters/Desire collaboration for the BBC Master, released at the Nova Online 2020 demoparty.
 
-Featuring music by Dya, images from Dethmunk, Luther and Visionvortex, and code and FX by VectorEyes and Henley.
+Featuring music by Dya, images from Dethmunk, Luther and Visionvortex, and code and FX by VectorEyes and Henley. Sk!n even made us an awesome [ASCII-art info file!](https://bitshifters.github.io/content/evil-influences-info.txt)
 
 208 git commits, almost a thousand lines of hand-coded script events, several months of cross-continental collaboration and one final all-night coding session went into this demo!
 
-Unsurprisingly for a demo whose primary theme is abuse of the CRTC chip, this production does not run on older emulators. As of June 2020, B2 or JSBeeb are the only two emulators that can run it without glitches.
+Unsurprisingly for a demo whose primary theme is abuse of the CRTC chip, this production does not run on older emulators. As of August 2020, B2 or JSBeeb are the only two emulators that can run it without glitches.
+
+Version 1.1 (released two months after Nova) is the 'final' release. If you really want to watch the original version shown at the party, it's [here](https://bitshifters.github.io/content/evil-inf-v1-0.ssd).
