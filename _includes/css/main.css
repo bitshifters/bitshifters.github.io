@@ -91,12 +91,19 @@ header .container {
 }
 
 header img {
-    display: block;
-    margin: 0 auto 20px;
+    display: flex;
+    /* margin: 0 auto 20px; */
+    margin: 8px;
+    width: auto;
+    height: 100px;
+}
+
+header .intro-text {
+    display: flex;
+    align-items: center;
 }
 
 header .intro-text .name {
-    display: block;
     text-transform: uppercase;
     font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
     font-size: 2em;
