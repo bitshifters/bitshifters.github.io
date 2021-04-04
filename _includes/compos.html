@@ -1,0 +1,33 @@
+<!-- Portfolio Grid Section -->
+<section id="portfolio">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Competitions</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            {% assign compos = site.categories['compos'] | sort: 'date' | reverse %} 
+            {% for compo in compos %}
+                <div class="panel panel-warning">
+                    <div class="panel-heading"><h2>{{ compo.title }}</h2></div>
+                    <div class="panel-body">            
+                        <h4 class="text-muted">
+                            <span>{{ compo.date | date: "%a, %d %B %Y" }}</span>
+                            {% if compo.compo_location %}
+                            <span>, {{ compo.compo_location }}</span>
+                            {% endif %}
+                        </h4>
+                        {% for post in site.posts %} 
+                            {% if post.tags contains compo.compo_id %} 
+                                {% include compos_item.html %} 
+                            {% endif %}
+                    {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>

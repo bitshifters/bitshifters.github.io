@@ -1,8 +1,8 @@
 ---
 layout: prods_post
 category: [posts, prods]
-tags: 
-
+tags: nova2018
+rank: 1st Place in Old Skool Demo
 title: TWISTED BRAIN
 img: bs-twisted-brain.png
 alt: image-alt

@@ -1,8 +1,8 @@
 ---
 layout: prods_post
 category: [posts, prods]
-tags: 
-
+tags: outlineonline2020
+rank: 2nd Place in Combined Demo/Invitro
 title: NOVA ONLINE INVITE
 img: bs-nova-invite.gif
 alt: image-alt

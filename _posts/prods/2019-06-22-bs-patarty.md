@@ -1,8 +1,8 @@
 ---
 layout: prods_post
 category: [posts, prods]
-tags: 
-
+tags: nova2019
+rank: 2nd Place in Old Skool Demo
 title: PATARTY
 img: bs-patarty.png
 alt: image-alt

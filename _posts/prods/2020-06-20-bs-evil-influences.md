@@ -1,8 +1,8 @@
 ---
 layout: prods_post
 category: [posts, prods]
-tags: [nova, 2020]
-
+tags: nova2020
+rank: 1st Place in Old Skool Demo
 title: EVIL INFLUENCES
 img: evil-influences.png
 alt: image-alt
