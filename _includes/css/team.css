@@ -112,6 +112,7 @@
     font-size: 30px;
 }
 
+/* SM: stolen from latest bootstrap because our version of bootstrap is too old, and latest version borks everything */
 .rounded-sm {
   border-radius: 0.25rem !important;
 }
@@ -169,4 +170,28 @@
   border-radius: 0.5rem;
   max-width: 100%;
   height: auto;
+}
+
+
+.list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}
+
+.list-inline {
+  padding-left: 0;
+  list-style: none;
+}
+
+.list-inline-item {
+  display: inline-block;
+}
+.list-inline-item:not(:last-child) {
+  margin-right: 0.5rem;
+}
+
+
+.badge-skill {
+  color: #fff;
+  background-color: #9eb5ca;
 }

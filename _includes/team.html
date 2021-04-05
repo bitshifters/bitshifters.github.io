@@ -1,6 +1,7 @@
 
 <section id="contact">
 
+
     <div class="container">
         <div class="row">
             <div class="col-12 text-center">
@@ -12,70 +13,42 @@
         </div><!--end row-->
 
         <div class="row">
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
+
+            {% assign items = site.categories['team'] | sort: 'date' %} 
+            {% for post in items %}
+            <div class="col-lg-4 col-md-6 col-12 mt-4 pt-2">
                 <div class="team text-center rounded p-3 py-4">
-                    <img src="/img/bitshifters.png" class="img-fluid avatar avatar-medium shadow rounded-pill" alt="">
+                    <img src="{{post.avatar}}" class="img-fluid avatar avatar-medium shadow rounded-pill" width="200px" alt="">
                     <div class="content mt-3">
-                        <h4 class="title mb-0">Kieran</h4>
-                        <small class="text-muted">Founder</small>
+                        <h4>
+                            {% if post.name %}
+                            {{post.name}}
+                            {% endif %}
+                            {% if post.name and post.handle %}
+                            /
+                            {% endif %}
+                            {% if post.handle %}
+                            {{post.handle}}
+                            {% endif %}
+                        </h4>
+                        <h6>{{post.bio}}</h6>
+                        <p>
+                        {% for skill in post.skills %}
+                        <span class="badge badge-skill">{{skill}}</span>
+                        {% endfor %}
+                        </p>
+                        <small class="text-muted"></small>
                         <ul class="list-unstyled mt-3 social-icon social mb-0">
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-facebook" title="Facebook"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-instagram" title="Instagram"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-twitter" title="Twitter"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-google-plus" title="Google +"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-linkedin" title="Linkedin"></i></a></li>
+                            {% if post.github %}<li class="list-inline-item"><a href="{{post.github}}" target="_blank" class="rounded"><i class="mdi mdi-github" title="Github"></i></a></li>{% endif %}
+                            {% if post.twitter %}<li class="list-inline-item"><a href="{{post.twitter}}" target="_blank" class="rounded"><i class="mdi mdi-twitter" title="Twitter"></i></a></li>{% endif %}
+                            {% if post.youtube %}<li class="list-inline-item"><a href="{{post.youtube}}" target="_blank" class="rounded"><i class="mdi mdi-youtube" title="YouTube"></i></a></li>{% endif %}
+                            {% if post.pouet %}<li class="list-inline-item"><a href="{{post.pouet}}" target="_blank" class="rounded"><i class="mdi mdi-link" title="Pouet"></i></a></li>{% endif %}
                         </ul><!--end icon-->
                     </div>
                 </div>
             </div><!--end col-->
-            
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="team text-center rounded p-3 py-4">
-                    <img src="/img/bitshifters.png" class="img-fluid avatar avatar-medium shadow rounded-pill" alt="">
-                    <div class="content mt-3">
-                        <h4 class="title mb-0">Simon</h4>
-                        <small class="text-muted">Founder</small>
-                        <ul class="list-unstyled mt-3 social-icon social mb-0">
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-facebook" title="Facebook"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-instagram" title="Instagram"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-twitter" title="Twitter"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-google-plus" title="Google +"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-linkedin" title="Linkedin"></i></a></li>
-                        </ul><!--end icon-->
-                    </div>
-                </div>
-            </div><!--end col-->
-            
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="team text-center rounded p-3 py-4">
-                    <img src="/img/bitshifters.png" class="img-fluid avatar avatar-medium shadow rounded-pill" alt="">
-                    <div class="content mt-3">
-                        <h4 class="title mb-0">Tom</h4>
-                        <small class="text-muted">Guru</small>
-                        <ul class="list-unstyled mt-3 social-icon social mb-0">
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-facebook" title="Facebook"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-instagram" title="Instagram"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-twitter" title="Twitter"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-google-plus" title="Google +"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-linkedin" title="Linkedin"></i></a></li>
-                        </ul><!--end icon-->
-                    </div>
-                </div>
-            </div><!--end col-->
-            
-            <div class="col-lg-3 col-md-6 col-12 mt-4 pt-2">
-                <div class="team text-center rounded p-3 py-4">
-                    <img src="/img/bitshifters.png" class="img-fluid avatar avatar-medium shadow rounded-pill" alt="">
-                    <div class="content mt-3">
-                        <h4 class="title mb-0">Inverse Phase</h4>
-                        <small class="text-muted">Musician</small>
-                        <ul class="list-unstyled mt-3 social-icon social mb-0">
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-github" title="Github"></i></a></li>
-                            <li class="list-inline-item"><a href="javascript:void(0)" class="rounded"><i class="mdi mdi-twitter" title="Twitter"></i></a></li>
-                        </ul><!--end icon-->
-                    </div>
-                </div>
-            </div><!--end col-->
+            {% endfor %}
+
         </div><!--end row-->
     </div>
 

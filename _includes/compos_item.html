@@ -1,10 +1,9 @@
 <!-- html code to present a compo production item -->
-<div class="col-lg-6 col-md-6 col-sm-12 portfolio-item">
+<div class="col-lg-4 col-md-6 col-sm-12 portfolio-item">
     <div class="panel panel-default">
         {% if post.rank %}
         <div class="panel-heading" data-mh="group-newstext"><h5>{{ post.rank | truncate: 50 }}</h5></div>
             {% endif %}
-        <div data-mh="group-prods-images">
 
             <a href="{{ post.url }}" class="portfolio-link">
                 <div class="caption">
@@ -12,12 +11,11 @@
                         <i class="fa fa-search-plus fa-3x"></i>
                     </div>
                 </div>
-                <div>
-                    <img src="/content/{{ post.img }}" class="img-responsive"  alt="{{ post.alt }}">
+                <div data-mh="group-prods-images flex-grow-1 overflow-auto">
+                    <img src="/content/{{ post.img }}" class="img-responsive"  style='width:100%;' alt="{{ post.alt }}">
 
                 </div>
             </a>
-        </div>
 
         <div class="panel-body" data-mh="group-prods">
             <!-- data-mh attribute puts all the items into a group so that the div height can be matched -->
