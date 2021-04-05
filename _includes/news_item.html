@@ -1,5 +1,5 @@
 <!-- html code to present a production or archived item -->
-<div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
+<div class="col-lg-3 col-md-4 col-sm-12 portfolio-item">
     <div class="panel panel-default">
         <div data-mh="group-prods-images">
 
@@ -21,8 +21,16 @@
             <div data-mh="group-prods-titles">
                 <h4>{{ post.title | truncate: 30 }}</h4> 
             </div>
-            <h6>{{ post.team }}</h6> 
-            <a href="{{ post.url }}" class="btn btn-default">Read More</a>            
+            <div data-mh="group-prods-team">
+                <h6>{{ post.team }}</h6> 
+            </div>
+            <div data-mh="group-prods-platform">
+                <h6 class="text-muted">{{ post.platform }}</h6> 
+            </div>
+            <div data-mh="group-prods-buttons">
+                <br>
+                <a href="{{ post.url }}" class="btn btn-default">Read More</a>            
+            </div>
         </div>
     </div>
 </div>

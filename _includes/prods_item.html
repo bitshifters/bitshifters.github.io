@@ -1,11 +1,8 @@
 <!-- html code to present a production or archived item -->
-<div class="col-lg-3 col-md-4 col-sm-6 portfolio-item">
+<div class="col-lg-3 col-md-4 col-sm-12 portfolio-item">
     <div class="panel panel-default">
-        <div class="panel-body" data-mh="group-prods">
+        <div data-mh="group-prods-images">
 
-
-            <!--           <a href="#portfolioModal-{{ post.modal-id }}" class="portfolio-link" data-toggle="modal">
--->
             <a href="{{ post.url }}" class="portfolio-link">
                 <div class="caption">
                     <div class="caption-content">
@@ -14,21 +11,25 @@
                 </div>
                 <img src="/content/{{ post.img }}" class="img-responsive"  alt="{{ post.alt }}">
             </a>
+        </div>
+        <div class="panel-body" data-mh="group-prods">
+
             <!-- data-mh attribute puts all the items into a group so that the div height can be matched -->
             <div data-mh="group-prods-titles">
                 <h4>{{ post.title | truncate: 30 }}</h4> 
             </div>
-            <h6>{{ post.team }}, {{ post.year }}</h6> 
+            <div data-mh="group-prods-team">
+                <h6>{{ post.team }}, {{ post.year }}</h6> 
+            </div>
+            <div data-mh="group-prods-platform">
+                <h6 class="text-muted">{{ post.platform }}</h6> 
+            </div>
 
-            <a href="{{ post.url }}" class="btn btn-default">Read More</a>
-            <!--
-        <a href="{{ post.emulate }}" class="btn btn-default">
-            <i class="fa fa-play-circle"></i> Emulate
-    </a>
-        <a href="{{ post.download }}" class="btn btn-default">
-            <i class="fa fa-download"></i> Download
-    </a>
-    -->
+            <div data-mh="group-prods-buttons">
+                <br>
+                <a href="{{ post.url }}" class="btn btn-default">Read More</a>
+            </div>
+
         </div>
     </div>
 </div>
