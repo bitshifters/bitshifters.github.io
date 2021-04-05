@@ -1,5 +1,6 @@
-    <!-- Header -->
-    {% if page.bgimage %}
+{% include shader.html %}
+<!-- Header -->
+    {% if page.image %}
         <header style="background-image: url('{{ page.bgimage }}'); background-repeat: no-repeat; background-position: bottom left; background-size: 350px;">
     {% else %}
         <header>
@@ -10,9 +11,11 @@
 
                 <div class="col-lg-12">
                     <div class="intro-text " >
+                        {% comment %}
                         {% if page.image %}
                         <img  src="{{ page.image }}" alt="page image">         
                         {% endif %}
+                        {% endcomment %}
                         {% if page.title %}
                         <span class="name">
                             {{ page.title }}
