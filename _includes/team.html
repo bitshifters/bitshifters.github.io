@@ -1,0 +1,60 @@
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js">
+    new WOW().init();
+</script>
+<section id="contact">
+
+
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="section-title mb-4 pb-2">
+                    <h4 class="title mb-4">Who</h4>
+                    <p class="text-muted">Collective Members</p>
+                </div>
+            </div><!--end col-->
+        </div><!--end row-->
+
+        <div class="row">
+
+            {% assign items = site.categories['team'] | sort: 'date' %} 
+            {% for post in items %}
+            <div class="col-lg-4 col-md-6 col-12 mt-4 pt-2">
+                <div class="team text-center rounded p-3 py-4">
+                    <img src="{{post.avatar}}" class="img-fluid avatar avatar-medium shadow rounded-pill" width="200px" alt="">
+                    <div class="content mt-3">
+                        <h4>
+                            {% if post.name %}
+                            {{post.name}}
+                            {% endif %}
+                            {% if post.name and post.handle %}
+                            /
+                            {% endif %}
+                            {% if post.handle %}
+                            {{post.handle}}
+                            {% endif %}
+                        </h4>
+                        <h6>{{post.bio}}</h6>
+                        <p>
+                        {% for skill in post.skills %}
+                        <span class="badge badge-skill">{{skill}}</span>
+                        {% endfor %}
+                        </p>
+                        <small class="text-muted"></small>
+                        <ul class="list-unstyled mt-3 social-icon social mb-0">
+                            {% if post.github %}<li class="list-inline-item"><a href="{{post.github}}" target="_blank" class="rounded"><i class="mdi mdi-github" title="Github"></i></a></li>{% endif %}
+                            {% if post.twitter %}<li class="list-inline-item"><a href="{{post.twitter}}" target="_blank" class="rounded"><i class="mdi mdi-twitter" title="Twitter"></i></a></li>{% endif %}
+                            {% if post.youtube %}<li class="list-inline-item"><a href="{{post.youtube}}" target="_blank" class="rounded"><i class="mdi mdi-youtube" title="YouTube"></i></a></li>{% endif %}
+                            {% if post.pouet %}<li class="list-inline-item"><a href="{{post.pouet}}" target="_blank" class="rounded"><i class="mdi mdi-link" title="Pouet"></i></a></li>{% endif %}
+                        </ul><!--end icon-->
+                    </div>
+                </div>
+            </div><!--end col-->
+            {% endfor %}
+
+        </div><!--end row-->
+    </div>
+
+
+</section>

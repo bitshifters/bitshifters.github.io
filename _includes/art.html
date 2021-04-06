@@ -1,0 +1,178 @@
+
+    <style>
+        #art {
+            /* Prevent vertical gaps */
+            line-height: 0;
+            
+            -webkit-column-count: 8;
+            -webkit-column-gap:   2px;
+            -moz-column-count:    8;
+            -moz-column-gap:      2px;
+            column-count:         8;
+            column-gap:           2px;  
+        }
+
+        #art img {
+            /* Just in case there are inline attributes */
+            width: 100% !important;
+            height: auto !important;
+        }
+
+        @media (max-width: 1200px) {
+            #art {
+                -moz-column-count:    8;
+                -webkit-column-count: 8;
+                column-count:         8;
+            }
+        }
+        @media (max-width: 1000px) {
+            #art {
+                -moz-column-count:    7;
+                -webkit-column-count: 7;
+                column-count:         7;
+            }
+        }
+        @media (max-width: 800px) {
+            #art {
+                -moz-column-count:    5;
+                -webkit-column-count: 5;
+                column-count:         5;
+            }
+        }
+        @media (max-width: 400px) {
+            #art {
+                -moz-column-count:    4;
+                -webkit-column-count: 4;
+                column-count:         4;
+            }
+        }        
+        .art-container {
+            overflow:hidden;
+            margin-bottom: 2px;
+            opacity: 0;
+
+        }
+        .art-effect {
+            transform-origin: center;
+            transition: transform 250ms ease-in-out;
+            -webkit-transition: transform 250ms ease-in-out;
+            -moz-transition: transform 250ms ease-in-out;
+            -o-transition: transform 250ms ease-in-out;
+        }
+        .art-effect:hover {
+            transform: scale(1.05);
+        }
+        .art-fade {
+            animation: fadeInAnimation 1s;
+            animation-iteration-count: 1;
+            animation-fill-mode: forwards;
+            animation-timing-function: ease-in-out;
+        }
+        @keyframes fadeInAnimation {
+            from {
+                opacity:0;
+            }
+            to {
+                opacity:1;
+            }
+        }
+
+
+    </style>
+    <script>
+
+
+        function compareElementVerticalPosition(a, b) {
+            const boundRect1 = a.getBoundingClientRect()
+            const boundRect2 = b.getBoundingClientRect()
+
+            const top1 = boundRect1.top + window.pageYOffset
+            const top2 = boundRect2.top + window.pageYOffset
+
+            if (top1 < top2) {
+                return -1;
+            }
+            if (top1 > top2) {
+                return 1;
+            }
+            // a must be equal to b
+            return 0;
+        }
+
+
+        function getSortedElements(elements) {
+            return elements.sort(compareElementVerticalPosition)
+        }
+
+        window.addEventListener('load', (event) => {
+
+
+
+            //console.log("loaded")
+
+
+
+            var myList = document.querySelector('#art')
+            const imageContainerList = []
+/*
+            for (const element of myList.children) {
+
+                imageContainerList.push(element)
+            }
+*/
+            for (var i = myList.children.length; i >= 0; i--) {
+                const element = myList.children[Math.random() * i | 0]
+                myList.appendChild(element)
+                imageContainerList.push(element)
+            }
+
+            const sortedImageContainers = getSortedElements(imageContainerList)
+            for (let i=0; i<sortedImageContainers.length; ++i) {
+                const element = sortedImageContainers[i]
+
+                /*
+                const rect = element.getBoundingClientRect()
+                var node = document.createElement("h6");
+                const ypos = rect.top + window.pageYOffset
+                //const ypos = element.offsetTop
+                const text = '#' + i + ', ' + ypos
+                var textnode = document.createTextNode(text);
+                node.appendChild(textnode);  
+                element.insertBefore(node, element.firstChild)
+                */
+
+                //console.log(element.className)
+                const animationDelay = 'animation-delay: '+ i*100 + 'ms'
+                //console.log(animationDelay)
+                element.setAttribute('style', animationDelay)
+                element.classList.add('art-fade')
+            }
+        })        
+    </script>
+
+
+    <section id="art">
+        {% for image in site.static_files %}
+            {% if image.path contains 'img/art' %}
+                <div class="art-container">
+                    <img src="{{ site.baseurl }}{{ image.path }}" class="art-effect" alt="">
+                </div>
+            {% endif %}
+        {% endfor %}
+    </section>
+
+    <!--
+    <div class="row">
+
+        {% for image in site.static_files %}
+            {% if image.path contains 'img/media' %}
+                <div class="col-lg-2 col-md-2 mb-4 wow slideInLeft" data-wow-duration="2s" data-wow-delay="5s"">
+
+                    <img src="{{ site.baseurl }}{{ image.path }}" class="img-fluid mb-4" width="320px" alt="">
+
+                </div>
+            {% endif %}
+        {% endfor %}
+
+    </div>
+-->

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    {% include head.html %}
+    <body id="page-top" class="index">
+    {% include nav.html %}
+    {% include header.html %}
+
+
+
+    <section id="portfolio">
+        <div class="container">
+
+            <h1>Support Contents</h1>
+            <br>
+            {% assign items = site.categories['support'] | sort: 'date' %} 
+            {% for post in items %}
+                <ul>
+                    <li>
+                        <a href="{{ post.url }}">
+                            <h4>
+                                {{ post.title }}
+                            </h4>
+                        </a>
+                    </li>
+                </ul>
+            {% endfor %}
+            <br>
+            <h6 class="text-muted">Feel free to <a href="/info.html#contact">contact us</a> with any queries.</h6>
+        </div>
+    </section>    
+
+    
+    
+    {% include footer.html %}
+    {% include js.html %}
+    </body>
+</html>

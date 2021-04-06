@@ -41,27 +41,28 @@ The overall site is designed to be a simple CMS to make it easy for us to add ne
 
 The site has 4 main pages, each with a custom layout:
  - home (default.html)
- - productions (prods.html)
  - archive (archive.html)
  - info (info.html)
+ - support (support.html)
+ - art (art.html)
 
  
- The site currently supports two types of post:
-  - production (prod)
-  - competition (compo)
+ The site currently supports 6 types of post:
+  - **Productions** (`prods` category, `_posts/prods`) - pieces of work created by the Bitshifters collective
+  - **Competitions** (`compo` category, `_posts/compos`) - competitions we've entered productions into
+  - **Archives** (`compos` category, `_posts/archives`) - pieces of work created by anyone else. They are treated by the site as productions also, but just categorised differently
+  - **Team** (`team` category, `_posts/team`) - one post per team member that wants to be listed in the `.NFO` page
+  - **Support** (`support` category, `_posts/support`) - one post per support topic that will be listed in the `support.html` page
+
 
 Some files (templates, layouts, includes etc.) are mostly HTML, with embedded Liquid templating commands that are compiled by Jekyll. 
 
 Some files (pages, posts, data) are YAML style configuration files, with embedded variables and markdown formatted content.
 
 
-**Productions** are pieces of work created by the Bitshifters collective (category 'prods')
-
-**Archives** are pieces of work created by anyone else. They are treated by the site as productions also, but just categorised differently (category 'archives')
-
-**Competitions** are posts releated to a specific challenge we'll be setting every so often, so kinda like a blog post. (category 'compos')
-
 ## How to use
+
+**THE FOLLOWING IS OUT OF DATE, BEWARE!**
 
 ### Productions (eg. new demos created by BitShifters)
 To add a new production:

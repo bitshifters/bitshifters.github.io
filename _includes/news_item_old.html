@@ -1,0 +1,26 @@
+<!-- html code to present a news item -->
+<div class="col-xs-6 col-sm-4 col-md-3 portfolio-item ">
+    <div class="panel panel-default">
+        <div class="panel-heading" data-mh="group-newstext"><h4>{{ post.title | truncate: 30 }}</h4></div>
+        <div class="panel-body" data-mh="group-newsitem">
+            <a href="{{ post.url }}" class="portfolio-link">
+                <div class="caption">
+                    <div class="caption-content">
+                        <i class="fa fa-search-plus fa-3x"></i>
+                    </div>
+                </div>
+                <img src="/content/{{ post.img }}" class="img-responsive" alt="{{ post.alt }}">
+            </a>
+ 
+ 
+            {% if post.category contains 'compos' %}
+            <h6>{{ post.platform }}</h6>
+            {% else %}
+            <h6>{{ post.team }}</h6>
+            {% endif %}
+            <div >    <h7>      
+                Added {{ post.date | date: "%-d %b %Y" }} </h7>
+            </div>
+        </div>
+    </div>
+</div>

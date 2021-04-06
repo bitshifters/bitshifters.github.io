@@ -1,7 +1,8 @@
 ---
 layout: prods_post
 category: [posts, prods]
-tags: compo1
+tags: nova2017
+rank: 1st Place in Old Skool Demo
 
 title: TELETEXTR
 img: bs-teletextr.png

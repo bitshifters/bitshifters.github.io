@@ -6,6 +6,9 @@
 
     {% include about.html %}
 
+    {% include team.html %}
+
+    {% comment %}
     {% if site.contact == "static" %}
     {% include contact_static.html %}
     {% elsif site.contact == "disqus" %}
@@ -13,6 +16,7 @@
     {% else %}
     {% include contact.html %}
     {% endif %}
+    {% endcomment %}
 
     {% include footer.html %}
     {% include js.html %}

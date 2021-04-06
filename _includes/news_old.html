@@ -1,0 +1,60 @@
+<!-- Portfolio Grid Section -->
+<section id="portfolio">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <h2>Updates & News</h2>
+                <hr class="star-primary">
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel panel-warning">
+                <div class="panel-heading">Latest BitShifters Releases</div>
+                <div class="panel-body">
+                    {% assign items = site.categories['prods'] | sort: 'date' | reverse %} 
+                    {% for post in items limit:8 %} 
+                    {% include news_item.html %} 
+                    {% endfor %}
+                    <div class="pull-right">
+                        <!-- see more -->
+                        <a href="/prods.html" class="btn btn-md btn-warning ">
+                          See More...
+                      </a>&nbsp;&nbsp;&nbsp;              
+                    </div>                        
+                </div>
+            
+            </div>
+
+
+        </div>
+        <div class="row">
+            <div class="panel panel-info">
+                <div class="panel-heading">Recent additions to the BBC Demo Archive</div>
+                <div class="panel-body">
+                    {% assign items = site.categories['archives'] | sort: 'date' | reverse %} 
+                    {% for post in items limit:8 %} 
+                    {% include news_item.html %} 
+                    {% endfor %}
+                    <div class="pull-right">
+                        <!-- see more -->
+                        <a href="/archive.html" class="btn btn-md btn-info ">
+                          See More...
+                      </a>&nbsp;&nbsp;&nbsp;              
+                    </div>                       
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="panel panel-success">
+                <div class="panel-heading">Latest Competitions</div>
+                <div class="panel-body">
+                    {% assign items = site.categories['compos'] | sort: 'date' | reverse %} 
+                    {% for post in items limit:8 %} {% include news_item.html %} 
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>

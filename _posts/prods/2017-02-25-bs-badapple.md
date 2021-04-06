@@ -1,7 +1,7 @@
 ---
 layout: prods_post
 category: [posts, prods]
-tags: compo1
+tags: blockparty2017
 
 title: TELETEXT BAD APPLE
 img: bs-badappl.png

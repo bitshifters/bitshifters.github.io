@@ -1,0 +1,12 @@
+
+.shaderView {
+  position: absolute;
+  width: 100%;
+  height: 500px;
+  /* background: #f00; */
+}
+#shaderOverlay {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+}
