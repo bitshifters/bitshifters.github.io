@@ -118,7 +118,11 @@
                 <div class="col-lg-8 col-lg-offset-2 text-center">
 
                     <!-- emulation -->
+                    {% if page.jsbeebmodel %}
+                    <a target='_blank' href="https://bbc.godbolt.org/?disc=https://bitshifters.github.io/content/{{ page.download }}&autoboot&model={{ page.jsbeebmodel }}" class="btn btn-md btn-success">
+                    {% else %}
                     <a target='_blank' href="https://bbc.godbolt.org/?disc=https://bitshifters.github.io/content/{{ page.download }}&autoboot&model=Master" class="btn btn-md btn-success">
+                    {% endif %}
                         <i class="fa fa-play-circle"></i> Emulate
                     </a>&nbsp;&nbsp;&nbsp;
 

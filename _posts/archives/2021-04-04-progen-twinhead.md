@@ -14,7 +14,7 @@ platform: BBC Micro w/ 6502 Co-Processor
 download: progen-twinhead.ssd
 video: https://www.youtube.com/watch?v=AvUCeJ6SEUI
 pouet: https://www.pouet.net/prod.php?which=88555
-
+jsbeebmodel: MasterTurbo
 ---
 
 **Twinhead by Progen & Desire**
