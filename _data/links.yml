@@ -1,0 +1,44 @@
+- name: BBC Micro Bot
+  info: Dom's tweet-sized BBC bot
+  url: https://twitter.com/bbcmicrobot
+
+- name: Stardot
+  info: Acorn community online
+  url: http://stardot.org.uk/
+
+- name: JSBeeb
+  info: Matt's BBC Micro in a browser
+  url: https://bbc.godbolt.org/
+
+- name: pouët.net
+  info: Acorn Demoscene
+  url: https://www.pouet.net/groups.php?which=12872
+
+- name: Owlet
+  info: Write & Tweet BBC BASIC programs online
+  url: https://bbcmic.ro/
+
+- name: BeebJIT
+  info: Chris's 21GHz 6502 BBC Emulator
+  url: https://github.com/scarybeasts/beebjit
+
+- name: BeebAsm
+  info: Rich's 6502 Assembler
+  url: https://github.com/stardot/beebasm
+
+- name: B2
+  info: Tom's BBC Micro Emulator
+  url: https://github.com/tom-seddon/b2
+
+
+- name: B-Em
+  info: Progen's BBC Micro Emulator
+  url: http://b-em.bbcmicro.com/
+
+- name: Arculator
+  info: Progen's Archimedes Emulator
+  url: http://b-em.bbcmicro.com/arculator/
+
+- name: BeebVSC
+  info: Simon's Visual Studio Code Plugin for BBC Micro software development
+  url: https://marketplace.visualstudio.com/items?itemName=simondotm.beeb-vsc

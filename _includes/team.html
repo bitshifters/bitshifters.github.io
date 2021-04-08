@@ -19,34 +19,34 @@
         <div class="row">
 
             {% assign items = site.categories['team'] | sort: 'date' %} 
-            {% for post in items %}
+            {% for member in site.data.team %}
             <div class="col-lg-4 col-md-6 col-12 mt-4 pt-2">
                 <div class="team text-center rounded p-3 py-4">
-                    <img src="{{post.avatar}}" class="img-fluid avatar avatar-medium shadow rounded-pill" width="200px" alt="">
+                    <img src="{{member.avatar}}" class="img-fluid avatar avatar-medium shadow rounded-pill" width="200px" alt="">
                     <div class="content mt-3">
                         <h4>
-                            {% if post.name %}
-                            {{post.name}}
+                            {% if member.name %}
+                            {{member.name}}
                             {% endif %}
-                            {% if post.name and post.handle %}
+                            {% if member.name and member.handle %}
                             /
                             {% endif %}
-                            {% if post.handle %}
-                            {{post.handle}}
+                            {% if member.handle %}
+                            {{member.handle}}
                             {% endif %}
                         </h4>
-                        <h6>{{post.bio}}</h6>
+                        <h6>{{member.bio}}</h6>
                         <p>
-                        {% for skill in post.skills %}
+                        {% for skill in member.skills %}
                         <span class="badge badge-skill">{{skill}}</span>
                         {% endfor %}
                         </p>
                         <small class="text-muted"></small>
                         <ul class="list-unstyled mt-3 social-icon social mb-0">
-                            {% if post.github %}<li class="list-inline-item"><a href="{{post.github}}" target="_blank" class="rounded"><i class="mdi mdi-github" title="Github"></i></a></li>{% endif %}
-                            {% if post.twitter %}<li class="list-inline-item"><a href="{{post.twitter}}" target="_blank" class="rounded"><i class="mdi mdi-twitter" title="Twitter"></i></a></li>{% endif %}
-                            {% if post.youtube %}<li class="list-inline-item"><a href="{{post.youtube}}" target="_blank" class="rounded"><i class="mdi mdi-youtube" title="YouTube"></i></a></li>{% endif %}
-                            {% if post.pouet %}<li class="list-inline-item"><a href="{{post.pouet}}" target="_blank" class="rounded"><i class="mdi mdi-link" title="Pouet"></i></a></li>{% endif %}
+                            {% if member.github %}<li class="list-inline-item"><a href="{{member.github}}" target="_blank" class="rounded"><i class="mdi mdi-github" title="Github"></i></a></li>{% endif %}
+                            {% if member.twitter %}<li class="list-inline-item"><a href="{{member.twitter}}" target="_blank" class="rounded"><i class="mdi mdi-twitter" title="Twitter"></i></a></li>{% endif %}
+                            {% if member.youtube %}<li class="list-inline-item"><a href="{{member.youtube}}" target="_blank" class="rounded"><i class="mdi mdi-youtube" title="YouTube"></i></a></li>{% endif %}
+                            {% if member.pouet %}<li class="list-inline-item"><a href="{{member.pouet}}" target="_blank" class="rounded"><i class="mdi mdi-link" title="Pouet"></i></a></li>{% endif %}
                         </ul><!--end icon-->
                     </div>
                 </div>
@@ -54,7 +54,73 @@
             {% endfor %}
 
         </div><!--end row-->
-    </div>
 
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="section-title mb-4 pb-2">
+                    <hr class="star-primary">
+                    <h4 class="title mb-4">Greets to our Friends...</h4>
+                    <hr class="star-primary">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+        {% for greet in site.data.greets %}
+            <div class="col-lg-4 col-md-6 col-12 mt-4 pt-2">
+                <div class="team text-center rounded p-3 py-4">
+                    <div class="content mt-3">
+                        {% if greet.url %}
+                        <a href="{{ greet.url}}" target="_blank">
+                        {% endif %}
+                        <h4>{{ greet.name }}</h4>
+                        {% if greet.url %}
+                        </a>
+                        {% endif %}
+                        <h5 class="text-muted">{{ greet.info }}</h5>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+
+
+        <div class="row">
+            <div class="col-12 text-center">
+                <div class="section-title mb-4 pb-2">
+                    <hr class="star-primary">
+                    <h4 class="title mb-4">Cool Stuff</h4>
+                    <hr class="star-primary">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12 text-center">
+                {% for link in site.data.links %}
+                <div class="button ">
+                    <ul class="list-unstyled mt-3 ">
+                        <li class="list-inline-item">
+                            {% if link.url %}
+                            <a href="{{ link.url}}" target="_blank">
+                            {% endif %}
+                                <strong class="text-uppercase">{{ link.name }}</strong>
+                            {% if link.url %}
+                            </a>
+                            {% endif %}
+                            <span> | {{ link.info }}</span>
+                        </li>
+                    </ul>
+
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+
+
+    </div>
 
 </section>
