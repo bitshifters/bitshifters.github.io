@@ -1,0 +1,59 @@
+- name: Kieran
+  handle: kieranhj
+  bio: Retro Coder
+  skills: [ 6502, ARM, CRTC ]
+  avatar: /img/avatars/kieran.jpg
+  github: https://github.com/kieranhj
+  twitter: https://twitter.com/kieranhj
+  pouet: https://www.pouet.net/user.php?who=100120
+  youtube: https://www.youtube.com/channel/UCAJC3T6FllkpCRgQegFyTVQ
+
+- name: Simon
+  handle: Henley
+  bio: Retro Coder
+  skills: [ 6502, ARM, VGM ]
+  avatar: /img/avatars/simon.jpg
+  github: https://github.com/simondotm
+  twitter: https://twitter.com/simondotm
+  pouet: https://www.pouet.net/user.php?who=49124
+  youtube: https://www.youtube.com/channel/UCfPeyp3BCSQqnRZi1o7KfQw
+
+- name: 
+  handle: Inverse Phase 
+  bio: Musician
+  skills: [ Chiptunes, VGM ]
+  avatar: /img/avatars/inversephase.jpg
+  github: 
+  twitter: https://twitter.com/inversephase
+  pouet: https://www.pouet.net/user.php?who=72990
+  youtube: https://www.youtube.com/user/inversephase
+
+- name: Tom
+  handle: 
+  bio: Retro Coder
+  skills: [ 6502, Emus, CRTC, Tools ]
+  avatar: /img/avatars/tom.jpg
+  github: https://github.com/tom-seddon
+  twitter: https://twitter.com/tom_seddon
+  pouet: https://www.pouet.net/user.php?who=102187
+  youtube: https://www.youtube.com/channel/UCZn_VbxvTwFII3iiajav_GA  
+
+- name: 
+  handle: Vector Eyes
+  bio: Retro Coder
+  skills: [ 6502, CRTC ]
+  avatar: /img/avatars/avatar.png
+  github: 
+  twitter: 
+  pouet: https://www.pouet.net/user.php?who=102471
+  youtube: 
+
+- name: Chris
+  handle: Scarybeasts
+  bio: Retro Coder
+  skills: [ 6502, CRTC, BeebJIT, 8271 ]
+  avatar: /img/avatars/chris.jpg
+  github: https://github.com/scarybeasts
+  twitter: https://twitter.com/scarybeasts
+  pouet: 
+  youtube: https://www.youtube.com/user/scarybeasts

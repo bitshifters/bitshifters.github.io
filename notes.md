@@ -30,3 +30,26 @@ Multiple disk formats ADFS/SSD
 Links to people 
 Show people in the compo items
 
+
+
+
+Greets
+People
+* Rich TW / Beebasm
+* Sarah / Progen / Arculator / B-Em
+* Chris / @Scarybeasts / BeebJIT
+* Stew B
+* Dom / @Dominic / Twitterbot / Owlet
+* Matt G / JS Beeb / Owlet
+* Rhino
+* Chris / BeebJIT
+* Desire / Ramon / Dya / 
+* Horsenburger / Teletext Art
+* John Blythe / Artist
+Links
+* Stardot Community
+* JSBeeb
+* Pouet
+* Owlet
+* Beeb VSC
+* BS Gitgub
