@@ -1,6 +1,0 @@
-05/04/2021 20:42:15 INFO main: starting B-em v-Win32
-05/04/2021 20:42:16 WARNING scsi lun 0: unable to open data file scsi/scsi0.dat: No such file or directory
-05/04/2021 20:42:16 WARNING scsi lun 1: unable to open data file scsi/scsi1.dat: No such file or directory
-05/04/2021 20:42:16 WARNING scsi lun 2: unable to open data file scsi/scsi2.dat: No such file or directory
-05/04/2021 20:42:16 WARNING scsi lun 3: unable to open data file scsi/scsi3.dat: No such file or directory
-05/04/2021 20:42:16 INFO disc: Loading 0 C:\Users\podvi\Dropbox\GitHub\bitshifters.github.io\content\bs-wobble-colours.ssd ssd
