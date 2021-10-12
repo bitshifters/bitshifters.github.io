@@ -9,12 +9,12 @@ alt: image-alt
 team: CRTC
 authors: 
 year: 2010
-type: Graphics Demo
+type: Demo
 platform: BBC Master
 download: crtc-tmoyos.ssd
 source: https://github.com/crtc-demos/the-master-of-your-old-school
 pouet: http://www.pouet.net/prod.php?which=55785
-video: https://www.youtube.com/watch?v=9bwQZ8ykhqA
+video: https://www.youtube.com/watch?v=TcD_F5DzsPM
 
 
 ---
@@ -23,3 +23,4 @@ video: https://www.youtube.com/watch?v=9bwQZ8ykhqA
 
 A demo for the BBC Master microcomputer
 
+(The elusive updated release with "fixed" music!)
