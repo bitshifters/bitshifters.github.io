@@ -25,7 +25,7 @@ This chiptune musicdisk was released by Rabenauge as a cross-platform production
 
 Bitshifters decided that Amiga and Atari shouldn't have all the fun, so we decided to make an Archimedes version of this chip tune pack! Hopefully the first of many more to come...
 
-Special thanks to Bodo for supplying all of the Amiga assets for the conversion and to Phoneix for making brand new versions of [QTM](http://www.pi-star.co.uk/qtm/) and [Rasterman](http://www.pi-star.co.uk/rasterman/) just for this release!
+Special thanks to Bodo for supplying all of the Amiga assets for the conversion and to Phoenix for making brand new versions of [QTM](http://www.pi-star.co.uk/qtm/) and [Rasterman](http://www.pi-star.co.uk/rasterman/) just for this release!
 
 Run on real Archimedes hardware with RISC OS 3.1 or 2, or if running under emulation, use [Arculator v2.1](http://b-em.bbcmicro.com/arculator/). For best emulated experience, emulate an A3010 and select sound output filter -> more reduced.
 
