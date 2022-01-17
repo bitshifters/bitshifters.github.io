@@ -7,7 +7,7 @@ title: Chipo Django 1
 img: bs-django01.png
 alt: image-alt
 authors: Bodo, Insane, Krill/Plush, Leonard/Oxygene, Kieran/Bitshifters, Phoenix/Quantum, Titus, Virgill, Juice, Okeanos, Dalzey, Slash, Vedder, Curt Cool, Triance, Ma2e
-team: Rabenague & Bitshifters & the great Amiga chiptune composers!
+team: Rabenauge, Bitshifters & the great composers of the Amiga scene!
 year: 2022
 type: Musicdisk
 platform: Acorn Archimedes
