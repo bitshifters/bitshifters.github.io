@@ -14,7 +14,7 @@ platform: Acorn Archimedes
 download: bs-django01,ddc
 source: https://github.com/kieranhj/arc-django
 pouet: https://www.pouet.net/prod.php?which=90085
-video: 
+video: https://www.youtube.com/watch?v=esrLRndz09E
 
 
 ---
