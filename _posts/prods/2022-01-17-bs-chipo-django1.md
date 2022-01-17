@@ -21,14 +21,12 @@ video:
 
 **Chipo Django 1**
 
-This chiptune musicdisk was released by Rabenauge as a cross-platform production at the Deadline 2021 demoparty.
+This chiptune musicdisk was released by Rabenauge as a cross-platform production at the [Deadline 2021](https://deadline.untergrund.net/2021/) demoparty.
 
 Bitshifters decided that Amiga and Atari shouldn't have all the fun, so we decided to make an Archimedes version of this chip tune pack! Hopefully the first of many more to come...
 
-Special thanks to Bodo for supplying all of the Amiga assets for the conversion and to Phoneix for making brand new versions of QTM and Rasterman just for this release!
+Special thanks to Bodo for supplying all of the Amiga assets for the conversion and to Phoneix for making brand new versions of [QTM](http://www.pi-star.co.uk/qtm/) and [Rasterman](http://www.pi-star.co.uk/rasterman/) just for this release!
 
-Run on real Archimedes hardware with RISC OS 3.1 or 2, or if running under emulation, use Arculator v2.1. For best emulated experience, emulate an A3010 and select sound output filter -> more reduced.
+Run on real Archimedes hardware with RISC OS 3.1 or 2, or if running under emulation, use [Arculator v2.1](http://b-em.bbcmicro.com/arculator/). For best emulated experience, emulate an A3010 and select sound output filter -> more reduced.
 
 For best audio quality on real Archimedes hardware we recommend removing the hardware low-pass filter by following the instructions on this [thread](https://stardot.org.uk/forums/viewtopic.php?f=16&t=13630).
-
-Find QTM and Rasterman at www.pi-star.co.uk.
