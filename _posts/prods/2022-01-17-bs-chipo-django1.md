@@ -1,0 +1,34 @@
+---
+layout: prods_post
+category: [posts, prods]
+tags: deadline2021
+rank: 2nd Place in Wild Demo
+title: Chipo Django 1
+img: bs-django01.png
+alt: image-alt
+authors: Bodo, Insane, Krill/Plush, Leonard/Oxygene, Kieran/Bitshifters, Phoenix/Quantum, Titus, Virgill, Juice, Okeanos, Dalzey, Slash, Vedder, Curt Cool, Triance, Ma2e
+team: Rabenague & Bitshifters & the great Amiga chiptune composers!
+year: 2022
+type: Musicdisk
+platform: Acorn Archimedes
+download: bs-django01,ddc
+source: https://github.com/kieranhj/arc-django
+pouet: https://www.pouet.net/prod.php?which=90085
+video: 
+
+
+---
+
+**Chipo Django 1**
+
+This chiptune musicdisk was released by Rabenauge as a cross-platform production at the Deadline 2021 demoparty.
+
+Bitshifters decided that Amiga and Atari shouldn't have all the fun, so we decided to make an Archimedes version of this chip tune pack! Hopefully the first of many more to come...
+
+Special thanks to Bodo for supplying all of the Amiga assets for the conversion and to Phoneix for making brand new versions of QTM and Rasterman just for this release!
+
+Run on real Archimedes hardware with RISC OS 3.1 or 2, or if running under emulation, use Arculator v2.1. For best emulated experience, emulate an A3010 and select sound output filter -> more reduced.
+
+For best audio quality on real Archimedes hardware we recommend removing the hardware low-pass filter by following the instructions on this [thread](https://stardot.org.uk/forums/viewtopic.php?f=16&t=13630).
+
+Find QTM and Rasterman at www.pi-star.co.uk.
