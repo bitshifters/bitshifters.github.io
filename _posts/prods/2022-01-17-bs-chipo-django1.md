@@ -31,4 +31,4 @@ Run on real Archimedes hardware with RISC OS 3.1 or 2, or if running under emula
 
 For best audio quality on real Archimedes hardware we recommend removing the hardware low-pass filter by following the instructions on this [thread](https://stardot.org.uk/forums/viewtopic.php?f=16&t=13630).
 
-Download the Archimedes disk image (ADFS 800K E Format) below or get the [!Spark](https://www.4corn.co.uk/articles/sparkplug/) archive [here](bs-django01,ddc).
+Download the Archimedes disk image (ADFS 800K E Format) below or get the [!Spark](https://www.4corn.co.uk/articles/sparkplug/) archive [here](../../content/bs-django01,ddc).
