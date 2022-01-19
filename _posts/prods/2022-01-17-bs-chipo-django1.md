@@ -11,10 +11,10 @@ team: Rabenauge, Bitshifters & the great composers of the Amiga scene!
 year: 2022
 type: Musicdisk
 platform: Acorn Archimedes
-download: bs-django01,ddc
+download: bs-django01.zip
 source: https://github.com/kieranhj/arc-django
 pouet: https://www.pouet.net/prod.php?which=90085
-video: https://www.youtube.com/watch?v=esrLRndz09E
+video: https://www.youtube.com/watch?v=frv0-KRWRhY
 
 
 ---
@@ -30,3 +30,5 @@ Special thanks to Bodo for supplying all of the Amiga assets for the conversion 
 Run on real Archimedes hardware with RISC OS 3.1 or 2, or if running under emulation, use [Arculator v2.1](http://b-em.bbcmicro.com/arculator/). For best emulated experience, emulate an A3010 and select sound output filter -> more reduced.
 
 For best audio quality on real Archimedes hardware we recommend removing the hardware low-pass filter by following the instructions on this [thread](https://stardot.org.uk/forums/viewtopic.php?f=16&t=13630).
+
+Download the Archimedes disk image (ADFS 800K E Format) below or get the [!Spark](https://www.4corn.co.uk/articles/sparkplug/) archive [here](bs-django01,ddc).
