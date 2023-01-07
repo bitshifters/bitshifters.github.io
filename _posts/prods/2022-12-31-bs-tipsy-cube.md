@@ -13,7 +13,7 @@ type: Intro
 platform: Acorn Archimedes
 download: bs-tipsy-cube.zip
 source: https://github.com/bitshifters/tipsy-cube
-pouet: 
+pouet: https://www.pouet.net/prod.php?which=93218
 video: https://www.youtube.com/watch?v=FITT0qfel5Q
 
 
