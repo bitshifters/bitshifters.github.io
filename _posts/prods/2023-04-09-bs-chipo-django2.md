@@ -6,7 +6,7 @@ rank: 6th Place in Wild Demo
 title: Chipo Django 2
 img: bs-django02.png
 alt: image-alt
-authors: Kieran^Bitshifters, Bodo^Rab, Insane^Rab, Titus^Rab, Slime, Triace, ne7, Okeanos, Dalezy, Slash, Virgill, Curt Cool, Punnik, 4Mat, Lord, Maze, ToBach, Soda7
+authors: Kieran^Bitshifters, Phoenix^Quantum, Bodo^Rab, Insane^Rab, Titus^Rab, Slime, Triace, ne7, Okeanos, Dalezy, Slash, Virgill, Curt Cool, Punnik, 4Mat, Lord, Maze, ToBach, Soda7
 team: Bitshifters & Rabenauge
 year: 2023
 type: Musicdisk
