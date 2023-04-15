@@ -41,4 +41,4 @@ Powered by [QTMTracker](http://www.pi-star.co.uk/qtm/) MOD player. Special thank
 
 Default cube visualiser setting `fake` `5`.
 
-The `Emulate` button below is hardcoded for BBC prods, oops. But don't worry, you can emulate using [Archimedes Live](https://archi.medes.live/#disc=https://bitshifters.github.io/content/bs-django02.adf&autoboot=desktop%20filer_run%20adfs::0.$.!Django02) instead!
+The `Emulate` button below is hardcoded for BBC prods, oops. But don't worry, you can emulate using [Archimedes Live](https://archi.medes.live/#disc=https://bitshifters.github.io/content/bs-django02.zip&autoboot=desktop%20filer_run%20adfs::0.$.!Django02) instead!
