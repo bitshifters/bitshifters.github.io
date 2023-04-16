@@ -29,4 +29,6 @@ For best audio quality on real Archimedes hardware we recommend removing the har
 
 Download the Archimedes disk image (ADFS 800K E Format) below or get the [!Spark](https://www.4corn.co.uk/articles/sparkplug/) archive [here](../../content/bs-tipsy-cube,ddc).
 
+The `Emulate` button below is hardcoded for BBC prods, oops. But don't worry, you can emulate using [Archimedes Live](https://archi.medes.live/#disc=https://bitshifters.github.io/content/bs-tipsy-cube.zip&autoboot=desktop%20filer_run%20adfs::0.$.!Tipsy&preset=a3020) instead!
+
 Thanks to Progen^DESiRE and Blueberry^Loonies.
