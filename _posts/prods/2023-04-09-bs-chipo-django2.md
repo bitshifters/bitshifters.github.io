@@ -11,6 +11,7 @@ team: Bitshifters & Rabenauge
 year: 2023
 type: Musicdisk
 platform: Acorn Archimedes
+emuboot: autoboot=desktop%20filer_run%20adfs::0.$.!Django02
 download: bs-django02.zip
 source: https://github.com/kieranhj/arc-django-2
 pouet: https://www.pouet.net/prod.php?which=94151
