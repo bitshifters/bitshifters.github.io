@@ -11,6 +11,7 @@ team: Bitshifters & Slipstream
 year: 2022
 type: Intro
 platform: Acorn Archimedes
+emuboot: autoboot=desktop%20filer_run%20adfs::0.$.!Tipsy&preset=a3020
 download: bs-tipsy-cube.zip
 source: https://github.com/bitshifters/tipsy-cube
 pouet: https://www.pouet.net/prod.php?which=93218

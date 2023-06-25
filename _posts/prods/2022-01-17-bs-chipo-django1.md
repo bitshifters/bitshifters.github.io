@@ -11,6 +11,7 @@ team: Rabenauge, Bitshifters & the great composers of the Amiga scene!
 year: 2022
 type: Musicdisk
 platform: Acorn Archimedes
+emuboot: autoboot=desktop%20filer_run%20adfs::0.$.!Django01
 download: bs-django01.zip
 source: https://github.com/kieranhj/arc-django
 pouet: https://www.pouet.net/prod.php?which=90085
