@@ -6,7 +6,7 @@ rank: 22nd in oldskool 256b intro
 title: Wobble Colours
 img: bs-wobble-colours.png
 alt: image-alt
-authors: Tom
+authors: Tom Seddon, Rich T-W, Inverse Phase
 team: Bitshifters
 year: 2021
 type: 256 Byte Demo
@@ -20,3 +20,5 @@ video: https://www.youtube.com/watch?v=w4F6ZJUS2CE
 ---
 
 **Wobble Colours**
+
+The first tiny production from Bitshifters!

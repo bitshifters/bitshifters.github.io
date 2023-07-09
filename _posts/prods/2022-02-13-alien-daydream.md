@@ -20,4 +20,6 @@ github: https://github.com/tom-seddon/256_bytes/
 
 **Alien Daydream**
 
-A 256b intro for the BBC Master, by Tom Seddon
+A dream makes little sense at the best of times. This one has been
+reduced (to the extent possible) to a form compatible with human modes
+of comprehension.
