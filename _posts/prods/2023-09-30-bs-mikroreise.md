@@ -13,7 +13,7 @@ type: Demo
 platform: Acorn Archimedes
 emuboot: autoboot=desktop%20hostfs::hostfs.$.!Reise&soundfilter=2&preset=a3020
 download: bs-mikroreise,ddc
-source: 
+source: https://github.com/bitshifters/mikroreise
 pouet: https://www.pouet.net/prod.php?which=95235
 video: https://www.youtube.com/watch?v=PmjDv7u55BE
 
