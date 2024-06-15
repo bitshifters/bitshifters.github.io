@@ -11,10 +11,10 @@ team: Bitshifters & Alcatraz & Torment
 year: 2024
 type: Intro
 platform: Acorn Archimedes
-emuboot: autoboot=desktop%20hostfs::hostfs.$.!AKlang&soundfilter=2&preset=a3010
+emuboot: autoboot=desktop%20hostfs::hostfs.$.!AKlang&soundfilter=2&preset=a3020
 download: bs-archieklang,ddc
 source: https://github.com/bitshifters/aklang
-pouet: 
+pouet: https://www.pouet.net/prod.php?which=97158
 video: 
 
 ---
