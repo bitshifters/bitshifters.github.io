@@ -21,11 +21,10 @@ video:
 We've always loved Ghouls. What better way to celebrate its 40th
 birthday than with an updated version?
 
-It's time to meet the ghost again! Revisit the deadly haunted mansion,
-then try 60 additional new levels and 2 new game modes.
+Time to meet the ghost again! Revisit the deadly haunted mansion, then
+try 60 additional new levels and 2 new game modes.
 
-But whatever you choose, don't expect this to be easy. Wherever your
-adventures take you, the ghost will never be far behind.
+Just... don't expect this to be easy.
 
 <img src="../../content/bs-ghouls-revenge-game-modes.png" width="177" height="144"/>
 <img src="../../content/bs-ghouls-revenge-learn-to-jump.png" width="177" height="144"/>
@@ -53,7 +52,4 @@ Full instructions are available on the project's GitHub page:
 
 The download here is an 80 track DFS disk image.
 
-For a 40 track DFS or ADFS S/M/L disk images, visit the GitHub release page:
-
-[https://github.com/tom-seddon/ghouls-revenge/releases/latest](https://github.com/tom-seddon/ghouls-revenge/releases/latest)
-
+The complete ZIP file includes a 40 track DFS disk images, and ADFS S/M/L disk images: [ghouls-revenge-v1.00.zip](../../content/ghouls-revenge-v1.00.zip)
