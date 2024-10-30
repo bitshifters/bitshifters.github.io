@@ -50,6 +50,8 @@ Full instructions are available on the project's GitHub page:
 
 ## **Additional Downloads**
 
-The download here is an 80 track DFS disk image.
+The download button link is for an 80 track DFS disk image.
 
-The complete ZIP file includes a 40 track DFS disk images, and ADFS S/M/L disk images: [ghouls-revenge-v1.00.zip](../../content/ghouls-revenge-v1.00.zip)
+The complete ZIP file includes both 40 and 80 track DFS disk images,
+and ADFS S/M/L disk images:
+[ghouls-revenge-v1.00.zip](../../content/ghouls-revenge-v1.00.zip)
