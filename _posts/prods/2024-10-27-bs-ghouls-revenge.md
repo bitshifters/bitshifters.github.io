@@ -2,7 +2,7 @@
 layout: prods_post
 category: [posts, prods]
 tags: 
-title: Ghouls&#x3a; Revenge
+title: Ghouls&#x3a; Revenge (and Ghouls Party)
 img: bs-ghouls-revenge.png
 alt: image-alt
 authors: David J Hoskins (original game); Tom Seddon (level editor, additional code); Kieran, Stew, VectorEyes, Dave, Tom (new levels); Dethmunk (title screen)
@@ -10,7 +10,7 @@ team: Bitshifters
 year: 2024
 type: Game
 platform: BBC Micro
-download: ghouls-revenge-v1.00.ssd
+download: ghouls-revenge-v1.10.ssd
 source: https://github.com/tom-seddon/ghouls-revenge
 video: 
 
@@ -40,6 +40,25 @@ level editor to devise fresh torments.
 
 -----
 
+## **Ghouls Party**
+
+_But that's not all!_ Ghouls: Revenge also includes Ghouls Party, a
+completely fresh arcade-style take on the Ghouls experience.
+
+The ghost is on holiday, and left you with the keys to the mansion
+(and everywhere else): time for a Ghouls Party! Your choice of level,
+race against the best time to get to the goal as quickly as possible.
+
+<img src="../../content/bs-ghouls-party.png" width="177" height="144"/>
+
+Best times are stored on disk, so competition can be ongoing!
+
+The files are mergeable, so you can share best times with others,
+keeping the fastest. (And a copy of our own best times file is
+included, if you fancy trying to beat us!)
+
+-----
+
 ## **Instructions**
 
 Full instructions are available on the project's GitHub page:
@@ -50,8 +69,10 @@ Full instructions are available on the project's GitHub page:
 
 ## **Additional Downloads**
 
-The download button link is for an 80 track DFS disk image.
+The download button link is for an 80 track DFS disk image for Ghouls:
+Revenge
 
-The complete ZIP file includes both 40 and 80 track DFS disk images,
-and ADFS S/M/L disk images:
-[ghouls-revenge-v1.00.zip](../../content/ghouls-revenge-v1.00.zip)
+The complete ZIP file includes both Ghouls: Revenge and Ghouls Party.
+Each one comes as DFS disk images (40 track and 80 track) and ADFS
+disk images (S, M and L):
+[ghouls-revenge-v1.10.zip](../../content/ghouls-revenge-v1.10.zip)
