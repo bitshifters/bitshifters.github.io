@@ -18,7 +18,9 @@ It is easy to modify the website, just clone the repo and make the desired chang
 
 If you want to test locally before pushing to the live site repo, you need to install Jekyll. 
 
-A guide for installing Jekyll on windows can be found [here](https://davidburela.wordpress.com/2015/11/28/easily-install-jekyll-on-windows-with-3-command-prompt-entries-and-chocolatey/) 
+A guide for installing Jekyll on windows can be found [here](https://davidburela.wordpress.com/2015/11/28/easily-install-jekyll-on-windows-with-3-command-prompt-entries-and-chocolatey/).
+
+`sudo apt-get install jekyll` should do the trick on Ubuntu.
 
 To build the site:
 ```
