@@ -15,7 +15,7 @@ emuboot: autoboot=desktop%20filer_run%20adfs::0.$.!dj3
 download: bs-django03,ddc
 source: 
 pouet: 
-video: 
+video: https://www.youtube.com/watch?v=RaLQ68ro3q0
 
 
 ---
