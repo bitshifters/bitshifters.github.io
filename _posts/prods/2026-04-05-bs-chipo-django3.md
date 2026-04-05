@@ -4,7 +4,7 @@ category: [posts, prods]
 tags: revision
 rank:
 title: Chipo Django 3
-img: bs-django03png
+img: bs-django03.png
 alt: image-alt
 authors: Kieran^Bitshifters, Phoenix^Quantum, Bodo^Rab, Insane^Rab
 team: Bitshifters & Rabenauge
