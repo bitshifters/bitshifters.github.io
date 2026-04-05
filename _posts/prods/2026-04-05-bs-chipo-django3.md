@@ -12,7 +12,7 @@ year: 2026
 type: Musicdisk
 platform: Acorn Archimedes
 emuboot: autoboot=desktop%20filer_run%20adfs::0.$.!dj3
-download: bs-django03.zip
+download: bs-django03,ddc
 source: 
 pouet: 
 video: 
