@@ -11,7 +11,7 @@ team: Bitshifters & Rabenauge
 year: 2026
 type: Musicdisk
 platform: Acorn Archimedes
-emuboot: autoboot=desktop%20filer_run%20HostFS::hostfs.$.!dj3&soundfilter=2&preset=a3000
+emuboot: autoboot=desktop%20filer_run%20HostFS::hostfs.$.!dj3&soundfilter=2&preset=a3020
 download: bs-django03,ddc
 source: 
 pouet: https://www.pouet.net/prod.php?which=106004
