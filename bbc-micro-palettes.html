@@ -35,9 +35,14 @@ figure{margin:0;width:176px}
 img{width:100%;height:auto;display:block;image-rendering:pixelated;
   border:1px solid var(--rule)}
 figcaption{font-size:12px;color:var(--dim);margin-top:7px}
-footer{border-top:1px solid var(--rule);padding-top:28px;margin-top:38px;
+footer{border-top:1px solid var(--rule);padding-top:30px;margin-top:38px;
   color:var(--dim);font-size:13px;max-width:70ch}
-a{color:inherit}
+footer p{margin:0 0 14px}
+footer b{color:var(--ink);font-weight:700}
+footer .by{margin-top:22px;padding-top:18px;border-top:1px solid var(--rule)}
+a{color:var(--ink);text-decoration:underline;text-underline-offset:3px;
+  text-decoration-color:var(--dim)}
+a:hover{text-decoration-color:var(--ink)}
 @media(max-width:820px){
   .pal{grid-template-columns:1fr;gap:20px}
   figure{width:calc(50% - 9px)}
@@ -50,7 +55,9 @@ a{color:inherit}
 four of them at a time. That is 70 possible sets. Across <b>1287</b>
 screenshots from the games archive, only <b>48</b> were ever used.</p>
 <p>Each set below is named for what it looks like and for what turned out
-to be sitting inside it. Palettes are ordered by how many games chose them.</p>
+to be sitting inside it. Palettes are ordered by how many games chose them.
+Screenshots come from the Complete BBC Micro Games Archive; the naming,
+grouping and writing are Claude&rsquo;s.</p>
 <div class="strip"><span style="background:#000000"></span><span style="background:#ff0000"></span><span style="background:#00ff00"></span><span style="background:#ffff00"></span><span style="background:#0000ff"></span><span style="background:#ff00ff"></span><span style="background:#00ffff"></span><span style="background:#ffffff"></span></div><div class="striplabels"><em>black</em><em>red</em><em>green</em><em>yellow</em><em>blue</em><em>magenta</em><em>cyan</em><em>white</em></div>
 </header>
 <section class="pal">
@@ -533,8 +540,19 @@ to be sitting inside it. Palettes are ordered by how many games chose them.</p>
 </div>
 <div class="shots"><figure><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUAAAAEABAMAAAAw5rL1AAAAMFBMVEUAAAAzAAAAMwAzMwAAADMzADMAMzMzMzMAAAD/AAAA/wD//wAAAP//AP8A//////89sOvtAAACiklEQVR42u3d0a3CIBiG4c+mC7ACK7D/BrICK3SFc1FbWwVEpUJP3v/CWC3wCH+rCUEuVy3hJK93YpJRhZikTEXD/an/oOIqPmMydY1yjzg3Hzt5ufnJcux255lErUuFt3JP5d1TZ+Q+6iDJ+7nSpSf3x2593+3PU8rnvff3co/l3WN7+aEYEz0Qe8EXZYF392Ten7+Uf2rATHng/uqYh/bW0CfJ6SXn/FpX9IS9L1fb5bpWss0ZbRrY5OTzwJhkCkZycN9O2VW8AcZa8modl6v6iCkx3oM6j7EXiHn9TdJnAAQIECBAgAABAgQIECBAgAABAgQIECBAgAATMUrVZn7rhIkAY5MUU+FrpVFa33TaHLSS7RloZW2XwrUHgxR67sFgJRvowZNfJC57kYTQXOjTQCvZPm8045qB/FgACBAgQIAAAQIECBAgQIAAAQIE+BBfL9eIzrGYHwBNabuFGPNhUXIQIECAAAECBAgQIECAAAECBAgQIECAAAECPCswOQ3xzfxHyTKMr4GmdleUfjhyECBAgAABAgQIECBAgP8UaG3fwGMWrw41fUcIh3q+IB2wRLkaMMxDHPod4rA+9JqDYf6vgW5zcO7B6sKx4giHI8aYrzqAAAEC7DzemyepHCV/k3XIPIkhBwECBAgQIECAAAECBAgQIECAAAECBAgQIECAmXmSb9aExOYhpsrA0naPLksOAgQIECBAgAABAgQIECBAgAABtgdae8yyuPJIbLy6biyqxhsnWsUXvW32jm2656RNLRxct8UMartvZ2oIhxcp8MMuDLkhDpvHVh1oo4Bxf4ZaE9M52PoqkY3f5sZO7jLJ1k8yTxKbw5g6ApqOe5BfMwABvog/ycuKMc1BpXAAAAAASUVORK5CYII=" alt="Maze Invaders" width="320" height="256"><figcaption>Maze Invaders</figcaption></figure></div>
 </section>
-<footer>Palettes read directly from the pixels of each screenshot, so counts
-count every shot, and a handful of titles appear in two different palettes
-because the archive holds two unrelated games under the same name. Screenshots from the Complete BBC Micro Games
-Archive; palette groupings after Tom Seddon&rsquo;s survey.</footer>
+<footer>
+<p><b>How this was made.</b> Every screenshot was read pixel by pixel to
+recover the four colours actually on screen, then grouped by colour set.
+The names are readings of each set &mdash; of the colours themselves and of
+the games that turned out to share them &mdash; not anything official.
+Counts include every screenshot, and a handful of titles appear in more than
+one palette because the archive holds unrelated games under the same name.</p>
+<p><b>Sources.</b> Screenshots and game data from the
+<a href="https://bbcmicro.co.uk/">Complete BBC Micro Games Archive</a>.
+Palette groupings follow
+<a href="https://tom-seddon.github.io/palettes/output/htdocs/games.all.by_index.html">Tom
+Seddon&rsquo;s palette survey</a>, which indexes the same archive by colour set.</p>
+<p class="by">Compiled and written by <a href="https://claude.ai">Claude</a>,
+Anthropic&rsquo;s AI assistant.</p>
+</footer>
 </div></body></html>
