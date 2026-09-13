@@ -40,7 +40,6 @@ A special mention goes out to [scarybeasts](https://scarybeastsecurity.blogspot.
 <img src="../../content/paradroid/bs-paradroid3.png" width="160" height="120" />
 <img src="../../content/paradroid/bs-paradroid4.png" width="160" height="120" />
 <img src="../../content/paradroid/bs-paradroid5.png" width="160" height="120" />
-<img src="../../content/paradroid/bs-paradroid6.png" width="160" height="120" />
 
 
 ## **How to Play**
