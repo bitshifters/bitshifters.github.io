@@ -12,7 +12,7 @@ year: 2026
 type: Game
 platform: BBC Micro
 download: bs-paradroid.ssd
-source: https://github.com/kieranhj/paradroid
+source: https://github.com/kieranhj/paradroid-beeb
 pouet:
 video:
 
@@ -29,9 +29,9 @@ video:
 
 I've been threatening to port this game [since 2017](https://stardot.org.uk/forums/viewtopic.php?p=181590&hilit=paradroid#p181590) and made a couple of aborted attempts to look at the code, having obtained an assembly listing of Paradroid Competition Edition from a C64 forum member. My previous [game](https://bitshifters.github.io/posts/prods/bs-pop-beeb.html) [ports](https://bitshifters.github.io/posts/prods/bs-scr-beeb.html) took between 6 and 12 months and I just didn't have capacity to do another one at that scale. With the advent of AI coding agents in 2026, I decided to take another look at the project with the help of Claude Code.
 
-Whilst I have wanted the port to exist for a long time, this was also very much an exploration into whether modern coding agents, like Claude, could write 6502 assembler and understand the BBC Micro architecture to the depth required for a sophisticated game. (This was very much not the case in 2025.) One month later, the port is complete yet not a single line of code has been written directly by me. The results are impressive, how I feel about that is better left to the [forum discussion](https://stardot.org.uk/forums/viewtopic.php?t=33437)!
+Whilst I have wanted the port to exist for a long time, this was also very much an exploration into whether modern coding agents, like Claude, could write 6502 assembler and understand the BBC Micro architecture to the depth required for a sophisticated game. (This was very much not the case in 2025.) Six weeks later, the port is complete yet not a single line of code has been written directly by me. The results are impressive, how I feel about that is better left to the [forum discussion](https://stardot.org.uk/forums/viewtopic.php?t=33437)!
 
-A special mention goes out to [scarybeasts](https://scarybeastsecurity.blogspot.com/), who has hand-written an impressive 15kHz MOD player rendering the Paradroid-90 Amiga soundtrack at astonishing quality on the BBC Micro for our intro. Lastly, thanks to [Hexwab](https://github.com/hexwab) for providing additional hand-written optimisations that saved a substantial amount of bytes and cycles, extensive playtesting and pushing for the highest possible quality bar, particularly removing the disk load. Both go to show the limits of what AI can do - humans still have the edge!
+A special mention goes out to [scarybeasts](https://scarybeastsecurity.blogspot.com/), who has hand-written an impressive 15kHz MOD player rendering the Paradroid-90 Amiga soundtrack at astonishing quality on the BBC Micro for our intro. Thanks to Sydney on Stardot for playtesting and bug reporting. Lastly, big thanks to [Hexwab](https://github.com/hexwab) for providing additional hand-written optimisations that saved a substantial amount of bytes and cycles, extensive playtesting and pushing for the highest possible quality bar, particularly removing the interstitial disk load. All go to show the limits of what AI can do - humans still have the edge!
 
 
 
