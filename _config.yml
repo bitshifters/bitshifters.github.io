@@ -64,6 +64,21 @@ credits: 'Freelancer is a free to use, open source Bootstrap theme created by <a
 
 #####################################################################
 
+# Disc-image manifest (content/manifest.json), consumed by external emulator
+# front-ends such as jsbeeb. Generated at build time; see content/manifest.json.
+# Disc images in /content/ that no post links to are listed automatically, so
+# name here anything that should stay out of the list (old versions, WIP, the
+# single-sided halves of a .dsd, ...).
+manifest:
+  exclude:
+    - bs-badappl-disk1.ssd     # halves of bs-badappl.dsd
+    - bs-badappl-disk2.ssd
+    - bs-wave-runner.ssd       # superseded by bs-wave-runner-v1-1.ssd
+    - evil-inf-v1-0.ssd        # superseded by EvilIn11.ssd
+    - EvlIn11a.ssd
+    - ghouls-revenge-v1.00.ssd # superseded by ghouls-revenge-v1.10.ssd
+    - starwars_colour_wip.dsd  # work in progress
+
 # Build settings
 markdown: kramdown
 

@@ -1,0 +1,81 @@
+---
+permalink: /content/manifest.json
+sitemap: false
+---
+{%- comment -%}
+  Disc-image manifest for external emulator front-ends (jsbeeb et al).
+
+  Jekyll regenerates this on every build, so it cannot drift from the site.
+  Two sources, in order:
+    1. every post whose `download:` is a .ssd / .dsd / .hfe, using that post's
+       own front matter for the metadata;
+    2. any other disc image sitting directly in /content/ that no post links
+       to, titled from its filename.
+  Subfolders (wip/, archie/, ...) are deliberately not scanned, and anything
+  listed under `manifest.exclude` in _config.yml is skipped.
+
+  Per-post overrides: `manifest_title`, `manifest_notes`, `jsbeebmodel`.
+{%- endcomment -%}
+{%- assign disc_exts = "ssd,dsd,hfe" | split: "," -%}
+{%- assign excluded = site.manifest.exclude | join: "|" | prepend: "|" | append: "|" -%}
+{%- assign linked = "|" -%}
+{%- assign first = true -%}
+{
+  "schemaVersion": 1,
+  "generated": {{ site.time | date_to_xmlschema | jsonify }},
+  "files": [
+{%- for post in site.posts -%}
+  {%- if post.download -%}
+    {%- assign ext = post.download | split: "." | last | downcase -%}
+    {%- assign key = post.download | prepend: "|" | append: "|" -%}
+    {%- if disc_exts contains ext -%}
+    {%- unless excluded contains key -%}
+      {%- assign linked = linked | append: post.download | append: "|" -%}
+      {%- if first %}{% assign first = false %}{% else %},{% endif -%}
+      {%- if post.manifest_title -%}
+        {%- assign title = post.manifest_title -%}
+      {%- else -%}
+        {%- assign title = post.title -%}
+      {%- endif -%}
+      {%- assign title = title | strip | replace: "&#x3a;", ":" | replace: "&#58;", ":" | replace: "&amp;", "&" | replace: "&quot;", '"' | replace: "&#39;", "'" -%}
+      {%- if post.jsbeebmodel -%}
+        {%- assign machine = post.jsbeebmodel -%}
+      {%- else -%}
+        {%- assign machine = "Master" -%}
+      {%- endif %}
+    {
+      "path": {{ post.download | jsonify }},
+      "title": {{ title | jsonify }},
+      {% if post.team and post.team != "" %}"publisher": {{ post.team | strip | jsonify }},
+      {% endif %}{% if post.authors and post.authors != "" %}"authors": {{ post.authors | strip | jsonify }},
+      {% endif %}{% if post.year and post.year != "" %}"year": {{ post.year }},
+      {% endif %}{% if post.type and post.type != "" %}"type": {{ post.type | strip | jsonify }},
+      {% endif %}{% if post.manifest_notes and post.manifest_notes != "" %}"notes": {{ post.manifest_notes | strip | jsonify }},
+      {% endif %}"machine": {{ machine | jsonify }},
+      "url": {{ post.url | absolute_url | jsonify }}
+    }
+    {%- endunless -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- for file in site.static_files -%}
+  {%- assign ext = file.extname | remove_first: "." | downcase -%}
+  {%- if disc_exts contains ext and file.path contains "/content/" -%}
+    {%- assign rest = file.path | remove_first: "/content/" -%}
+    {%- assign key = rest | prepend: "|" | append: "|" -%}
+    {%- unless rest contains "/" -%}
+    {%- unless linked contains key -%}
+    {%- unless excluded contains key -%}
+      {%- if first %}{% assign first = false %}{% else %},{% endif %}
+    {
+      "path": {{ rest | jsonify }},
+      "title": {{ file.basename | replace: "-", " " | replace: "_", " " | jsonify }},
+      "machine": "Master"
+    }
+    {%- endunless -%}
+    {%- endunless -%}
+    {%- endunless -%}
+  {%- endif -%}
+{%- endfor %}
+  ]
+}

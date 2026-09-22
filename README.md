@@ -143,6 +143,36 @@ PUT YOUR MARKDOWN FORMATTED POST CONTENT HERE
 
 ```
 
+Disc image manifest
+===================
+
+`https://bitshifters.github.io/content/manifest.json` lists every released disc
+image on the site, for external emulator front-ends (jsbeeb) to browse. It is a
+Jekyll template (`content/manifest.json`) rendered on every build, so it is
+regenerated automatically whenever the site is pushed — there is nothing to run
+by hand and it cannot drift from the posts.
+
+What goes in it:
+ - every post with a `download:` that is a `.ssd`, `.dsd` or `.hfe`, using that
+   post's `title`, `team`, `authors`, `year`, `type` and page URL;
+ - any other disc image sitting directly in `/content/` that no post links to,
+   titled from its filename. Subfolders (`wip/`, `archie/`, ...) are not scanned.
+
+So pushing a new `.ssd` into `/content/` is enough to get it listed; adding a
+post for it is what gives it a proper title and metadata.
+
+Optional front matter, per post:
+ - `manifest_title:` — use instead of the post title
+ - `manifest_notes:` — free text for the listing, e.g. "Needs a Master 128"
+ - `jsbeebmodel:` — the emulator model, which the Emulate button already uses;
+   without it the entry says `Master`, matching the site's own Emulate links
+
+To keep something out of the list (an old version, a WIP disc, the halves of a
+`.dsd`), add its filename under `manifest.exclude` in `_config.yml`.
+
+`path` values are relative to the manifest and must stay stable once published,
+since jsbeeb links to them.
+
 Credits
 =======
 The Jekyll theme for the Bitshifters site was based on [Freelancer bootstrap theme ](http://startbootstrap.com/templates/freelancer/)
