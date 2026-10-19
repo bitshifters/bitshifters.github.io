@@ -27,5 +27,9 @@ Version 1.1 now supports the Video NuLA colour board for the BBC Micro to provid
 
 <img src="../../content/nula-niccc.gif"/>
 
+Version 1.2 (October 2026) draws its frames up to 29% faster and adds an Amstrad CPC palette version: press C during the intro. It draws in MODE 2 with 83 colours, dithered from the BBC's standard eight and mapped from the Atari palette so that no edge is lost, and needs no extra hardware.
+
+<img src="../../content/cpc-niccc.gif"/>
+
 ***Known Issues***
 This demo only works correctly on real floppy disc hardware or Gotek devices. DataCentre and MMC/MMFS devices may suffer slowdown and audio issues due to incompatible interrupt behaviour.
