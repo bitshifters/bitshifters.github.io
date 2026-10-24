@@ -462,3 +462,92 @@ footer .footer-below {
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
 }
+
+/* Post body text (prods and support posts): a left-aligned reading column
+   inside the otherwise centred layout, with one text size for paragraphs and
+   lists and a heading scale that fits body text. */
+.post-content {
+    max-width: 800px;
+    margin: 30px auto 0;
+    text-align: left;
+    font-size: 18px;
+    line-height: 1.6;
+}
+
+.post-content p,
+.post-content li {
+    font-size: 18px;
+}
+
+.post-content p {
+    margin: 0 0 18px;
+}
+
+.post-content ul,
+.post-content ol {
+    margin: 0 0 18px;
+    padding-left: 1.5em;
+}
+
+.post-content li {
+    margin-bottom: 6px;
+}
+
+.post-content li > ul,
+.post-content li > ol {
+    margin: 6px 0 0;
+}
+
+.post-content h1,
+.post-content h2 {
+    margin: 40px 0 16px;
+    font-size: 28px;
+}
+
+.post-content h3 {
+    margin: 28px 0 12px;
+    font-size: 22px;
+}
+
+.post-content h4,
+.post-content h5,
+.post-content h6 {
+    margin: 24px 0 10px;
+    font-size: 18px;
+}
+
+.post-content > :first-child {
+    margin-top: 0;
+}
+
+.post-content code {
+    padding: 2px 6px;
+    font-size: 0.85em;
+    color: #{{ site.color.secondary }};
+    background-color: #ecf0f1;
+    border-radius: 3px;
+}
+
+.post-content pre {
+    font-size: 14px;
+    text-align: left;
+}
+
+.post-content pre code {
+    padding: 0;
+    background: 0 0;
+}
+
+.post-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Paragraphs that hold only screenshots stay centred. */
+.post-content p:has(> img) {
+    text-align: center;
+}
+
+.post-content p:has(> img) img {
+    margin: 4px;
+}
