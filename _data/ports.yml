@@ -1,0 +1,180 @@
+# AI-assisted game ports and remasters for the BBC Micro, shown on /ports.html.
+#
+# One entry per disc; newest `added` first on the page. Only `name` is needed,
+# leave out anything not known.
+#
+#   name:    game name
+#   author:  who did the port (forum handle in brackets if useful)
+#   from:    platform it was ported from (BBC Micro for a remaster)
+#   kind:    port (default) or remaster
+#   status:  shown as a tag, e.g. WIP; leave out once released
+#   target:  what it needs, as shown on the page
+#   ssd:     disc image URL (absolute, or /content/... for our own)
+#   model:   jsbeeb model for the Play link (default Master; B-DFS1.2 for a Model B)
+#   emulate: full Play link, overriding the one built from ssd + model (for
+#            extra jsbeeb options such as &coProcessor=true or &displayMode=pal)
+#   source:  repository URL
+#   thread:  Stardot (or other) thread URL
+#   page:    page about it (our prod page); the name links here, else to
+#            the thread, else to the source
+#   thumb:   thumbnail image path or URL, ideally 4:3
+#   added:   date first released, YYYY-MM-DD
+#   notes:   one short line
+#
+# Play is shown only where the emulator can fetch the disc cross-site: our own
+# /content/ files, *.github.io and raw.githubusercontent.com. Stardot
+# attachments don't allow it, so those get a download link only, unless
+# `emulate:` is given.
+
+- name: Cauldron II
+  author: Matt Godbolt
+  from: ZX Spectrum
+  target: Model B + 32K sideways RAM, or Master
+  ssd: https://raw.githubusercontent.com/mattgodbolt/cauldron-2-beeb/main/cauldron2.ssd
+  source: https://github.com/mattgodbolt/cauldron-2-beeb
+  thumb: https://raw.githubusercontent.com/mattgodbolt/cauldron-2-beeb/main/docs/images/title.png
+  added: 2026-10-31
+  notes: The whole game, with no colour clash.
+
+- name: Exolon
+  author: Rich Talbot-Watkins
+  from: Amstrad CPC
+  status: WIP
+  target: Model B + 32K sideways RAM
+  ssd: https://waitingforvsync.github.io/beeb/exolon.ssd
+  model: B-DFS1.2
+  source: https://github.com/waitingforvsync/exolon-beeb
+  added: 2026-10-31
+
+- name: Cauldron
+  author: Matt Godbolt
+  from: ZX Spectrum
+  status: WIP
+  target: Model B + 32K sideways RAM, or Master
+  ssd: https://raw.githubusercontent.com/mattgodbolt/cauldron-beeb/main/cauldron.ssd
+  model: B-DFS1.2
+  source: https://github.com/mattgodbolt/cauldron-beeb
+  thumb: https://raw.githubusercontent.com/mattgodbolt/cauldron-beeb/main/docs/images/title.png
+  added: 2026-10-30
+
+- name: Chase H.Q.
+  author: Rich Talbot-Watkins
+  from: Amstrad CPC
+  target: Model B + 64K sideways RAM, or Master
+  ssd: https://waitingforvsync.github.io/beeb/chasehq.ssd
+  emulate: https://bbc.xania.org/?disc=https://waitingforvsync.github.io/beeb/chasehq.ssd&autoboot&displayMode=pal
+  source: https://github.com/waitingforvsync/chasehq-beeb
+  added: 2026-10-30
+
+- name: Critical Mass
+  author: Rich Talbot-Watkins
+  from: PICO-8
+  target: Model B
+  ssd: https://waitingforvsync.github.io/beeb/criticalmass.ssd
+  model: B-DFS1.2
+  source: https://github.com/waitingforvsync/criticalmass
+  added: 2026-10-28
+  notes: From Eli Piilonen's Marble Merger.
+
+- name: Solid Elite (6502 Second Processor)
+  author: Eben Upton
+  from: BBC Micro
+  kind: remaster
+  target: 6502 Second Processor, with a Master 128 or Model B + 64K sideways RAM host
+  ssd: https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/solid-elite-tube-master.ssd
+  emulate: https://bbc.xania.org/?disc=https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/solid-elite-tube-master.ssd&autoboot&model=Master&coProcessor=true
+  source: https://github.com/ebenupton/solid-elite-6502-second-processor
+  thumb: https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/images/solid-elite-combat.png
+  added: 2026-10-26
+  notes: Solid Elite on the parasite. This is the Master-host disc; the Model B host disc is in the repo.
+
+- name: Solid Elite
+  author: Eben Upton
+  from: BBC Micro
+  kind: remaster
+  target: Master 128
+  ssd: https://raw.githubusercontent.com/ebenupton/solid-elite-bbc-master/master-port/solid-elite-bbc-master.ssd
+  source: https://github.com/ebenupton/solid-elite-bbc-master
+  thumb: https://raw.githubusercontent.com/ebenupton/solid-elite-bbc-master/master-port/images/solid-elite-beach-ball-planet.png
+  added: 2026-10-20
+  notes: BBC Master Elite with solid, sunlit ships, from Mark Moxon's documented source.
+
+- name: Teddy Boy
+  author: Rich Talbot-Watkins
+  from: Sega Master System
+  target: Model B + 16K sideways RAM
+  ssd: https://waitingforvsync.github.io/beeb/teddy.ssd
+  model: B-DFS1.2
+  source: https://github.com/waitingforvsync/teddyboy
+  added: 2026-10-16
+
+- name: Ms Pac-Man
+  author: PhilHP
+  from: Arcade
+  target: BBC Micro + sideways RAM
+  ssd: https://stardot.org.uk/forums/download/file.php?id=122678
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33832
+  added: 2026-10-31
+  notes: Version 2, with a side panel for scores.
+
+- name: Stryker's Run Redux Lite
+  author: Kieran Connell
+  from: BBC Micro
+  kind: remaster
+  target: Model B + 64K sideways RAM
+  ssd: /content/bs-strykers-run-model-b.ssd
+  model: B-DFS1.2
+  source: https://github.com/kieranhj/strykers-run
+  page: /posts/prods/bs-strykers-run.html
+  thumb: /content/bs-strykers-run.png
+  added: 2026-10-24
+  notes: Single-screen Model B version of Redux.
+
+- name: Stryker's Run Redux
+  author: Kieran Connell
+  from: BBC Micro
+  kind: remaster
+  target: Master 128
+  ssd: /content/bs-strykers-run.ssd
+  source: https://github.com/kieranhj/strykers-run
+  page: /posts/prods/bs-strykers-run.html
+  thumb: /content/bs-strykers-run.png
+  added: 2026-10-24
+  notes: Smooth 25fps original plus Redux with gameplay changes.
+
+- name: Frak! Smooth
+  author: rowett
+  from: BBC Micro
+  kind: remaster
+  target: Model B; double buffered on Master 128
+  ssd: https://stardot.org.uk/forums/download/file.php?id=122423
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33774
+  added: 2026-10-23
+
+- name: "1942"
+  author: Kieran Connell
+  from: Arcade
+  target: Master 128 (real floppy or accurate emulator)
+  ssd: /content/bs-1942.ssd
+  source: https://github.com/kieranhj/1942-beeb
+  page: /posts/prods/bs-1942.html
+  thumb: /content/bs-1942.png
+  added: 2026-10-23
+
+- name: Green Beret
+  author: James Watson (dudleysoft71)
+  from: ZX Spectrum
+  target: Model B + 32K sideways RAM, or Master
+  ssd: https://stardot.org.uk/forums/download/file.php?id=122372
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33760
+  added: 2026-10-21
+
+- name: Paradroid
+  author: Kieran Connell
+  from: Commodore 64
+  target: Model B, B+ or Master + 64K sideways RAM
+  ssd: /content/bs-paradroid.ssd
+  source: https://github.com/kieranhj/paradroid-beeb
+  page: /posts/prods/bs-paradroid.html
+  thumb: /content/bs-paradroid.png
+  added: 2026-09-13

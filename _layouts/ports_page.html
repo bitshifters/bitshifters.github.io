@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    {% include head.html %}
+    <body id="page-top" class="index">
+    {% include nav.html %}
+    {% include header.html %}
+
+    <section id="ports">
+        <div class="container">
+            <div class="post-content">{{ content }}</div>
+
+            {% assign ports = site.data.ports | sort: "added" | reverse %}
+            <table class="ports-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Game</th>
+                        <th>Author</th>
+                        <th>From</th>
+                        <th>Needs</th>
+                        <th>Links</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for p in ports %}
+                    {% assign link = p.page | default: p.thread | default: p.source %}
+                    {% assign ssd = p.ssd %}
+                    {% if ssd and ssd contains "://" %}{% else %}{% if ssd %}{% assign ssd = p.ssd | prepend: site.url %}{% endif %}{% endif %}
+                    {% assign play = p.emulate %}
+                    {% unless play %}
+                        {% if ssd contains ".github.io/" or ssd contains "raw.githubusercontent.com" %}
+                            {% assign model = p.model | default: "Master" %}
+                            {% capture play %}https://bbc.xania.org/?disc={{ ssd }}&autoboot&model={{ model }}{% endcapture %}
+                        {% endif %}
+                    {% endunless %}
+                    <tr>
+                        <td class="ports-thumb">{% if p.thumb %}<img src="{{ p.thumb }}" alt="" loading="lazy">{% endif %}</td>
+                        <td class="ports-name" data-label="Game">
+                            {% if link %}<a href="{{ link }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}
+                            {% if p.kind == "remaster" %}<span class="ports-tag">remaster</span>{% endif %}
+                            {% if p.status %}<span class="ports-tag ports-tag-status">{{ p.status }}</span>{% endif %}
+                            {% if p.notes %}<div class="ports-notes">{{ p.notes }}</div>{% endif %}
+                        </td>
+                        <td data-label="Author">{{ p.author }}</td>
+                        <td data-label="From">{{ p.from }}</td>
+                        <td data-label="Needs">{{ p.target }}</td>
+                        <td class="ports-links" data-label="Links">
+                            {% if play %}<a target="_blank" href="{{ play }}"><i class="fa fa-play-circle"></i> Play</a>{% endif %}
+                            {% if ssd %}<a href="{{ ssd }}"><i class="fa fa-download"></i> SSD</a>{% endif %}
+                            {% if p.source %}<a target="_blank" href="{{ p.source }}"><i class="fa fa-github"></i> Source</a>{% endif %}
+                            {% if p.thread %}<a target="_blank" href="{{ p.thread }}"><i class="fa fa-comments"></i> Thread</a>{% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    {% include footer.html %}
+    {% include js.html %}
+    </body>
+</html>

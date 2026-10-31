@@ -551,3 +551,101 @@ footer .footer-below {
 .post-content p:has(> img) img {
     margin: 4px;
 }
+
+/* Ports page: a compact table, stacking into one block per game on phones. */
+.ports-table {
+    width: 100%;
+    margin-top: 20px;
+    font-size: 16px;
+}
+
+.ports-table th {
+    padding: 8px 10px;
+    text-align: left;
+    font-family: Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #{{ site.color.secondary }};
+}
+
+.ports-table td {
+    padding: 10px;
+    vertical-align: middle;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.ports-thumb {
+    width: 100px;
+}
+
+.ports-thumb img {
+    display: block;
+    width: 80px;
+    height: auto;
+    image-rendering: pixelated;
+}
+
+.ports-name {
+    font-weight: 700;
+}
+
+.ports-tag {
+    margin-left: 6px;
+    padding: 1px 6px;
+    font-size: 12px;
+    font-weight: 400;
+    color: #fff;
+    background-color: #{{ site.color.primary }};
+    border-radius: 3px;
+}
+
+.ports-tag-status {
+    background-color: #e67e22;
+}
+
+.ports-notes {
+    font-size: 14px;
+    font-weight: 400;
+    color: #7b8a8b;
+}
+
+.ports-links a {
+    display: inline-block;
+    margin-right: 10px;
+    white-space: nowrap;
+}
+
+@media(max-width:767px) {
+    .ports-table thead {
+        display: none;
+    }
+
+    .ports-table,
+    .ports-table tbody,
+    .ports-table tr,
+    .ports-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .ports-table tr {
+        padding: 12px 0;
+        border-bottom: 1px solid #ecf0f1;
+    }
+
+    .ports-table td {
+        padding: 2px 0;
+        border: 0;
+    }
+
+    .ports-table td[data-label="Author"]:before,
+    .ports-table td[data-label="From"]:before,
+    .ports-table td[data-label="Needs"]:before {
+        content: attr(data-label) ": ";
+        color: #7b8a8b;
+    }
+
+    .ports-table td:empty {
+        display: none;
+    }
+}
