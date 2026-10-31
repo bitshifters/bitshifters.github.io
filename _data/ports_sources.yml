@@ -1,0 +1,38 @@
+# Where the weekly "Ports - weekly Stardot check" routine looks for new
+# AI-assisted ports and remasters to add to _data/ports.yml. Not used by the
+# site itself; add or remove sources here and the next run picks them up.
+#
+# Stardot's search needs a login, so the routine reads these forums' topic
+# lists (first two pages each).
+
+stardot_forums:
+  - id: 74
+    name: miscellaneous new bbc and electron games
+  - id: 1
+    name: "8-bit acorn software: classic games"
+  - id: 2
+    name: "8-bit acorn software: other"
+  - id: 53
+    name: "new projects in development: games"
+  - id: 69
+    name: bitshifters (new bbc master games)
+  - id: 72
+    name: trickysoft (new bbc micro games)
+  - id: 71
+    name: new bbc and electron games from 'retro software'
+  - id: 85
+    name: educraft (new bbc master games)
+  - id: 54
+    name: programming
+
+# GitHub accounts whose new public repos are checked for BBC Micro ports
+# (a repo with an .ssd and a CLAUDE.md or similar is a strong sign).
+github_users:
+  - kieranhj
+  - mattgodbolt
+  - ebenupton
+  - waitingforvsync
+
+# Pages listing disc images to check for new ones.
+disc_pages:
+  - https://github.com/waitingforvsync/waitingforvsync.github.io/tree/master/beeb
