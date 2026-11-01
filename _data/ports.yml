@@ -169,6 +169,18 @@
   thread: https://stardot.org.uk/forums/viewtopic.php?t=33760
   added: 2026-10-21
 
+- name: Chuckie Egg 2
+  author: Matt Godbolt
+  from: ZX Spectrum
+  target: Model B or Master; music needs 16K sideways RAM
+  ssd: https://raw.githubusercontent.com/mattgodbolt/chuckie-egg-2-beeb/main/chuckie-egg-2.ssd
+  model: B-DFS1.2
+  source: https://github.com/mattgodbolt/chuckie-egg-2-beeb
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33686
+  thumb: https://raw.githubusercontent.com/mattgodbolt/chuckie-egg-2-beeb/main/docs/images/room-001.png
+  added: 2026-10-05
+  notes: One disc, with a sideways RAM edition and a disc-only edition.
+
 - name: Paradroid
   author: Kieran Connell
   from: Commodore 64
