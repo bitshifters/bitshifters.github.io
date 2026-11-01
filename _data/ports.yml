@@ -17,7 +17,8 @@
 #   thread:  Stardot (or other) thread URL
 #   page:    page about it (our prod page); the name links here, else to
 #            the thread, else to the source
-#   thumb:   thumbnail image path or URL, ideally 4:3
+#   thumb:   thumbnail image path or URL, ideally 4:3 (ours are 320x240 jsbeeb
+#            captures in /content/ports/)
 #   added:   date first released, YYYY-MM-DD
 #   notes:   one short line
 #
@@ -44,6 +45,7 @@
   ssd: https://waitingforvsync.github.io/beeb/exolon.ssd
   model: B-DFS1.2
   source: https://github.com/waitingforvsync/exolon-beeb
+  thumb: /content/ports/exolon.png
   added: 2026-10-31
 
 - name: Cauldron
@@ -64,6 +66,7 @@
   ssd: https://waitingforvsync.github.io/beeb/chasehq.ssd
   emulate: https://bbc.xania.org/?disc=https://waitingforvsync.github.io/beeb/chasehq.ssd&autoboot&displayMode=pal
   source: https://github.com/waitingforvsync/chasehq-beeb
+  thumb: /content/ports/chase-hq.png
   added: 2026-10-30
 
 - name: Critical Mass
@@ -73,6 +76,7 @@
   ssd: https://waitingforvsync.github.io/beeb/criticalmass.ssd
   model: B-DFS1.2
   source: https://github.com/waitingforvsync/criticalmass
+  thumb: /content/ports/critical-mass.png
   added: 2026-10-28
   notes: From Eli Piilonen's Marble Merger.
 
@@ -106,6 +110,7 @@
   ssd: https://waitingforvsync.github.io/beeb/teddy.ssd
   model: B-DFS1.2
   source: https://github.com/waitingforvsync/teddyboy
+  thumb: /content/ports/teddy-boy.png
   added: 2026-10-16
 
 - name: Ms Pac-Man
@@ -114,6 +119,7 @@
   target: BBC Micro + sideways RAM
   ssd: https://stardot.org.uk/forums/download/file.php?id=122678
   thread: https://stardot.org.uk/forums/viewtopic.php?t=33832
+  thumb: /content/ports/ms-pac-man.png
   added: 2026-10-31
   notes: Version 2, with a side panel for scores.
 
@@ -149,6 +155,7 @@
   target: Model B; double buffered on Master 128
   ssd: https://stardot.org.uk/forums/download/file.php?id=122423
   thread: https://stardot.org.uk/forums/viewtopic.php?t=33774
+  thumb: /content/ports/frak-smooth.png
   added: 2026-10-23
 
 - name: "1942"
@@ -167,6 +174,7 @@
   target: Model B + 32K sideways RAM, or Master
   ssd: https://stardot.org.uk/forums/download/file.php?id=122372
   thread: https://stardot.org.uk/forums/viewtopic.php?t=33760
+  thumb: /content/ports/green-beret.png
   added: 2026-10-21
 
 - name: Chuckie Egg 2
