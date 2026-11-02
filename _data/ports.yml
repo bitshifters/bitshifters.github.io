@@ -113,6 +113,27 @@
   thumb: /content/ports/teddy-boy.png
   added: 2026-10-16
 
+- name: "2048"
+  author: Eben Upton
+  from: BBC Micro
+  kind: remaster
+  target: Model B or Master 128
+  ssd: https://raw.githubusercontent.com/ebenupton/2048/master/2048.ssd
+  source: https://github.com/ebenupton/2048
+  thumb: https://raw.githubusercontent.com/ebenupton/2048/master/docs/img/tiles_master.png
+  added: 2026-10-16
+  notes: Eben's own 2014 version, moved to dithered MODE 1 at 50Hz.
+
+- name: Lander
+  author: Eben Upton
+  from: Acorn Archimedes
+  target: Model B + 64K sideways RAM, or Master
+  ssd: https://raw.githubusercontent.com/ebenupton/lander/main/lander.ssd
+  source: https://github.com/ebenupton/lander
+  thumb: /content/ports/lander.png
+  added: 2026-10-15
+  notes: David Braben's 1987 demo that became Zarch, as a 3D landscape at about ten frames a second.
+
 - name: Ninja Massacre
   author: Matt Godbolt
   from: ZX Spectrum
@@ -200,6 +221,16 @@
   added: 2026-10-05
   notes: Made entirely with Claude. One disc, with a sideways RAM edition and a disc-only edition.
 
+- name: Cleo
+  author: Eben Upton
+  from: Mobile (J2ME)
+  target: Model B + 64K sideways RAM, or Master 128
+  ssd: https://raw.githubusercontent.com/ebenupton/cleo/master/cleo.ssd
+  source: https://github.com/ebenupton/cleo
+  thumb: https://raw.githubusercontent.com/ebenupton/cleo/master/docs/img/l0_master.png
+  added: 2026-10-04
+  notes: High Energy Magic's 2004 platformer, all sixteen levels with smooth scrolling.
+
 - name: Paradroid
   author: Kieran Connell
   from: Commodore 64
@@ -209,3 +240,14 @@
   page: /posts/prods/bs-paradroid.html
   thumb: /content/bs-paradroid.png
   added: 2026-09-13
+
+- name: DOOM
+  author: Eben Upton
+  from: PC
+  target: Model B + sideways RAM
+  ssd: https://raw.githubusercontent.com/ebenupton/doom/master/doom_walk.ssd
+  model: B-DFS1.2
+  source: https://github.com/ebenupton/doom
+  thumb: /content/ports/doom.png
+  added: 2026-08-23
+  notes: A wireframe E1M1 you can walk around, with working doors and lifts, at about 7 frames a second.
