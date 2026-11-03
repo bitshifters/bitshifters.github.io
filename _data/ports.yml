@@ -43,7 +43,7 @@
   status: WIP
   target: Model B + 32K sideways RAM
   ssd: https://waitingforvsync.github.io/beeb/exolon.ssd
-  model: B-DFS1.2
+  emulate: https://bbc.xania.org/?disc=https://waitingforvsync.github.io/beeb/exolon.ssd&autoboot
   source: https://github.com/waitingforvsync/exolon-beeb
   thumb: /content/ports/exolon.png
   added: 2026-10-31
