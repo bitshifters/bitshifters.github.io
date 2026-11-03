@@ -64,7 +64,7 @@
   from: Amstrad CPC
   target: Model B + 64K sideways RAM, or Master
   ssd: https://waitingforvsync.github.io/beeb/chasehq.ssd
-  emulate: https://bbc.xania.org/?disc=https://waitingforvsync.github.io/beeb/chasehq.ssd&autoboot&displayMode=pal
+  emulate: https://bbc.xania.org/?disc=https://waitingforvsync.github.io/beeb/chasehq.ssd&autoboot
   source: https://github.com/waitingforvsync/chasehq-beeb
   thumb: /content/ports/chase-hq.png
   added: 2026-10-30
