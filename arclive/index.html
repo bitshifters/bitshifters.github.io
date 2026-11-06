@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en-gb">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="icon" href="images/arclive.png">
+  <title>Archimedes Live! - Online Acorn Archimedes emulator</title>
+  <link rel="stylesheet" href="style.css?593e89c-dirty">
+</head>
+
+<body>
+
+<header>
+  <div id="logo"><h1>Archimedes Live!</h1></div>
+
+  <div id='controls'>
+    <a role="button" onclick="showBasicEditor()" tabindex="0">Open BASIC editor</a>
+    <a role="button" onclick="showMachinePicker()" class="dropdown-button" tabindex="0">Choose Machine</a>
+    <a role="button" onclick="showSoftwareBrowser()" class="dropdown-button" tabindex="0">Load Software</a>
+  
+    <button onclick="fullscreen()" tabindex="0">Fullscreen</button>
+    <a role="button" onclick="showModal('about-box')" tabindex="0">About</a>
+  </div>
+</header>
+  
+<!-- Default emscripted-generated loading UI, need to revise -->
+
+<div class="spinner" id='spinner'></div>
+<div class="emscripten" id="status">Downloading...</div>
+<div class="emscripten">
+  <progress value="0" max="100" id="progress" hidden=1></progress>
+</div>
+
+
+<!-- Main UI - contains editor and emulator canvas ----------------------------------------->
+
+<div id="main">
+
+  <!-- BBC BASIC Editor-->
+  <div id="editor-container">
+    
+    <p>
+      <button onclick="runProgram()">Run (ctrl-enter)</button> 
+      <button onclick="showShareBox()">Share</button>
+      <button style="float:right" onclick="closeBasicEditor()">Close 🗙</button>
+    </p>
+    <textarea id="editor" tabindex="0" autocomplete="off" spellcheck="false" 
+      onkeydown="if (event.keyCode==13 && event.ctrlKey) runProgram()"></textarea>
+
+    <p class="editor-info">
+      <span id="char-count">0 characters</span> | 
+      <a href="http://www.riscos.com/support/developers/basicv/index.htm">BBC BASIC V Guide</a> |
+      <a href="http://www.riscos.com/support/developers/bbcbasic/index.html">BBC BASIC V Reference Manual</a>
+    </p>
+  </div>
+
+  <div id="display-container">
+    <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1" autofocus></canvas>
+     
+    <div id="audio-warning" class="canvas-dropdown">Your browser has suspended audio - click mouse or press key for sound</div>
+
+    <div id="mouse-capture-prompt" class="canvas-dropdown"><p>Emulator needs full control of mouse cursor, click to capture</p>
+       <!-- Hide this for now, not needed?
+         <label>
+         <input type="checkbox" onchange="getEmuInput().setCaptureMode(this.checked ? 3 : 1)">
+         Don't capture mouse (may cause issues in some games)
+        </label>
+      -->
+    </div>
+    <div id="mouse-capture-info" class="canvas-dropdown"><p>Press <b>[Escape]</b> to release mouse cursor from emulator window</p></div>
+    <div class="emulator-overlay">
+      <div class="resume-dialog"> 
+        <button class="round-button" onclick="resumeEmulator()"><span class="play-button"></span></button>
+        <p>Click to resume the emulator</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Resusable dialog, used by showBooleanDialog() --------------------------->
+
+<div class="modal" id="generic-dialog">
+  <div class="modal-content">
+    <!-- text of h2, p and buttons are replaced dynamically -->
+    <h2>Run BASIC Program</h2>
+    <p>Reboot emulator to BASIC prompt?</p>
+    <div style="text-align:center"><button>OK</button> <button>Cancel</button></div>
+  </div>
+</div>
+
+
+<!-- Machine Picker dialog --------------------------------------------------->
+
+<div class="modal" id="machine-picker"  onclick="closeModal('machine-picker', event)">
+  <div class="modal-content">
+    <h2>Choose an Archimedes to Emulate!</h2>
+
+    <div id="machine-picker-cols">
+      
+      <!-- contents of #machine-list are replaced dynamically -->
+      <ul id="machine-list" onclick="previewMachine(event)" class="vert-list">
+        <li>A3000 (RISC OS 2)</li>
+        <li>A3000 (RISC OS 3)</li>
+        <li>A3010</li>
+        <li>A5000</li>
+      </ul>
+      
+      <div id="machine-preview">
+        <!-- These elements are kept but their text is replaced by previewMachine() -->
+        <h3>Archimedes A310</h3>
+        <ul>
+          <li>CPU: <span class="cpu">ARM2 @ 8 MHz</span></li>
+          <li>OS: <span class="os">RISC OS 2.01</span></li>
+          <li>Memory: <span class="memory">1 MB</span></li>
+          <li>Release Date: <span class="release-date">July 1987</span></li>
+          <li>Launch Price: <span class="price">£875</span></li>
+        </ul>
+        <div class='buttons'>
+          <button onclick="bootSelected()">Boot Machine</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- BASIC program share dialog --------------------------------------------->
+
+<div class="modal" id="share-box" onclick="closeModal('share-box', event)">
+  <div class="modal-content">
+    <h2>Share your Archimedes program</h2>
+    <p>Let other people run and remix your program by sharing a link to this page. <!--Or tweet your
+      program at @ARM2bot and it will reply with a short video showing your program running.-->
+    </p>
+    <input id="share-url" readonly tabindex="0">
+
+    <p><button onclick="copyProgAsURL()">Copy URL</button>
+    <!--<button onclick="tweetProg()">Tweet to @ARM2bot</button>--></p>
+    <!--<p id="bot-speed-warning">@ARM2bot emulates an Archimedes with an 8Mhz ARM2 processor.
+        Your program may run slower than it does here. </p>-->
+  </div>
+</div>
+
+
+<!-- Software Browser dialog ------------------------------------------------------------------>
+
+<div class="modal" id="software-browser" onclick="closeModal('software-browser', event)">
+  <div class="modal-content" tabindex="0">
+    <h2>Load Software</h2>
+    <div id="software-browser-cols">
+      
+      <div class="listing">
+          <select id="software-category" tabindex="0" onchange="filterSoftware()">
+            <option>Games</option>
+            <option>Demos</option>
+          </select>
+      
+        <input class="search" type="text" placeholder="Search" onkeyup="filterSoftware()" tabindex="0">
+        <ul class="vert-list"></ul>
+      </div>
+
+      <div id="software-intro"> <!-- this is displayed before any item is selected from the left hand side -->
+        <h3>Try out some Archimedes software!</h3>
+        <p>Search or browse through the categories to the left, find a game or sofware and try it out!</p>
+      </div>
+
+      <div id="software-details" tabindex="0"> <!-- this div is used as a template in showSoftware() -->
+        <h3>Software title</h3>
+        <dl>
+          <dt>Author</dt> <dd>A person</dd>
+          <dt>Publisher</dt> <dd>A company</dd>
+        </dl>
+        <p class="description">This is some software</p>
+
+        <button class="launch">▶ Launch</button>
+        <button class="archive">Unpack onto HostFS</button>
+        <button class="disc">Insert disc</button>
+        
+        <p>
+        <label class="autoboot" for="autoboot"><input type="checkbox" id="autoboot" checked="checked">Auto-boot</label>
+        </p>
+       
+        <p class="boot-recommended">
+          <label for="boot-recommended-machine">This software runs best on RISC OS 3.</label>
+          <input type="checkbox" id="boot-recommended-machine"></p>
+        
+      </div>
+    </div>
+
+    <p>Upload a disc image or RISC OS archive: <input type=file id="filebutton"></p>
+    <p>You can also drag a disc image or archive file onto the emulator to load it.</p>
+  </div>
+</div>
+
+
+<!-- Upload UI ----------------------------------------------------------------------->
+
+<div class="modal" id="upload-disc-box" onclick="closeModal('upload-disc-box', event)">
+  <div class="modal-content">
+    <h2>Disc Image</h2>
+    <p>Detected file type: <span class="detect-type"></span></p>
+    <button>Insert disk</button> 
+    <input type="checkbox" id="auto-insert"><label for="auto-insert">Don't ask again</label>
+  </div>
+</div>
+
+<div class="modal" id="upload-archive-box" onclick="closeModal('upload-archive-box', event)">
+  <div class="modal-content">
+    <h2>Software archive</h2>
+    <p>File name: <span class="filename"></span></p>
+    <p>Detected file type: <span class="filetype"></span></p>
+    <button>Unpack to HostFS</button> <button>Put archive on HostFS</button>
+  </div>
+</div>
+
+
+<!-- About box ----------------------------------------------------------------->
+
+<div class="modal" id="about-box" onclick="closeModal('about-box', event)"> 
+  <div id="about" class="modal-content">
+    <h2>About Archimedes Live!</h2>
+    <p>Archimedes Live is an online <a href="https://en.wikipedia.org/wiki/Acorn_Archimedes">Acorn Archimedes</a> 
+      emulator. You can try out a range of Archimedes games, demos and other software here in your browser,
+    or load discs and archives from your own machine.</p>
+    <p>The Archimedes, first released in 1987, was Acorn's 32-bit successor 
+      to the popular BBC Micro. Acorn also created the ARM2 processor at the heart of the Archimedes - the ancestor 
+      of the ARM chips that power billions of smartphones, computers and other devices around the world today.</p>
+    <p>The emulator itself is a <a href="https://github.com/pdjstone/arculator-wasm">WebAssembly port</a> of
+        Sarah Walker's excellent <a href="http://b-em.bbcmicro.com/arculator/">Arculator</a> Archimedes 
+        emulator</a>.</p>
+    <p>Thanks to <a href="https://twitter.com/mattgodbolt">Matt Godbolt</a> for creating 
+      <a href="https://bbc.godbolt.org/">jsbeeb</a> and demonstrating how awesome a web-based emulator could be. 
+      Thanks also to <a href="https://twitter.com/DominicPajak">Dominic Pajak</a>, creator of the famous 
+      <a href="https://www.bbcmicrobot.com/">BBC Micro Bot</a>, and <a href="https://bbcmic.ro">Owlet BBC BASIC
+          Editor</a> which have allowed people to code, share and remix thousands of wonderfully creative BBC 
+          BASIC programs.</p>
+    <p>The RISC OS "System" font used on this site was converted by <a href="https://github.com/marutan/riscos-free-fonts">Peter Howkins</a>.</p>
+    <p>Archimedes Live is a work in progress, with many bugfixes, improvements and new features still to come. 
+      Thanks to the <a href="https://stardot.org.uk/forums/">StarDot forum</a> community for help with testing, 
+      and for providing tips, help and other expertise on everything Acorn related.</p> 
+    <p>This is an open-source project by <a href="https://mastodon.me.uk/@pdjstone" rel="me">Paul Stone</a>. You can contribute on <a href="https://github.com/pdjstone/archimedes-live">GitHub</a>
+    with code and helpful bug reports.</p>
+    <p>Follow on Mastodon: <a href="https://oldbytes.space/@arclive" rel="me" target="_blank" class="mstdn">arclive<span>oldbytes.space</span></a> </p>
+    </div>
+
+   
+</div>
+
+
+<!-- Machine status panel -------------------------------------------------------->
+
+<div id="machine-status">
+  <span class="name">-</span> 
+  <span class="memory">4MB</span>
+  <span class="processor">ARM2</span>
+  <span class="os">RISC OS 3.01</span>
+</div>
+
+
+<!-- Imports --------------------------------------------------------------------->
+<script>
+  BUILD_TAG='593e89c-dirty';
+  ARCULATOR_BUILD_TAG='30fd8d3-clean';
+  SOFTWARE_BUILD_TAG='be0765b-dirty';
+</script>
+<script type="module">
+  import {NSpark} from './nspark/nspark-helper.js?593e89c-dirty';
+  window.NSpark = NSpark;
+</script>  
+
+<script type='text/javascript' src="zlib.js?593e89c-dirty"></script>
+<script type='text/javascript' src="riscosunzip.js?593e89c-dirty"></script>
+<script type='text/javascript' src="cmos.js?593e89c-dirty"></script>
+<script type='text/javascript' src="machine-config.js?593e89c-dirty"></script>
+<script type='text/javascript' src="editor.js?593e89c-dirty"></script>
+<script type='text/javascript' src="ui.js?593e89c-dirty"></script>
+<script type='text/javascript' src="emu-interface.js?593e89c-dirty"></script>
+<script type='text/javascript' src="fsutil.js?593e89c-dirty"></script>
+<script type='text/javascript' src="software-browser.js?593e89c-dirty"></script>
+<script type='text/javascript' src="hostfs.js?593e89c-dirty"></script>
+
+<script type="text/javascript" src="arculator.data.js?30fd8d3-clean"></script>
+<script type="text/javascript" src="arculator.js?touch2"></script>
+
+</body>
+</html>
