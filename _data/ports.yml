@@ -92,6 +92,19 @@
   added: 2026-10-28
   notes: From Eli Piilonen's Marble Merger.
 
+- name: Imogen Smooth(er)
+  author: tomhelm
+  from: BBC Micro
+  kind: remaster
+  target: Model B + 16K sideways RAM
+  ssd: https://raw.githubusercontent.com/tommy9/Imogen/main/imogen.ssd
+  emulate: https://bbc.xania.org/?autoboot&disc=github:tommy9/imogen/imogen.ssd
+  source: https://github.com/tommy9/Imogen
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33813
+  thumb: /content/ports/imogen.png
+  added: 2026-10-27
+  notes: Micro Power's Imogen with a faster sprite plotter in sideways RAM, so much less flicker. Finished with ChatGPT's help.
+
 - name: Solid Elite (6502 Second Processor)
   author: Eben Upton
   from: BBC Micro
