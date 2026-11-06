@@ -37,7 +37,7 @@
                         <td class="ports-thumb">{% if p.thumb %}<img src="{{ p.thumb }}" alt="" loading="lazy">{% endif %}</td>
                         <td class="ports-name" data-label="Game">
                             {% if link %}<a href="{{ link }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}
-                            {% if p.kind == "remaster" %}<span class="ports-tag">remaster</span>{% endif %}
+                            {% if p.kind and p.kind != "port" %}<span class="ports-tag">{{ p.kind }}</span>{% endif %}
                             {% if p.status %}<span class="ports-tag ports-tag-status">{{ p.status }}</span>{% endif %}
                             {% if p.added or p.notes %}<div class="ports-notes">{% if p.added %}{{ p.added | date: "%-d %b %Y" }}{% endif %}{% if p.added and p.notes %} &middot; {% endif %}{{ p.notes }}</div>{% endif %}
                         </td>

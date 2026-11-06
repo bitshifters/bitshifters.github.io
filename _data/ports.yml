@@ -6,7 +6,7 @@
 #   name:    game name
 #   author:  who did the port (forum handle in brackets if useful)
 #   from:    platform it was ported from (BBC Micro for a remaster)
-#   kind:    port (default) or remaster
+#   kind:    port (default), remaster or original (shown as a tag)
 #   status:  shown as a tag, e.g. WIP; leave out once released
 #   target:  what it needs, as shown on the page
 #   ssd:     disc image URL (absolute, or /content/... for our own)
@@ -36,6 +36,18 @@
   thumb: https://raw.githubusercontent.com/mattgodbolt/cauldron-2-beeb/main/docs/images/title.png
   added: 2026-10-31
   notes: The whole game, with no colour clash.
+
+- name: REDSHIFT
+  author: Matt Godbolt
+  from: BBC Micro
+  kind: original
+  target: Model B + 16K sideways RAM, or Master 128
+  ssd: https://raw.githubusercontent.com/mattgodbolt/redshift-beeb/main/redshift.ssd
+  emulate: https://bbc.xania.org/?disc=github:mattgodbolt/redshift-beeb/redshift.ssd&autoboot
+  source: https://github.com/mattgodbolt/redshift-beeb
+  thumb: https://raw.githubusercontent.com/mattgodbolt/redshift-beeb/main/docs/media/landing.png
+  added: 2026-10-31
+  notes: A flip-screen run-and-gun in the spirit of Exolon, with 45 rooms, two phases to shift between, a boss and two endings.
 
 - name: Exolon
   author: Rich Talbot-Watkins
