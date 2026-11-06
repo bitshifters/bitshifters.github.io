@@ -27,6 +27,17 @@
 # attachments don't allow it, so those get a download link only, unless
 # `emulate:` is given.
 
+- name: Flipside
+  author: rowett
+  from: BBC Micro
+  kind: original
+  target: Model B; 16K sideways RAM adds levels and music, 64K adds bosses
+  ssd: https://stardot.org.uk/forums/download/file.php?id=122797
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33870
+  thumb: /content/ports/flipside.png
+  added: 2026-11-06
+  notes: A new shoot-'em-up where turrets can only be hit from the front, so you flip to get them.
+
 - name: Cauldron II
   author: Matt Godbolt
   from: ZX Spectrum
