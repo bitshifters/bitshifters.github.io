@@ -27,6 +27,20 @@
 # attachments don't allow it, so those get a download link only, unless
 # `emulate:` is given.
 
+- name: Nightfall
+  author: Evile
+  from: BBC Micro
+  kind: original
+  status: Beta
+  target: Master 128, or Model B with five sideways ROM/RAM banks
+  ssd: https://raw.githubusercontent.com/1larity/nightfall/main/nightfall.ssd
+  emulate: https://bbc.xania.org/?model=Master&rom.3=github:1larity/nightfall/EGFX2.rom&rom.4=github:1larity/nightfall/EGFX.rom&rom.5=github:1larity/nightfall/EAUDIO.rom&rom.7=github:1larity/nightfall/NFASSETS.rom&disc1=github:1larity/nightfall/nightfall.ssd&autotype=*DISC%0A*RUN%20NFBOOT%0A
+  source: https://github.com/1larity/nightfall
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33856
+  thumb: /content/ports/nightfall.png
+  added: 2026-11-04
+  notes: A Vampire Survivors-style survival game, with Holst's The Planets as the music. Needs its ROMs loaded too; the Play link sets them up.
+
 - name: Flipside
   author: rowett
   from: BBC Micro
