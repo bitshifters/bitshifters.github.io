@@ -27,6 +27,19 @@
 # attachments don't allow it, so those get a download link only, unless
 # `emulate:` is given.
 
+- name: Starquake
+  author: Kenton Price (kenton)
+  from: BBC Micro
+  kind: remaster
+  status: RC7
+  target: Model B
+  ssd: https://littlefluffytoys.com/starquake/builds/Starquake%20Release%20Candidate%207.SSD
+  emulate: https://bbc.xania.org/?disc1=https%3A%2F%2Flittlefluffytoys.com%2Fstarquake%2Fbuilds%2FStarquake%2520Release%2520Candidate%25207.SSD&autoboot
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33497
+  thumb: /content/ports/starquake.png
+  added: 2026-08-25
+  notes: The original author of the 1987 BBC conversion puts back Steve Crow's full 512-room Spectrum world, plus the scenery, objects and monsters that were cut.
+
 - name: Galaxa
   author: paul_n
   from: BBC Micro
