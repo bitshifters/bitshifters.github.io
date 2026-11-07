@@ -27,6 +27,19 @@
 # attachments don't allow it, so those get a download link only, unless
 # `emulate:` is given.
 
+- name: Galaxa
+  author: paul_n
+  from: BBC Micro
+  kind: original
+  target: Model B
+  ssd: https://raw.githubusercontent.com/newell-paul/galaxa-6502/main/galaxa.ssd
+  model: B-DFS1.2
+  source: https://github.com/newell-paul/galaxa-6502
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33873
+  thumb: /content/ports/galaxa.png
+  added: 2026-11-07
+  notes: A Galaxian-style shooter in MODE 2 at 50fps. Shoot the boss for a power-up capsule.
+
 - name: Nightfall
   author: Evile
   from: BBC Micro
