@@ -156,6 +156,18 @@
   added: 2026-10-27
   notes: Micro Power's Imogen with a faster sprite plotter in sideways RAM, so much less flicker. Finished with ChatGPT's help.
 
+- name: Solid Elite (Model B)
+  author: Eben Upton
+  from: BBC Micro
+  kind: remaster
+  target: Model B + 64K sideways RAM
+  ssd: https://raw.githubusercontent.com/ebenupton/solid-elite-bbc-micro/main/solid-elite-bbc-micro.ssd
+  model: B-DFS1.2
+  source: https://github.com/ebenupton/solid-elite-bbc-micro
+  thumb: https://raw.githubusercontent.com/ebenupton/solid-elite-bbc-micro/main/images/solid-elite-beach-ball.png
+  added: 2026-11-07
+  notes: Solid Elite on the Model B, double-buffered under the original's dashboard. So far run only in emulators.
+
 - name: Solid Elite (6502 Second Processor)
   author: Eben Upton
   from: BBC Micro
