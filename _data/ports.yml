@@ -41,7 +41,7 @@
   notes: The original author of the 1987 BBC conversion puts back Steve Crow's full 512-room Spectrum world, plus the scenery, objects and monsters that were cut.
 
 - name: Galaxa
-  author: paul_n
+  author: Paul Newell (paul_n)
   from: BBC Micro
   kind: original
   target: Model B
@@ -167,6 +167,19 @@
   thumb: https://raw.githubusercontent.com/ebenupton/solid-elite-bbc-micro/main/images/solid-elite-beach-ball.png
   added: 2026-11-07
   notes: Solid Elite on the Model B, double-buffered under the original's dashboard. So far run only in emulators.
+
+- name: Caterpillar
+  author: Paul Newell (paul_n)
+  from: BBC Micro
+  kind: remaster
+  target: Model B
+  ssd: https://raw.githubusercontent.com/newell-paul/caterpillar-assembler/master/caterpillar.ssd
+  model: B-DFS1.2
+  source: https://github.com/newell-paul/caterpillar-assembler
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33778
+  thumb: /content/ports/caterpillar.png
+  added: 2026-10-24
+  notes: The author's own 1983 C&VG type-in, rewritten in 6502 assembly 43 years later with multi-colour sprites at 50Hz.
 
 - name: Solid Elite (6502 Second Processor)
   author: Eben Upton
