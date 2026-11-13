@@ -186,12 +186,12 @@
   from: BBC Micro
   kind: remaster
   target: 6502 Second Processor, with a Master 128 or Model B + 64K sideways RAM host
-  ssd: https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/solid-elite-tube-master.ssd
-  emulate: https://bbc.xania.org/?disc=https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/solid-elite-tube-master.ssd&autoboot&model=Master&coProcessor=true
+  ssd: https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/solid-elite-tube.ssd
+  emulate: https://bbc.xania.org/?disc=https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/solid-elite-tube.ssd&autoboot&model=Master&coProcessor=true
   source: https://github.com/ebenupton/solid-elite-6502-second-processor
   thumb: https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/images/solid-elite-combat.png
   added: 2026-10-26
-  notes: Solid Elite on the parasite. This is the Master-host disc; the Model B host disc is in the repo.
+  notes: Solid Elite on the parasite. One disc for either host.
 
 - name: Solid Elite
   author: Eben Upton
