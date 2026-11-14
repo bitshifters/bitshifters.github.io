@@ -40,6 +40,17 @@
   added: 2026-09-02
   notes: The author's own diving game moved further into machine code, for smoother animation and better collisions.
 
+- name: TRON Lightcycle Run
+  author: Eben Upton
+  from: BBC Micro
+  kind: original
+  target: Master 128, or Model B + 32K sideways RAM (16K gets a narrower build)
+  ssd: https://raw.githubusercontent.com/ebenupton/tron/main/tron.ssd
+  source: https://github.com/ebenupton/tron
+  thumb: https://raw.githubusercontent.com/ebenupton/tron/main/screenshots/play1.png
+  added: 2026-11-11
+  notes: Two-player split-screen isometric light cycles, smoothly scrolling at 25Hz, with a computer opponent for one player.
+
 - name: Starquake
   author: Kenton Price (kenton)
   from: BBC Micro
