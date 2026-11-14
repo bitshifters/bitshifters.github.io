@@ -27,6 +27,19 @@
 # attachments don't allow it, so those get a download link only, unless
 # `emulate:` is given.
 
+- name: Polymer Picker v2.01
+  author: Stephen Scott (sa_scott)
+  from: BBC Micro
+  kind: remaster
+  target: BBC Micro
+  ssd: https://www.sassquad.net/downloads/polymer-picker/polymer-picker-fuller-assembly-v2-01.ssd
+  emulate: https://bbc.xania.org/?disc=https://www.sassquad.net/downloads/polymer-picker/polymer-picker-fuller-assembly-v2-01.ssd&autoboot
+  source: https://github.com/sassquad/polymer-picker-6502
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33532
+  thumb: /content/ports/polymer-picker.png
+  added: 2026-09-02
+  notes: The author's own diving game moved further into machine code, for smoother animation and better collisions.
+
 - name: Starquake
   author: Kenton Price (kenton)
   from: BBC Micro
