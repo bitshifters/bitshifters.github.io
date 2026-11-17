@@ -51,6 +51,18 @@
   added: 2026-11-11
   notes: Two-player split-screen isometric light cycles, smoothly scrolling at 25Hz, with a computer opponent for one player.
 
+- name: Don't Dither!
+  author: Robert Smallshire (robert_smallshire)
+  from: BBC Micro
+  kind: original
+  target: Model B; up to four joysticks via SPItFIRE; ADFS disc for the Master Compact
+  ssd: https://github.com/rob-smallshire/dont-dither/releases/download/v0.3.0/dont-dither-v0.3.0.ssd
+  source: https://github.com/rob-smallshire/dont-dither
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33653
+  thumb: https://raw.githubusercontent.com/rob-smallshire/dont-dither/master/docs/images/four_player_game.png
+  added: 2026-09-28
+  notes: Splatoon-style territory control for up to four players, painting the arena in Cleo's dithered CMYK. Version 0.3.0.
+
 - name: Starquake
   author: Kenton Price (kenton)
   from: BBC Micro
