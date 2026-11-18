@@ -51,6 +51,18 @@
   added: 2026-11-11
   notes: Two-player split-screen isometric light cycles, smoothly scrolling at 25Hz, with a computer opponent for one player.
 
+- name: Dunjunz Revised
+  author: Robert Smallshire (robert_smallshire)
+  from: BBC Micro
+  kind: remaster
+  target: Model B, B+, Master or Master Compact; up to four joysticks via SPItFIRE
+  ssd: https://github.com/rob-smallshire/dunjunz-revised/releases/download/v2026.4/dunjunz-revised-v2026.4.ssd
+  source: https://github.com/rob-smallshire/dunjunz-revised
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33943
+  thumb: https://raw.githubusercontent.com/rob-smallshire/dunjunz-revised/master/docs/title-screen.png
+  added: 2026-11-16
+  notes: Julian Avis's four-player dungeon game from the 1987 disc, with twenty fixes and less flicker. Version 2026.4.
+
 - name: Don't Dither!
   author: Robert Smallshire (robert_smallshire)
   from: BBC Micro
