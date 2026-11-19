@@ -33,7 +33,7 @@
                             {% capture play %}https://bbc.xania.org/?disc={{ ssd }}&autoboot&model={{ model }}{% endcapture %}
                         {% endif %}
                     {% endunless %}
-                    <tr>
+                    <tr data-gc="{{ p.name | escape }}">
                         <td class="ports-thumb">{% if p.thumb %}<img src="{{ p.thumb }}" alt="" loading="lazy">{% endif %}</td>
                         <td class="ports-name" data-label="Game">
                             {% if link %}<a href="{{ link }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}

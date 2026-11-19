@@ -1,13 +1,33 @@
 <head>
 
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-116848464-1"></script>
+    <!-- GoatCounter: page views, plus disc downloads and emulator Play clicks as
+         events (stats at https://bitshifters.goatcounter.com). No cookies. -->
+    <script data-goatcounter="https://bitshifters.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'UA-116848464-1');
+    (function () {
+        var DISC = /\.(ssd|dsd|adl|adf|uef|zip|rom|arc)$/i;
+        var EMU = /^(bbc\.xania\.org|archi\.medes\.live|(www\.)?bbcmicro\.co\.uk)$/i;
+        function file(p) { try { return decodeURIComponent(p.split('/').pop()); } catch (e) { return p; } }
+        function track(e) {
+            var a = e.target.closest && e.target.closest('a[href]');
+            if (!a || !window.goatcounter || !window.goatcounter.count) return;
+            var u; try { u = new URL(a.href, location.href); } catch (err) { return; }
+            var kind, what;
+            if (EMU.test(u.hostname) && (u.search || u.hash)) {
+                kind = 'play';
+                var d = u.searchParams.get('disc') || u.searchParams.get('disc1') || (u.hash.match(/disc=([^&]+)/) || [])[1];
+                what = d ? file(d.split('?')[0]) : u.hostname;
+            } else if (DISC.test(u.pathname) || /\/download\/file\.php$/.test(u.pathname) || /\/releases\/download\//.test(u.pathname)) {
+                kind = 'download';
+                what = /file\.php$/.test(u.pathname) ? 'stardot-' + u.searchParams.get('id') : file(u.pathname);
+            } else return;
+            var row = a.closest('[data-gc]');
+            var name = row ? row.getAttribute('data-gc') : what;
+            window.goatcounter.count({ path: kind + ': ' + name, title: what + ' (' + location.pathname + ')', event: true });
+        }
+        document.addEventListener('click', track);
+        document.addEventListener('auxclick', function (e) { if (e.button === 1) track(e); });
+    })();
     </script>
 
 
