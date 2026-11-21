@@ -141,8 +141,10 @@
   author: rowett
   from: BBC Micro
   kind: original
+  status: v1.6
   target: Model B; 16K sideways RAM adds levels and music, 64K adds bosses
-  ssd: https://stardot.org.uk/forums/download/file.php?id=122797
+  ssd: https://stardot.org.uk/forums/download/file.php?id=123187
+  emulate: https://bbc.xania.org/?hasVideoNula&autoboot&disc1=https://lazyslug.com/beeblife/flipside.ssd
   thread: https://stardot.org.uk/forums/viewtopic.php?t=33870
   thumb: /content/ports/flipside.png
   added: 2026-11-06
