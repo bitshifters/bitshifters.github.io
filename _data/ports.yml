@@ -27,6 +27,18 @@
 # attachments don't allow it, so those get a download link only, unless
 # `emulate:` is given.
 
+- name: Bubble Bobble
+  author: Peter Gillett (petergillett)
+  from: BBC Micro
+  kind: remaster
+  status: WIP
+  target: BBC Micro; two banks of sideways RAM for masked sprites, a third caches levels
+  ssd: https://stardot.org.uk/forums/download/file.php?id=123255
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33978
+  thumb: /content/ports/bubble-bobble.png
+  added: 2026-11-21
+  notes: Peter Gillett's own BBC version revamped to play closer to the arcade, with music, sound effects, bubble chains, wind and a new completion screen. Work in progress, 20 Nov 2026.
+
 - name: Super Sprint
   author: Tom Seddon
   from: Atari ST
