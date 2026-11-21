@@ -42,7 +42,7 @@ This disc puts two versions of the enhanced game behind the original release's o
 
 A second disc puts both versions on a **BBC Model B with 64K of sideways RAM** (four 16K banks, in any slots).
 
-<a href="/content/bs-strykers-run-model-b.ssd" class="btn btn-md btn-success"><i class="fa fa-download"></i> Download Model B disc</a>&nbsp;&nbsp;&nbsp;<a target='_blank' href="https://bbc.godbolt.org/?disc=https://bitshifters.github.io/content/bs-strykers-run-model-b.ssd&autoboot&model=B-DFS1.2" class="btn btn-md btn-success"><i class="fa fa-play-circle"></i> Emulate Model B</a>
+<a href="/content/bs-strykers-run-model-b.ssd" class="btn btn-md btn-success"><i class="fa fa-download"></i> Download Model B disc</a>&nbsp;&nbsp;&nbsp;<a target='_blank' href="https://bbc.xania.org/?disc=https://bitshifters.github.io/content/bs-strykers-run-model-b.ssd&autoboot&model=B-DFS1.2" class="btn btn-md btn-success"><i class="fa fa-play-circle"></i> Emulate Model B</a>
 
 The Model B has no shadow RAM to draw the next frame into, so this version shows a single screen and races the TV beam: each part of the picture is redrawn either just after the beam has passed it or before it gets there, with the player and the scroll's new column first, so tearing and flicker are down to the odd frame in the busiest scenes. The code is rewritten for the Model B's NMOS 6502, and the graphics and code the Master kept in its extra RAM are packed into the four sideways banks. Both games play exactly as they do on the Master: the same levels, rules, Redux features, dithered hills and HUD. The busiest scenes drop the odd frame more often than on the Master.
 
