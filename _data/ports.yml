@@ -27,6 +27,16 @@
 # attachments don't allow it, so those get a download link only, unless
 # `emulate:` is given.
 
+- name: The Bard's Tale
+  author: MrChocky
+  from: ZX Spectrum and C64
+  status: Unreleased
+  target: BBC Master
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=33916
+  thumb: /content/ports/bards-tale.png
+  added: 2026-11-21
+  notes: Interplay's dungeon crawler, from the Spectrum disassembly with the C64 version's graphics and logic. Screenshots only for now; no release is planned while it's an EA property.
+
 - name: Bubble Bobble
   author: Peter Gillett (petergillett)
   from: BBC Micro
