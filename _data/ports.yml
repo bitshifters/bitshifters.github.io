@@ -27,6 +27,16 @@
 # attachments don't allow it, so those get a download link only, unless
 # `emulate:` is given.
 
+- name: Super Sprint
+  author: Tom Seddon
+  from: Atari ST
+  target: Master 128 or Master Compact, 64K sideways RAM
+  ssd: https://github.com/tom-seddon/super-sprint-beeb/releases/download/super-sprint-20261120-2241-8abc1/super-sprint-20261120-2241-8abc1.zip
+  source: https://github.com/tom-seddon/super-sprint-beeb
+  thumb: https://raw.githubusercontent.com/tom-seddon/super-sprint-beeb/main/docs/docimages/game-race.png
+  added: 2026-11-21
+  notes: The 1986 arcade racer for up to three players, eight tracks, plus a Time Attack disc with ghost cars. The zip holds DFS and ADFS discs.
+
 - name: Polymer Picker v2.01
   author: Stephen Scott (sa_scott)
   from: BBC Micro
