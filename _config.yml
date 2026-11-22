@@ -85,3 +85,12 @@ markdown: kramdown
 # set permalinks to be based on category & title. No need for date.
 # category is "blog" "prods" "comps"
 permalink: none
+
+# Repo housekeeping files, not site content (Jekyll's own defaults listed too, since this list replaces them).
+exclude:
+  - Makefile
+  - START_HERE.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
