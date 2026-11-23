@@ -221,6 +221,7 @@
   ssd: https://waitingforvsync.github.io/beeb/criticalmass.ssd
   model: B-DFS1.2
   source: https://github.com/waitingforvsync/criticalmass
+  page: /posts/prods/bs-critical-mass.html
   thumb: /content/ports/critical-mass.png
   added: 2026-10-28
   notes: From Eli Piilonen's Marble Merger.

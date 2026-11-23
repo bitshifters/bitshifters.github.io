@@ -2,6 +2,7 @@
 layout: ports_page
 title: "Ports and more..."
 subtitle: AI-assisted ports, remasters and new games for the BBC Micro
+ai_text: true
 ---
 
 BBC Micro and Master games made with the help of AI coding tools: ports from other machines, updates and restorations of BBC classics, and brand new games. They're by Bitshifters and others in the community, mostly found on [Stardot](https://stardot.org.uk/forums/).

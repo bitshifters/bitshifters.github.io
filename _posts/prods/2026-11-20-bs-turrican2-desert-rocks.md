@@ -16,6 +16,7 @@ download: bs-turrican2-desert-rocks.ssd
 source:
 pouet:
 video:
+ai_text: true
 
 
 

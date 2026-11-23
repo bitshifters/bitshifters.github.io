@@ -15,6 +15,7 @@ download: bs-strykers-run.ssd
 source: https://github.com/kieranhj/strykers-run
 pouet:
 video:
+ai_text: true
 
 
 
