@@ -13,3 +13,4 @@ _site
 .jekyll-metadata
 Gemfile.lock
 .claude/settings.local.json
+START_HERE.md
