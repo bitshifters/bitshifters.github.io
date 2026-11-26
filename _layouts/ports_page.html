@@ -27,7 +27,7 @@
                     {% assign ssd = p.ssd %}
                     {% if ssd and ssd contains "://" %}{% else %}{% if ssd %}{% assign ssd = p.ssd | prepend: site.url %}{% endif %}{% endif %}
                     {% assign play = p.emulate %}
-                    {% unless play %}
+                    {% unless play or p.play == false %}
                         {% if ssd contains ".github.io/" or ssd contains "raw.githubusercontent.com" %}
                             {% assign model = p.model | default: "Master" %}
                             {% capture play %}https://bbc.xania.org/?disc={{ ssd }}&autoboot&model={{ model }}{% endcapture %}

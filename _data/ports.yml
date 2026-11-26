@@ -13,6 +13,7 @@
 #   model:   jsbeeb model for the Play link (default Master; B-DFS1.2 for a Model B)
 #   emulate: full Play link, overriding the one built from ssd + model (for
 #            extra jsbeeb options such as &coProcessor=true or &displayMode=pal)
+#   play:    false for no Play link (a disc jsbeeb can't run, e.g. Electron)
 #   source:  repository URL
 #   thread:  Stardot (or other) thread URL
 #   page:    page about it (our prod page); the name links here, else to
@@ -26,6 +27,19 @@
 # /content/ files, *.github.io and raw.githubusercontent.com. Stardot
 # attachments don't allow it, so those get a download link only, unless
 # `emulate:` is given.
+
+- name: Solid Elite (Electron)
+  author: Eben Upton
+  from: BBC Micro
+  kind: remaster
+  target: Acorn Electron + Plus 3 (ACP 1770 DFS) + 64K sideways RAM
+  ssd: https://raw.githubusercontent.com/ebenupton/solid-elite-acorn-electron/main/solid-elite-acorn-electron.ssd
+  play: false
+  source: https://github.com/ebenupton/solid-elite-acorn-electron
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=34027
+  thumb: https://raw.githubusercontent.com/ebenupton/solid-elite-acorn-electron/main/images/electron/docking.png
+  added: 2026-11-25
+  notes: Solid Elite on the Electron, ported from the Model B version. Also runs from an ElkSD128.
 
 - name: The Bard's Tale
   author: MrChocky
@@ -247,6 +261,7 @@
   ssd: https://raw.githubusercontent.com/ebenupton/solid-elite-bbc-micro/main/solid-elite-bbc-micro.ssd
   model: B-DFS1.2
   source: https://github.com/ebenupton/solid-elite-bbc-micro
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=34027
   thumb: https://raw.githubusercontent.com/ebenupton/solid-elite-bbc-micro/main/images/solid-elite-beach-ball.png
   added: 2026-11-07
   notes: Solid Elite on the Model B, double-buffered under the original's dashboard. So far run only in emulators.
@@ -272,6 +287,7 @@
   ssd: https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/solid-elite-tube.ssd
   emulate: https://bbc.xania.org/?disc=https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/solid-elite-tube.ssd&autoboot&model=Master&coProcessor=true
   source: https://github.com/ebenupton/solid-elite-6502-second-processor
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=34027
   thumb: https://raw.githubusercontent.com/ebenupton/solid-elite-6502-second-processor/main/images/solid-elite-combat.png
   added: 2026-10-26
   notes: Solid Elite on the parasite. One disc for either host.
@@ -283,6 +299,7 @@
   target: Master 128
   ssd: https://raw.githubusercontent.com/ebenupton/solid-elite-bbc-master/master-port/solid-elite-bbc-master.ssd
   source: https://github.com/ebenupton/solid-elite-bbc-master
+  thread: https://stardot.org.uk/forums/viewtopic.php?t=34027
   thumb: https://raw.githubusercontent.com/ebenupton/solid-elite-bbc-master/master-port/images/solid-elite-beach-ball-planet.png
   added: 2026-10-20
   notes: BBC Master Elite with solid, sunlit ships, from Mark Moxon's documented source.
