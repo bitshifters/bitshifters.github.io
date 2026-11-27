@@ -12,7 +12,7 @@ year: 2021
 type: 256 Byte Demo
 platform: BBC Micro
 download: bs-bar-beeb.ssd
-source: https://github.com/kieranhj/stniccc-archie
+source: https://github.com/bitshifters/stniccc-archie
 pouet: https://www.pouet.net/prod.php?which=88422
 video: 
 

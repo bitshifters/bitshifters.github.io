@@ -12,7 +12,7 @@ year: 2020
 type: Demo
 platform: Acorn Archimedes
 download: bs-popular-demand.arc
-source: https://github.com/kieranhj/stniccc-archie
+source: https://github.com/bitshifters/stniccc-archie
 pouet: https://www.pouet.net/prod.php?which=85916
 video: https://www.youtube.com/watch?v=LkufnMO4gwU
 

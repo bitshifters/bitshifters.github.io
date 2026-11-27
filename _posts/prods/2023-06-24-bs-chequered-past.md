@@ -13,7 +13,7 @@ type: Demo
 platform: Acorn Archimedes
 emuboot: autoboot=desktop%20filer_run%20adfs::0.$.!Chequered&preset=a3020
 download: bs-chequered-past.zip
-source: https://github.com/kieranhj/arc-check
+source: https://github.com/bitshifters/arc-check
 pouet: https://www.pouet.net/prod.php?which=94538
 video: https://www.youtube.com/watch?v=mAJ44cdQiDQ
 

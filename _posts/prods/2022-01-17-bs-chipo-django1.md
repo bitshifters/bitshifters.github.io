@@ -13,7 +13,7 @@ type: Musicdisk
 platform: Acorn Archimedes
 emuboot: autoboot=desktop%20filer_run%20adfs::0.$.!Django01
 download: bs-django01.zip
-source: https://github.com/kieranhj/arc-django
+source: https://github.com/bitshifters/arc-django
 pouet: https://www.pouet.net/prod.php?which=90085
 video: https://www.youtube.com/watch?v=frv0-KRWRhY
 
