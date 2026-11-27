@@ -13,7 +13,7 @@ type: Musicdisk
 platform: Acorn Archimedes
 emuboot: autoboot=desktop%20filer_run%20HostFS::hostfs.$.!dj3&soundfilter=2&preset=a3020
 download: bs-django03,ddc
-source: 
+source: https://github.com/bitshifters/chipo-django3
 pouet: https://www.pouet.net/prod.php?which=106004
 video: https://www.youtube.com/watch?v=RaLQ68ro3q0
 
