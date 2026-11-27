@@ -5,7 +5,7 @@ The Bitshifters demo group's website: a Jekyll site served by GitHub Pages at ht
 | | |
 |---|---|
 | GitHub | https://github.com/bitshifters/bitshifters.github.io (public) |
-| Local path | D:\beeb\mine\bitshifters.github.io (moved from OneDrive\BEEB\Repos\bitshifters.github.io on 2026-11-22) |
+| Local path | D:\bitshifters\bitshifters.github.io (moved from OneDrive\BEEB\Repos\bitshifters.github.io on 2026-11-22) |
 | Branch | master (only branch) |
 | Last commit | 2026-11-21: Create p15k4v_cream_v6.ssd |
 
