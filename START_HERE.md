@@ -33,4 +33,4 @@ The Bitshifters demo group's website: a Jekyll site served by GitHub Pages at ht
 
 ## See also
 - README.md (Jekyll structure and how to add posts).
-- D:\beeb\mine\jsbeeb-kieranhj (the emulator the site's "Emulate" links used to target).
+- github.com/kieranhj/jsbeeb (the jsbeeb fork the site's "Emulate" links used to target; the local clone was deleted 2026-11-27).
